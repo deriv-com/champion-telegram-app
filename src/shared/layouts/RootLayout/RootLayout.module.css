@@ -1,0 +1,48 @@
+.root {
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-background);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1;
+  margin: 0;
+  box-sizing: border-box;
+  background-color: var(--color-background);
+  position: relative;
+  z-index: 1;
+  
+  /* Scrolling behavior */
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none;
+  touch-action: pan-x pan-y;
+  scroll-behavior: smooth;
+  
+  /* Hide scrollbar */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Hide scrollbar for WebKit browsers */
+.main::-webkit-scrollbar {
+  display: none;
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: max(0px)) {
+  .main {
+    padding-left: max(var(--tg-safe-area-left), 16px);
+    padding-right: max(var(--tg-safe-area-right), 16px);
+    padding-bottom: max(var(--tg-safe-area-bottom), 16px);
+  }
+}

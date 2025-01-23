@@ -1,0 +1,83 @@
+@import './theme.css';
+
+/* Reset & Base Styles */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Root element styles */
+html,
+body,
+#root {
+  height: 100%;
+  background-color: var(--color-background);
+  overflow: auto;
+}
+
+body {
+  font-family: var(--font-family);
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Container */
+.container,
+.tg-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+  min-height: 100vh;
+  background-color: var(--color-background);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Button Base */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-speed) ease-in-out;
+  border: none;
+  user-select: none;
+}
+
+/* Button Variants */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-secondary-hover);
+}
+
+/* Responsive Utilities */
+@media (max-width: 576px) {
+  .container,
+  .tg-container {
+    padding: 0 var(--spacing-sm);
+  }
+}
