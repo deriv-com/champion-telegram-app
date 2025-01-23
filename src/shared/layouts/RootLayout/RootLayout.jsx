@@ -19,6 +19,9 @@ const RootLayout = ({ children }) => {
 
   return (
     <div className={styles.root}>
+      <header role="banner" className={styles.header}>
+        {/* Header content */}
+      </header>
       <main className={styles.main}>
         {children}
       </main>

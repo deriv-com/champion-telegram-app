@@ -19,7 +19,7 @@ const Hero = () => {
             Trade Smarter with Champion Trade
           </h1>
           <p className={styles.subtitle}>
-            Experience the future of trading with our advanced platform, powerful tools, and expert insights
+            Experience the future of trading with our advanced platform powerful tools and expert insights
           </p>
         </div>
 

@@ -12,7 +12,7 @@ describe('Hero', () => {
     
     // Check if title and subtitle are rendered
     expect(screen.getByText('Trade Smarter with Champion Trade')).toBeInTheDocument();
-    expect(screen.getByText('Experience the future of trading with our advanced platform, powerful tools, and expert insights')).toBeInTheDocument();
+    expect(screen.getByText('Experience the future of trading with our advanced platform powerful tools and expert insights')).toBeInTheDocument();
   });
 
   it('renders action buttons', () => {
