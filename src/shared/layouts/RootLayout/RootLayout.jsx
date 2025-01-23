@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getThemeParams } from '@/utils/telegram';
+import { getThemeParams } from '@/services/telegram';
 import styles from './RootLayout.module.css';
 
 const RootLayout = ({ children }) => {
@@ -19,16 +19,11 @@ const RootLayout = ({ children }) => {
 
   return (
     <div className={styles.root}>
-      <header role="banner" className={styles.header}>
-        <div className="tg-container" />
-      </header>
-      <div className="tg-container">
-        <main className={styles.main}>
-          {children}
-        </main>
-        {/* Reserve space for main button if needed */}
-        <div className="tg-main-button-area" />
-      </div>
+      <main className={styles.main}>
+        {children}
+      </main>
+      {/* Reserve space for main button if needed */}
+      <div className="tg-main-button-area" />
     </div>
   );
 };

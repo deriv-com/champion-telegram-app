@@ -39,10 +39,7 @@
 /* Main Container */
 .tg-container {
   min-height: var(--tg-viewport-stable-height);
-  padding-top: calc(var(--tg-safe-area-top) + var(--tg-header-height));
-  padding-bottom: var(--tg-safe-area-bottom);
-  padding-left: var(--tg-safe-area-left);
-  padding-right: var(--tg-safe-area-right);
+  padding: var(--spacing-md);
   background-color: var(--tg-theme-bg-color);
   color: var(--tg-theme-text-color);
 }
@@ -96,12 +93,7 @@
 }
 
 /* Prevent overscroll bounce */
-html {
-  height: 100%;
-  overflow: hidden;
-}
-
-body {
+html, body {
   height: 100%;
   overflow: auto;
   -webkit-overflow-scrolling: touch;

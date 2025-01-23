@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { initializeTelegramWebApp } from '@/utils/telegram';
-import './styles/telegram.css';
-import './styles/global.css';
+import { initializeTelegramWebApp } from '@/services/telegram';
+import '@/assets/styles/global.css';
+import '@/assets/styles/telegram.css';
+import '@/assets/styles/theme.css';
 
 // Initialize Telegram WebApp
 try {

@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import Hero from './Hero';
 import styles from './Hero.module.css';
+import buttonStyles from '@/shared/components/Button/Button.module.css';
 
 describe('Hero', () => {
   it('renders hero section with content', () => {
@@ -20,8 +21,8 @@ describe('Hero', () => {
     const loginButton = screen.getByText('Login');
     const openAccountButton = screen.getByText('Open Account');
     
-    expect(loginButton).toHaveClass(styles.buttonSecondary);
-    expect(openAccountButton).toHaveClass(styles.buttonPrimary);
+    expect(loginButton).toHaveClass(buttonStyles.buttonSecondary);
+    expect(openAccountButton).toHaveClass(buttonStyles.buttonPrimary);
   });
 
   it('has correct section structure', () => {

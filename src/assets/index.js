@@ -1,5 +1,6 @@
-import championTradeLogo from '@/assets/images/champion-trade-logo.svg';
+export * from './images';
 
-export {
-  championTradeLogo
-};
+// Export styles
+import './styles/global.css';
+import './styles/telegram.css';
+import './styles/theme.css';

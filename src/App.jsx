@@ -1,4 +1,4 @@
-import RootLayout from '@/shared/layouts/RootLayout';
+import { RootLayout } from '@/shared';
 import { Hero } from '@/features/home';
 
 function App() {
