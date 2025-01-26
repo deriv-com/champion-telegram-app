@@ -1,17 +1,15 @@
+/**
+ * Application configuration object
+ * Structured for different deployment environments on Vercel
+ * @typedef {Object} AppConfig
+ */
 export const APP_CONFIG = {
-  name: process.env.VITE_APP_NAME || 'Champion Trade',
-  url: process.env.VITE_APP_URL,
+  /** API configuration for different environments */
   api: {
-    baseUrl: process.env.VITE_API_BASE_URL || 'http://localhost:3000',
+    baseUrl: process.env.VITE_API_BASE_URL,
   },
-  telegram: {
-    botUsername: process.env.VITE_TELEGRAM_BOT_USERNAME,
-    botToken: process.env.VITE_TELEGRAM_BOT_TOKEN,
-  },
-  features: {
-    enableAnalytics: process.env.VITE_ENABLE_ANALYTICS === 'true',
-    enableDarkMode: process.env.VITE_ENABLE_DARK_MODE === 'true',
-  },
+
+  /** Environment configuration */
   environment: {
     mode: process.env.VITE_BUILD_MODE || 'development',
     isDevelopment: process.env.VITE_BUILD_MODE === 'development',

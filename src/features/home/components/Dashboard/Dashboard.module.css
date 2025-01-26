@@ -1,0 +1,44 @@
+.dashboard {
+  min-height: 100dvh;
+  background-color: var(--color-background);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.tabBar {
+  display: flex;
+  justify-content: space-around;
+  background-color: var(--color-background-elevated);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-top: 1px solid var(--color-border);
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+}
+
+.tabButton {
+  flex: 1;
+  padding: var(--spacing-md);
+  border: none;
+  background: none;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: color var(--transition-speed) ease;
+}
+
+.tabButton.active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.tabButton:hover {
+  color: var(--color-primary);
+}

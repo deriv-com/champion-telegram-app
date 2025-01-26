@@ -1,0 +1,23 @@
+.positionsView {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--spacing-lg);
+}
+
+/* Future positions-specific component styles */
+/* .filters {
+  margin-bottom: var(--spacing-lg);
+}
+
+.positionsList {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.positionCard {
+  background: var(--color-background-elevated);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+} */

@@ -1,1 +1,2 @@
-export * from './components/Hero';
+export * from './components/LandingPage';
+export * from './components/Dashboard';

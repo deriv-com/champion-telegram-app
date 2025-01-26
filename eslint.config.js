@@ -6,7 +6,7 @@ import reactRefreshPlugin from 'eslint-plugin-react-refresh';
 
 export default [
   {
-    ignores: ['dist/**'],
+    ignores: ['dist/**', 'coverage/**', 'node_modules/**'],
   },
   js.configs.recommended,
   {
@@ -75,6 +75,7 @@ export default [
         expect: 'readonly',
         beforeEach: 'readonly',
         afterEach: 'readonly',
+        vi: 'readonly',
       },
     },
   },
