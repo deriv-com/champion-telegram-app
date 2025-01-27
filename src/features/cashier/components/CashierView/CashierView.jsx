@@ -13,7 +13,7 @@ const CashierView = () => {
 
   return (
     <div className={styles.cashierView}>
-      <p>Under development</p>
+      <p>Cashier page under development</p>
     </div>
   );
 };

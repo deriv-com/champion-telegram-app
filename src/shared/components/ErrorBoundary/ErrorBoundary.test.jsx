@@ -1,24 +1,14 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { vi } from 'vitest';
-import ErrorBoundary from './ErrorBoundary';
+import { vi, describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import { ErrorBoundary } from './ErrorBoundary';
 import { Button } from '../Button';
 
 // Mock Button component to avoid any potential issues
 vi.mock('../Button', () => ({
-  Button: ({ children, onClick }) => (
-    <button onClick={onClick}>{children}</button>
+  Button: ({ children, onClick, variant }) => (
+    <button onClick={onClick} data-variant={variant}>{children}</button>
   )
 }));
-
-// Mock console.error to avoid test noise
-const originalError = console.error;
-beforeAll(() => {
-  console.error = vi.fn();
-});
-
-afterAll(() => {
-  console.error = originalError;
-});
 
 // Component that throws an error
 const ThrowError = () => {
@@ -26,6 +16,23 @@ const ThrowError = () => {
 };
 
 describe('ErrorBoundary', () => {
+  // Mock console.error to avoid test noise
+  const originalError = console.error;
+  
+  beforeAll(() => {
+    console.error = vi.fn();
+  });
+
+  afterAll(() => {
+    console.error = originalError;
+  });
+
+  beforeEach(() => {
+    // Clear mocks and reset console.error mock between tests
+    vi.clearAllMocks();
+    console.error.mockClear();
+  });
+
   it('renders children when there is no error', () => {
     render(
       <ErrorBoundary>

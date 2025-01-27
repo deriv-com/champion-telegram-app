@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import ErrorBoundary from '../../components/ErrorBoundary';
+import { ErrorBoundary } from '../../components/ErrorBoundary';
 import styles from './RootLayout.module.css';
 
 const RootLayout = ({ children }) => {

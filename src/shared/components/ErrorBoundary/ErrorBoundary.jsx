@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button } from '../Button';
 import styles from './ErrorBoundary.module.css';
 
-class ErrorBoundary extends React.Component {
+export class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,5 +49,3 @@ class ErrorBoundary extends React.Component {
 ErrorBoundary.propTypes = {
   children: PropTypes.node.isRequired,
 };
-
-export default ErrorBoundary;

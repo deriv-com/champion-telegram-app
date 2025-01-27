@@ -1,0 +1,60 @@
+.tabBar {
+  display: flex;
+  background-color: var(--color-white);
+  padding: 0 0 env(safe-area-inset-bottom, var(--spacing-md));
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: var(--tab-bar-height);
+  z-index: 1000;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.tabButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xs) 0;
+  border: none;
+  background: none;
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  position: relative;
+  gap: 4px;
+}
+
+.tabButton.active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  background-color: rgba(var(--color-primary-rgb), 0.15);
+}
+
+.tabButton:not(:last-child) {
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.tabButton img {
+  width: 24px;
+  height: 24px;
+  transition: all var(--transition-speed) ease;
+  opacity: 0.6;
+  filter: none;
+}
+
+.tabButton.active img {
+  transform: scale(1.1);
+  opacity: 1;
+  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(200deg) brightness(118%) contrast(119%);
+}
+
+.tabButton span {
+  font-size: 11px;
+  line-height: 1;
+}

@@ -3,6 +3,16 @@ import { screen, render } from '@testing-library/react';
 import { MemoryRouter, Navigate } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import { ROUTES } from '@/config/routes.config';
+import { APP_CONFIG } from '@/config/app.config';
+
+// Mock APP_CONFIG
+vi.mock('@/config/app.config', () => ({
+  APP_CONFIG: {
+    environment: {
+      isDevelopment: false
+    }
+  }
+}));
 
 // Mock useTelegram hook
 const mockUseTelegram = vi.fn();

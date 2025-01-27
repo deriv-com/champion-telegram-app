@@ -3,6 +3,26 @@ import styles from './Dashboard.module.css';
 import { TradeView } from '@/features/trade';
 import { CashierView } from '@/features/cashier';
 import { PositionsView } from '@/features/positions';
+import { tradeIcon, cashierIcon, positionsIcon } from '@/assets/images';
+import { TabBar } from '@/shared/components';
+
+const TAB_ITEMS = [
+  {
+    id: 'trade',
+    icon: tradeIcon,
+    label: 'Trade',
+  },
+  {
+    id: 'cashier',
+    icon: cashierIcon,
+    label: 'Cashier',
+  },
+  {
+    id: 'positions',
+    icon: positionsIcon,
+    label: 'Positions',
+  },
+];
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = React.useState('trade');
@@ -25,26 +45,11 @@ const Dashboard = () => {
       <div className={styles.content}>
         {renderContent()}
       </div>
-      <nav className={styles.tabBar}>
-        <button
-          className={`${styles.tabButton} ${activeTab === 'trade' ? styles.active : ''}`}
-          onClick={() => setActiveTab('trade')}
-        >
-          Trade
-        </button>
-        <button
-          className={`${styles.tabButton} ${activeTab === 'cashier' ? styles.active : ''}`}
-          onClick={() => setActiveTab('cashier')}
-        >
-          Cashier
-        </button>
-        <button
-          className={`${styles.tabButton} ${activeTab === 'positions' ? styles.active : ''}`}
-          onClick={() => setActiveTab('positions')}
-        >
-          Positions
-        </button>
-      </nav>
+      <TabBar
+        items={TAB_ITEMS}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
     </div>
   );
 };

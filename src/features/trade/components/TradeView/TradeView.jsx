@@ -12,7 +12,7 @@ const TradeView = () => {
 
   return (
     <div className={styles.tradeView}>
-      <p>Under development</p>
+      <p>Trade page under development</p>
     </div>
   );
 };

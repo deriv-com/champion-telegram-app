@@ -7,6 +7,9 @@
   --spacing-xl: 2.5rem;
   --spacing-2xl: 3.5rem;
 
+  /* Layout */
+  --tab-bar-height: 4rem;
+
   /* Colors */
   --color-primary: #00C7F4;
   --color-primary-rgb: 0, 199, 244;

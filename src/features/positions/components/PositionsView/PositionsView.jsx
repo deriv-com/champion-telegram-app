@@ -13,7 +13,7 @@ const PositionsView = () => {
 
   return (
     <div className={styles.positionsView}>
-      <p>Under development</p>
+      <p>Positions page under development</p>
     </div>
   );
 };

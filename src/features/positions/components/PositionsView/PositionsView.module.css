@@ -3,6 +3,12 @@
   flex-direction: column;
   height: 100%;
   padding: var(--spacing-lg);
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Future positions-specific component styles */
