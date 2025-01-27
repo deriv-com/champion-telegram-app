@@ -26,12 +26,12 @@
   display: block;
   margin-bottom: var(--spacing-xl);
   transition: all var(--transition-speed) ease;
-  filter: drop-shadow(0 0 20px rgba(var(--color-primary-rgb), 0.2));
+  filter: drop-shadow(0 0 10px rgba(var(--color-primary-rgb), 0.1));
 }
 
 .logo:hover {
   transform: scale(1.05);
-  filter: drop-shadow(0 0 30px rgba(var(--color-primary-rgb), 0.3));
+  filter: drop-shadow(0 0 15px rgba(var(--color-primary-rgb), 0.15));
 }
 
 .content {

@@ -41,9 +41,9 @@
   --border-radius: 1rem;
   --border-radius-full: 9999px;
   --transition-speed: 0.3s;
-  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --box-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
-  --box-shadow-primary: 0 4px 15px rgba(0, 199, 244, 0.3);
+  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --box-shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --box-shadow-primary: 0 2px 8px rgba(0, 199, 244, 0.2);
 }
 
 /* Global styles to match Champion Trade */

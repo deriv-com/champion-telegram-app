@@ -4,7 +4,7 @@ import { TradeView } from '@/features/trade';
 import { CashierView } from '@/features/cashier';
 import { PositionsView } from '@/features/positions';
 import { tradeIcon, cashierIcon, positionsIcon } from '@/assets/images';
-import { TabBar } from '@/shared/components';
+import { TabBar, AppBar } from '@/shared/components';
 
 const TAB_ITEMS = [
   {
@@ -42,6 +42,7 @@ const Dashboard = () => {
 
   return (
     <div className={styles.dashboard}>
+      <AppBar accountId="CT123456" balance="10,000.00" />
       <div className={styles.content}>
         {renderContent()}
       </div>
