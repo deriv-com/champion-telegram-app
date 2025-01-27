@@ -38,10 +38,12 @@ describe('TabBar', () => {
       expect(screen.getByText(item.label)).toBeInTheDocument();
     });
 
-    // Check if all icons are rendered with correct alt text
+    // Check if all icons are rendered
     mockItems.forEach(item => {
-      expect(screen.getByAltText(item.label)).toBeInTheDocument();
-      expect(screen.getByAltText(item.label)).toHaveAttribute('src', item.icon);
+      const tab = screen.getByRole('tab', { name: item.label });
+      const icon = tab.querySelector('img');
+      expect(icon).toBeInTheDocument();
+      expect(icon).toHaveAttribute('src', item.icon);
     });
   });
 
@@ -54,12 +56,12 @@ describe('TabBar', () => {
       />
     );
 
-    const activeButton = screen.getByText('Positions').closest('button');
-    const inactiveButton = screen.getByText('Trade').closest('button');
+    const activeTab = screen.getByRole('tab', { name: 'Positions' });
+    const inactiveTab = screen.getByRole('tab', { name: 'Trade' });
 
-    expect(activeButton).toHaveClass('tabButton_123', 'active_123');
-    expect(inactiveButton).toHaveClass('tabButton_123');
-    expect(inactiveButton).not.toHaveClass('active_123');
+    expect(activeTab).toHaveClass('tabButton_123', 'active_123');
+    expect(inactiveTab).toHaveClass('tabButton_123');
+    expect(inactiveTab).not.toHaveClass('active_123');
   });
 
   it('calls onTabChange with correct tab id when clicked', () => {
@@ -71,10 +73,10 @@ describe('TabBar', () => {
       />
     );
 
-    fireEvent.click(screen.getByText('Positions'));
+    fireEvent.click(screen.getByRole('tab', { name: 'Positions' }));
     expect(mockOnTabChange).toHaveBeenCalledWith('positions');
 
-    fireEvent.click(screen.getByText('Cashier'));
+    fireEvent.click(screen.getByRole('tab', { name: 'Cashier' }));
     expect(mockOnTabChange).toHaveBeenCalledWith('cashier');
   });
 
@@ -87,11 +89,11 @@ describe('TabBar', () => {
       />
     );
 
-    const buttons = screen.getAllByRole('button');
+    const tabs = screen.getAllByRole('tab');
     const expectedWidth = `${100 / mockItems.length}%`;
 
-    buttons.forEach(button => {
-      expect(button).toHaveStyle({ width: expectedWidth });
+    tabs.forEach(tab => {
+      expect(tab).toHaveStyle({ width: expectedWidth });
     });
   });
 
