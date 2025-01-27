@@ -4,6 +4,7 @@ import { MemoryRouter, Navigate } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import { ROUTES } from '@/config/routes.config';
 import { APP_CONFIG } from '@/config/app.config';
+import { authService } from '@/services/auth.service';
 
 // Mock APP_CONFIG
 vi.mock('@/config/app.config', () => ({
@@ -14,10 +15,12 @@ vi.mock('@/config/app.config', () => ({
   }
 }));
 
-// Mock useTelegram hook
-const mockUseTelegram = vi.fn();
-vi.mock('@/hooks/useTelegram', () => ({
-  useTelegram: () => mockUseTelegram()
+// Mock authService
+vi.mock('@/services/auth.service', () => ({
+  authService: {
+    isAuthenticated: vi.fn(),
+    clearSession: vi.fn()
+  }
 }));
 
 // Mock Navigate component
@@ -35,17 +38,11 @@ const MockProtectedComponent = () => <div>Protected Content</div>;
 describe('ProtectedRoute', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Default to no user (unauthenticated)
-    mockUseTelegram.mockReturnValue({
-      webApp: {
-        initDataUnsafe: {
-          user: null
-        }
-      }
-    });
+    // Default to unauthenticated
+    authService.isAuthenticated.mockReturnValue(false);
   });
 
-  it('redirects to home when no Telegram user data is present', () => {
+  it('redirects to home when user is not authenticated', () => {
     render(
       <MemoryRouter initialEntries={['/protected']}>
         <ProtectedRoute>
@@ -59,18 +56,9 @@ describe('ProtectedRoute', () => {
     expect(screen.queryByText('Protected Content')).not.toBeInTheDocument();
   });
 
-  it('renders protected content when Telegram user data is present', () => {
-    // Mock authenticated Telegram user
-    mockUseTelegram.mockReturnValue({
-      webApp: {
-        initDataUnsafe: {
-          user: {
-            id: 123456789,
-            username: 'testuser'
-          }
-        }
-      }
-    });
+  it('renders protected content when user is authenticated', () => {
+    // Mock authenticated user
+    authService.isAuthenticated.mockReturnValue(true);
 
     render(
       <MemoryRouter>
@@ -85,18 +73,9 @@ describe('ProtectedRoute', () => {
     expect(screen.queryByText(/redirecting/i)).not.toBeInTheDocument();
   });
 
-  it('renders nested routes when Telegram user data is present', () => {
-    // Mock authenticated Telegram user
-    mockUseTelegram.mockReturnValue({
-      webApp: {
-        initDataUnsafe: {
-          user: {
-            id: 123456789,
-            username: 'testuser'
-          }
-        }
-      }
-    });
+  it('renders nested routes when user is authenticated', () => {
+    // Mock authenticated user
+    authService.isAuthenticated.mockReturnValue(true);
     
     const NestedComponent = () => <div>Nested Content</div>;
 

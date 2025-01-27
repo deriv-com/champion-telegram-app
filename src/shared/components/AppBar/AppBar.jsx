@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes.config';
 import { useTelegram } from '@/hooks/useTelegram';
+import { authService } from '@/services/auth.service';
+import { APP_CONFIG } from '@/config/app.config';
 import styles from './AppBar.module.css';
 
 const ChevronIcon = ({ className }) => (
@@ -53,12 +55,14 @@ const AppBar = ({ accountId, balance }) => {
   };
 
   const handleLogout = async () => {
-    const confirmed = await showConfirm('Are you sure you want to logout?');
+    // In development mode, skip confirmation
+    const confirmed = APP_CONFIG.environment.isDevelopment ? true : await showConfirm('Are you sure you want to logout?');
     if (confirmed) {
-      // Clear Telegram WebApp data
-      webApp.clearData();
-      // Navigate to login page
-      navigate(ROUTES.LOGIN);
+      // Clear session data first
+      authService.clearSession();
+      
+      // Navigate to landing page after clearing session
+      navigate(ROUTES.HOME, { replace: true });
     }
   };
 
