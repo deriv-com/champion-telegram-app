@@ -1,0 +1,29 @@
+.cashierView {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--spacing-lg);
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Future cashier-specific component styles */
+/* .balanceSection {
+  margin-bottom: var(--spacing-xl);
+}
+
+.transactionHistory {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.actionButtons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+} */

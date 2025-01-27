@@ -1,0 +1,24 @@
+.tradeView {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--spacing-lg);
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Future trade-specific component styles */
+/* .tradeChart {
+  flex: 1;
+  margin-bottom: var(--spacing-lg);
+}
+
+.tradeControls {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+} */

@@ -1,0 +1,29 @@
+.positionsView {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--spacing-lg);
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Future positions-specific component styles */
+/* .filters {
+  margin-bottom: var(--spacing-lg);
+}
+
+.positionsList {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.positionCard {
+  background: var(--color-background-elevated);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+} */

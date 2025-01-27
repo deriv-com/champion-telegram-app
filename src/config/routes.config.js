@@ -1,14 +1,17 @@
+/**
+ * Application route paths
+ * @constant {Object} ROUTES
+ */
 export const ROUTES = {
   HOME: '/',
   LOGIN: '/login',
-  REGISTER: '/register',
   DASHBOARD: '/dashboard',
-  PROFILE: '/profile',
-  SETTINGS: '/settings',
 };
 
+/**
+ * Routes that require authentication
+ * @constant {Array} PROTECTED_ROUTES
+ */
 export const PROTECTED_ROUTES = [
   ROUTES.DASHBOARD,
-  ROUTES.PROFILE,
-  ROUTES.SETTINGS,
 ];

@@ -2,6 +2,16 @@ import { useEffect, useCallback, useState } from 'react';
 import WebApp from '@twa-dev/sdk';
 import { haptic } from '@/utils/telegram';
 
+// Initialize Telegram WebApp
+export const initializeTelegramWebApp = () => {
+  try {
+    WebApp.ready();
+    WebApp.expand();
+  } catch (error) {
+    console.warn('Telegram WebApp initialization failed:', error);
+  }
+};
+
 export const useTelegram = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isBackButtonVisible, setIsBackButtonVisible] = useState(false);

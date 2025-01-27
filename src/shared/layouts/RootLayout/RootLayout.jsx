@@ -1,33 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { getThemeParams } from '@/services/telegram';
+import { ErrorBoundary } from '../../components/ErrorBoundary';
 import styles from './RootLayout.module.css';
 
 const RootLayout = ({ children }) => {
-  // Get theme parameters from Telegram WebApp
-  const themeParams = getThemeParams();
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Apply theme colors to CSS variables
-  React.useEffect(() => {
-    const root = document.documentElement;
-    Object.entries(themeParams).forEach(([key, value]) => {
-      if (key.includes('color')) {
-        root.style.setProperty(`--tg-theme-${key}`, value);
-      }
-    });
-  }, [themeParams]);
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    const handleResize = (e) => setIsMobile(e.matches);
+    
+    setIsMobile(mediaQuery.matches);
+    mediaQuery.addEventListener('change', handleResize);
+
+    return () => mediaQuery.removeEventListener('change', handleResize);
+  }, []);
+
+  const rootClasses = `${styles.root} ${isMobile ? styles.mobile : ''}`.trim();
 
   return (
-    <div className={styles.root}>
-      <header role="banner" className={styles.header}>
-        {/* Header content */}
-      </header>
-      <main className={styles.main}>
-        {children}
-      </main>
-      {/* Reserve space for main button if needed */}
-      <div className="tg-main-button-area" />
-    </div>
+    <ErrorBoundary>
+      <div className={rootClasses}>
+        <main className={styles.main}>{children}</main>
+      </div>
+    </ErrorBoundary>
   );
 };
 
