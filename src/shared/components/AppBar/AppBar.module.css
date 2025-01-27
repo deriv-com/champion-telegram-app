@@ -1,5 +1,5 @@
 .appBar {
-  height: var(--app-bar-height, 72px);
+  height: calc(var(--app-bar-height, 72px) + env(safe-area-inset-top, 0px));
   background: linear-gradient(90deg, 
     var(--color-surface) 0%,
     color-mix(in srgb, var(--color-surface) 95%, var(--color-primary)) 100%
@@ -7,16 +7,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 clamp(16px, 5vw, 32px);
+  padding: env(safe-area-inset-top, 0px) max(env(safe-area-inset-right, 16px), clamp(16px, 5vw, 32px)) 0 max(env(safe-area-inset-left, 16px), clamp(16px, 5vw, 32px));
   border-bottom: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
-  box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   width: 100%;
-  z-index: 9999;
+  z-index: 2;
+  box-sizing: border-box;
 }
 
 .leading {
@@ -112,7 +112,7 @@
   transform: translateY(-10px);
   pointer-events: none;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 9998;
+  z-index: 3;
   visibility: hidden;
 }
 
@@ -146,21 +146,29 @@
 }
 
 @media (max-width: 480px) {
+  .appBar {
+    height: calc(56px + env(safe-area-inset-top, 0px));
+    --app-bar-height: 56px;
+  }
+
   .leading {
     margin-left: -4px;
+    padding: calc(12px + env(safe-area-inset-top, 0px)) 0 12px;
   }
 
   .trailing {
     margin-right: -4px;
+    padding-top: env(safe-area-inset-top, 0px);
   }
 
   .logo {
-    height: 32px;
+    height: 28px;
   }
 
   .accountInfo {
     padding: 6px 12px;
     gap: 8px;
+    margin-top: env(safe-area-inset-top, 0px);
   }
 
   .accountId {
