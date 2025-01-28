@@ -22,14 +22,16 @@ export const useTrade = () => {
   };
 
   const executeTrade = async (params) => {
-    await withLoading(async () => {
-      const result = await tradeApi.executeTrade(params);
-      showNotification({
-        type: 'success',
-        message: 'Trade executed successfully'
-      });
-      return result;
+    const result = await withLoading(async () => {
+      return await tradeApi.executeTrade(params);
     });
+    
+    showNotification({
+      type: 'success',
+      message: 'Trade executed successfully'
+    });
+    
+    return result;
   };
 
   const refreshTradeHistory = async () => {
