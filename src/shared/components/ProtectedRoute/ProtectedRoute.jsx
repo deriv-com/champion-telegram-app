@@ -6,12 +6,12 @@ import { authService } from '@/services/auth.service';
 import { APP_CONFIG } from '@/config/app.config';
 
 const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = APP_CONFIG.environment.isDevelopment || authService.isAuthenticated();
+  const isAuthenticated = authService.isAuthenticated();
 
-  if (!isAuthenticated) {
-    // Clear any stale session data
+  if (!isAuthenticated && !APP_CONFIG.environment.isDevelopment) {
+    // Clear any stale session data and redirect to login
     authService.clearSession();
-    return <Navigate to={ROUTES.HOME} replace />;
+    return <Navigate to={ROUTES.LOGIN} replace />;
   }
 
   return children;

@@ -3,3 +3,4 @@ export { ErrorBoundary } from './ErrorBoundary';
 export { ProtectedRoute } from './ProtectedRoute';
 export { TabBar } from './TabBar';
 export { default as AppBar } from './AppBar';
+export { Loading } from './Loading';

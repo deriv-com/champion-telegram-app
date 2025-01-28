@@ -33,10 +33,10 @@ class WebSocketService extends EventEmitter {
       try {
         const data = JSON.parse(event.data);
         const { type, payload } = data;
-        
+
         // Emit the event with its payload
         this.emit(type, payload);
-        
+
         // Also emit a general message event
         this.emit('message', { type, payload });
       } catch (error) {
@@ -64,8 +64,9 @@ class WebSocketService extends EventEmitter {
     }
 
     setTimeout(() => {
-      console.log(`Attempting to reconnect... (${this.reconnectAttempts + 1}/${this.maxReconnectAttempts})`);
       this.reconnectAttempts++;
+      this.emit('reconnect_attempt', this.reconnectAttempts);
+      console.log(`Attempting to reconnect... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
       this.reconnectTimeout *= 2; // Exponential backoff
       this.connect();
     }, this.reconnectTimeout);

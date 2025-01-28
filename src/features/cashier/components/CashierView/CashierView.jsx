@@ -1,10 +1,10 @@
 import React from 'react';
+import { Loading } from '@/shared/components/Loading';
 import styles from './CashierView.module.css';
 
 const CashierView = () => {
   // Future cashier-specific state management
-  // const [balance, setBalance] = React.useState(null);
-  // const [transactions, setTransactions] = React.useState([]);
+  const [isLoading] = React.useState(false);
 
   // Future cashier-specific effects
   // React.useEffect(() => {
@@ -13,7 +13,11 @@ const CashierView = () => {
 
   return (
     <div className={styles.cashierView}>
-      <p>Cashier page under development</p>
+      {isLoading ? (
+        <Loading size="lg" text="Loading financial data..." />
+      ) : (
+        <p>Cashier page under development</p>
+      )}
     </div>
   );
 };

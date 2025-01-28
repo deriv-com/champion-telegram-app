@@ -1,10 +1,10 @@
 import React from 'react';
+import { Loading } from '@/shared/components/Loading';
 import styles from './PositionsView.module.css';
 
 const PositionsView = () => {
   // Future positions-specific state management
-  // const [positions, setPositions] = React.useState([]);
-  // const [filters, setFilters] = React.useState({ status: 'all' });
+  const [isLoading] = React.useState(false);
 
   // Future positions-specific effects
   // React.useEffect(() => {
@@ -13,7 +13,11 @@ const PositionsView = () => {
 
   return (
     <div className={styles.positionsView}>
-      <p>Positions page under development</p>
+      {isLoading ? (
+        <Loading size="lg" text="Loading positions..." />
+      ) : (
+        <p>Positions page under development</p>
+      )}
     </div>
   );
 };
