@@ -1,14 +1,14 @@
 .cashierView {
   display: flex;
   flex-direction: column;
+  width: 100%;
   height: 100%;
-  padding: var(--spacing-lg);
   justify-content: flex-start;
   align-items: center;
   text-align: center;
   position: relative;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  /* Remove nested scrolling since parent handles it */
+  overflow: visible;
 }
 
 /* Future cashier-specific component styles */

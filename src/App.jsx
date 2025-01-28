@@ -1,10 +1,28 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes.config';
 import { RootLayout, ProtectedRoute } from '@/shared';
 import { LandingPage, Dashboard } from '@/features/home';
 import { LoginForm } from '@/features/auth/components/LoginForm';
+import { authService } from '@/services/auth.service';
+import { useEffect } from 'react';
 
 function App() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Initialize authentication state
+    const isAuthenticated = authService.initialize();
+    
+    // Redirect based on auth state
+    if (isAuthenticated) {
+      navigate(ROUTES.DASHBOARD);
+    } else {
+      // Clear any stale session data and redirect to landing
+      authService.clearSession();
+      navigate(ROUTES.HOME);
+    }
+  }, [navigate]);
+
   return (
     <RootLayout>
       <Routes>

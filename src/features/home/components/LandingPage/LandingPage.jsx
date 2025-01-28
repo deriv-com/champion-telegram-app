@@ -3,21 +3,11 @@ import { championTradeLogo } from '@/assets/images';
 import { Button } from '@/shared';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes.config';
-import { useTelegram } from '@/hooks/useTelegram';
 import styles from './LandingPage.module.css';
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const { handleMainButton } = useTelegram();
 
-  React.useEffect(() => {
-    const cleanup = handleMainButton({
-      text: 'Open Account',
-      callback: () => navigate(ROUTES.LOGIN)
-    });
-
-    return cleanup;
-  }, [handleMainButton, navigate]);
   return (
     <section className={styles.hero} role="banner">
       <div className={styles.container}>

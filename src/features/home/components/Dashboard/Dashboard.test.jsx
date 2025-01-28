@@ -38,16 +38,16 @@ describe('Dashboard', () => {
   it('renders dashboard with tab navigation', () => {
     renderWithRouter(<Dashboard />);
     
-    expect(screen.getByRole('button', { name: /trade/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /cashier/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /positions/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /trade/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /cashier/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /positions/i })).toBeInTheDocument();
   });
 
   it('shows trade view by default', () => {
     renderWithRouter(<Dashboard />);
     
-    const tradeButton = screen.getByRole('button', { name: /trade/i });
-    expect(tradeButton.className).toContain('active');
+    const tradeTab = screen.getByRole('tab', { name: /trade/i });
+    expect(tradeTab.className).toContain('active');
     expect(screen.getByTestId('trade-view')).toBeInTheDocument();
   });
 
@@ -55,7 +55,9 @@ describe('Dashboard', () => {
     renderWithRouter(<Dashboard />);
     
     TAB_ITEMS.forEach(item => {
-      const icon = screen.getByAltText(item.label);
+      const tab = screen.getByRole('tab', { name: item.label });
+      const icon = tab.querySelector('img');
+      expect(icon).toBeInTheDocument();
       expect(icon).toHaveAttribute('src', item.icon);
     });
   });
@@ -77,19 +79,19 @@ describe('Dashboard', () => {
     const user = userEvent.setup();
     
     // Switch to Cashier tab
-    const cashierButton = screen.getByRole('button', { name: /cashier/i });
-    await user.click(cashierButton);
+    const cashierTab = screen.getByRole('tab', { name: /cashier/i });
+    await user.click(cashierTab);
     // Wait for the state update to complete
     await screen.findByTestId('cashier-view');
-    expect(cashierButton.className).toContain('active');
+    expect(cashierTab.className).toContain('active');
     expect(screen.getByTestId('cashier-view')).toBeInTheDocument();
 
     // Switch to Positions tab
-    const positionsButton = screen.getByRole('button', { name: /positions/i });
-    await user.click(positionsButton);
+    const positionsTab = screen.getByRole('tab', { name: /positions/i });
+    await user.click(positionsTab);
     // Wait for the state update to complete
     await screen.findByTestId('positions-view');
-    expect(positionsButton.className).toContain('active');
+    expect(positionsTab.className).toContain('active');
     expect(screen.getByTestId('positions-view')).toBeInTheDocument();
   });
 });
