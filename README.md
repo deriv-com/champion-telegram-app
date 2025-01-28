@@ -49,9 +49,9 @@ src/
 ├── assets/           # Static assets
 │   ├── images/       # Image assets
 │   └── styles/       # Global styles
-├── config/           # App configuration
-├── constants/        # App constants
-├── features/         # Feature-based modules
+├── config/           # App configuration files (environment settings, routing configuration)
+├── constants/        # Application-wide constants (API endpoints, error messages, shared enums)
+├── features/         # Feature-based modules organized by domain
 │   ├── auth/         # Authentication feature
 │   │   └── components/
 │   ├── cashier/      # Cashier feature
@@ -68,12 +68,12 @@ src/
 │       ├── api/
 │       ├── components/
 │       └── hooks/
-├── hooks/            # Global hooks
-├── services/         # Service layer
-├── shared/           # Shared code
+├── hooks/            # Global custom React hooks for shared functionality (authentication, notifications, WebSocket)
+├── services/         # Service layer for external communication (HTTP clients, WebSocket, authentication)
+├── shared/           # Shared code and components used across multiple features
 │   ├── components/   # Shared components
 │   └── layouts/      # Layout components
-├── utils/            # Utility functions
+├── utils/            # Utility functions (error handling, data formatting, validation, Telegram helpers)
 └── test/            # Test setup
 ```
 
@@ -97,9 +97,14 @@ The application uses Vite with the following configuration:
   - API endpoint whitelisted
 
 #### Code Splitting
-Manual chunk splitting for optimal loading:
+Manual chunk splitting is implemented to optimize application loading and caching:
 - Vendor chunk: React core libraries
+  - Separates frequently-updated app code from stable dependencies
+  - Enables better browser caching of rarely-changing vendor libraries
 - TWA chunk: Telegram Web App SDK
+  - Loads Telegram-specific functionality only when needed
+  - Reduces initial bundle size for non-Telegram environments
+This splitting strategy improves initial page load times by reducing the main bundle size and enables more efficient caching strategies.
 
 #### Testing Configuration
 - Environment: JSDOM

@@ -1,16 +1,52 @@
-import { useEffect, useCallback, useRef, useState } from 'react';
+import { useEffect, useCallback, useRef, useReducer } from 'react';
 import { websocketService } from '@/services/websocket.service';
+
+const initialState = {
+  isConnected: false,
+  isConnecting: true,
+  error: null,
+  reconnectAttempt: 0
+};
+
+const connectionReducer = (state, action) => {
+  switch (action.type) {
+    case 'CONNECT_SUCCESS':
+      return {
+        ...state,
+        isConnected: true,
+        isConnecting: false,
+        error: null,
+        reconnectAttempt: 0
+      };
+    case 'CONNECT_START':
+      return {
+        ...state,
+        isConnected: false,
+        isConnecting: true,
+        error: null
+      };
+    case 'CONNECT_ERROR':
+      return {
+        ...state,
+        error: action.payload,
+        isConnecting: false
+      };
+    case 'RECONNECT_ATTEMPT':
+      return {
+        ...state,
+        isConnecting: true,
+        reconnectAttempt: action.payload
+      };
+    default:
+      return state;
+  }
+};
 
 export const useWebSocket = (channels = [], handlers = {}) => {
   const handlersRef = useRef(handlers);
   handlersRef.current = handlers;
   
-  const [connectionState, setConnectionState] = useState({
-    isConnected: false,
-    isConnecting: true,
-    error: null,
-    reconnectAttempt: 0
-  });
+  const [connectionState, dispatch] = useReducer(connectionReducer, initialState);
 
   const setupListeners = useCallback(() => {
     // Setup message handlers
@@ -21,40 +57,21 @@ export const useWebSocket = (channels = [], handlers = {}) => {
     };
 
     const connectedHandler = () => {
-      setConnectionState(prev => ({
-        ...prev,
-        isConnected: true,
-        isConnecting: false,
-        error: null,
-        reconnectAttempt: 0
-      }));
+      dispatch({ type: 'CONNECT_SUCCESS' });
       // Resubscribe to channels on reconnection
       channels.forEach(channel => websocketService.subscribe(channel));
     };
 
     const disconnectedHandler = () => {
-      setConnectionState(prev => ({
-        ...prev,
-        isConnected: false,
-        isConnecting: true,
-        error: null
-      }));
+      dispatch({ type: 'CONNECT_START' });
     };
 
     const errorHandler = (error) => {
-      setConnectionState(prev => ({
-        ...prev,
-        error,
-        isConnecting: false
-      }));
+      dispatch({ type: 'CONNECT_ERROR', payload: error });
     };
 
     const reconnectHandler = (attempt) => {
-      setConnectionState(prev => ({
-        ...prev,
-        isConnecting: true,
-        reconnectAttempt: attempt
-      }));
+      dispatch({ type: 'RECONNECT_ATTEMPT', payload: attempt });
     };
 
     websocketService.on('message', messageHandler);

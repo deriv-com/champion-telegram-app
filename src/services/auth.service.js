@@ -15,17 +15,17 @@ class AuthService {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
 
-    // Try to get stored session
-    const storedSession = await this.getStoredSession();
-    
-    // Check if we have valid Telegram WebApp data
+    // Check if we have valid Telegram WebApp data first
     const telegramUser = WebApp?.initDataUnsafe?.user;
-    
     if (telegramUser) {
       // We have fresh Telegram data, update session
       await this.setSession(telegramUser);
       return true;
-    } else if (storedSession) {
+    }
+    
+    // Fall back to stored session if no Telegram data
+    const storedSession = await this.getStoredSession();
+    if (storedSession) {
       // We have stored session, validate it
       return this.validateSession(storedSession);
     }
