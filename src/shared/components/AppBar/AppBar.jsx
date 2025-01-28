@@ -58,11 +58,18 @@ const AppBar = ({ accountId, balance }) => {
     // In development mode, skip confirmation
     const confirmed = APP_CONFIG.environment.isDevelopment ? true : await showConfirm('Are you sure you want to logout?');
     if (confirmed) {
-      // Clear session data first
-      authService.clearSession();
-      
-      // Navigate to landing page after clearing session
-      navigate(ROUTES.HOME, { replace: true });
+      try {
+        // Clear session data first and wait for it to complete
+        await authService.clearSession();
+        
+        // Force navigation to landing page and clear history
+        navigate(ROUTES.HOME, { replace: true });
+        
+        // Close dropdown
+        setIsDropdownOpen(false);
+      } catch (error) {
+        console.error('Logout failed:', error);
+      }
     }
   };
 

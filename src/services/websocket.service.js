@@ -63,9 +63,11 @@ class WebSocketService extends EventEmitter {
       return;
     }
 
+    this.reconnectAttempts++;
+    this.emit('reconnect_attempt', this.reconnectAttempts);
+
     setTimeout(() => {
-      console.log(`Attempting to reconnect... (${this.reconnectAttempts + 1}/${this.maxReconnectAttempts})`);
-      this.reconnectAttempts++;
+      console.log(`Attempting to reconnect... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
       this.reconnectTimeout *= 2; // Exponential backoff
       this.connect();
     }, this.reconnectTimeout);

@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithRouter } from '../../../../test/test-utils';
 import Dashboard from './Dashboard';
@@ -75,23 +75,34 @@ describe('Dashboard', () => {
   });
 
   it('switches between tabs when clicked', async () => {
-    renderWithRouter(<Dashboard />);
+    await act(async () => {
+      renderWithRouter(<Dashboard />);
+    });
     const user = userEvent.setup();
+    
+    // Initial state check
+    expect(screen.getByTestId('trade-view')).toBeInTheDocument();
     
     // Switch to Cashier tab
     const cashierTab = screen.getByRole('tab', { name: /cashier/i });
-    await user.click(cashierTab);
-    // Wait for the state update to complete
-    await screen.findByTestId('cashier-view');
-    expect(cashierTab.className).toContain('active');
-    expect(screen.getByTestId('cashier-view')).toBeInTheDocument();
+    await act(async () => {
+      await user.click(cashierTab);
+    });
+    
+    await waitFor(() => {
+      expect(screen.getByTestId('cashier-view')).toBeInTheDocument();
+      expect(cashierTab.className).toContain('active');
+    });
 
     // Switch to Positions tab
     const positionsTab = screen.getByRole('tab', { name: /positions/i });
-    await user.click(positionsTab);
-    // Wait for the state update to complete
-    await screen.findByTestId('positions-view');
-    expect(positionsTab.className).toContain('active');
-    expect(screen.getByTestId('positions-view')).toBeInTheDocument();
+    await act(async () => {
+      await user.click(positionsTab);
+    });
+    
+    await waitFor(() => {
+      expect(screen.getByTestId('positions-view')).toBeInTheDocument();
+      expect(positionsTab.className).toContain('active');
+    });
   });
 });

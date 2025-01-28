@@ -1,19 +1,30 @@
-# Telegram Web App
+# Champion Trade Telegram App
 
-A modern React-based Telegram Web App built with Vite.
+A mini version of [Champion Trade](https://champion.trade/) platform designed specifically for Telegram users. This app provides a seamless trading experience within the Telegram ecosystem by integrating Champion Trade's powerful trading capabilities with Telegram's native features.
+
+Key benefits:
+- **Native Telegram Experience**: Seamless authentication and payments using Telegram's built-in systems
+- **Simplified Trading**: Streamlined interface optimized for Telegram's mini-app format
+- **Full Integration**: Direct access to Champion Trade's trading features within Telegram
 
 ## Features
 
-- 🚀 Built with Vite for lightning-fast development
-- ⚡️ Modern React with hooks and functional components
-- 📱 Telegram Web App SDK integration
-- 🎨 CSS modules for scoped styling
-- ✅ Testing with Vitest and React Testing Library
-- 📦 Feature-based project structure
-- 🔧 ESLint + Prettier for code quality
-- 💾 State management with Zustand
-- 🎯 Type-safe Telegram Web App types
-- 🛠️ Utility-first styling with clsx
+- 🚀 Seamless Telegram Integration
+  - Native authentication using Telegram
+  - Integrated payment system
+  - Smooth user experience within Telegram
+- 💹 Trading Features
+  - Real-time market data
+  - Position management
+  - Trade execution
+  - Cashier functionality
+- ⚡️ Technical Features
+  - Built with Vite for fast development
+  - Modern React with hooks
+  - CSS modules for styling
+  - Comprehensive testing
+  - Feature-based architecture
+  - State management with Zustand
 
 ## Quick Start
 
@@ -35,91 +46,66 @@ npm run build
 
 ```
 src/
-├── api/               # API related code
-│   ├── interceptors/
-│   ├── services/
-│   └── telegram/
 ├── assets/           # Static assets
-│   ├── fonts/
-│   ├── icons/
-│   ├── images/
+│   ├── images/       # Image assets
 │   └── styles/       # Global styles
 ├── config/           # App configuration
 ├── constants/        # App constants
 ├── features/         # Feature-based modules
-│   └── home/         # Home feature
+│   ├── auth/         # Authentication feature
+│   │   └── components/
+│   ├── cashier/      # Cashier feature
+│   │   ├── api/
+│   │   ├── components/
+│   │   └── hooks/
+│   ├── home/         # Home feature
+│   │   └── components/
+│   ├── positions/    # Positions feature
+│   │   ├── api/
+│   │   ├── components/
+│   │   └── hooks/
+│   └── trade/        # Trade feature
 │       ├── api/
 │       ├── components/
-│       ├── hooks/
-│       ├── store/
-│       ├── types/
-│       └── utils/
+│       └── hooks/
 ├── hooks/            # Global hooks
 ├── services/         # Service layer
-│   ├── analytics/
-│   ├── storage/
-│   └── telegram/
 ├── shared/           # Shared code
 │   ├── components/   # Shared components
 │   └── layouts/      # Layout components
-├── store/            # Global state management
-├── types/            # TypeScript types
 ├── utils/            # Utility functions
 └── test/            # Test setup
 ```
 
 ## Development
 
-### Environment Variables
+### Build Configuration
 
-Copy `.env.example` to `.env` and update the values:
+The application uses Vite with the following configuration:
 
-```bash
-cp .env.example .env
-```
+#### Development Server
+- Port: 5173
+- Auto-opens browser on start
+- Source maps enabled in development and staging
 
-Required environment variables:
+#### Production Build
+- Minification enabled
+- Source maps disabled
+- Content Security Policy (CSP) enabled with:
+  - Allowed sources for scripts, styles, and connections
+  - Telegram domains whitelisted
+  - API endpoint whitelisted
 
-```env
-# App
-VITE_APP_NAME=Champion Trader        # Your application name
-VITE_APP_URL=http://localhost:3000   # Your application URL
+#### Code Splitting
+Manual chunk splitting for optimal loading:
+- Vendor chunk: React core libraries
+- TWA chunk: Telegram Web App SDK
 
-# Telegram WebApp
-VITE_TELEGRAM_BOT_USERNAME=your_bot_username  # Your Telegram bot username
-VITE_TELEGRAM_BOT_TOKEN=your_bot_token        # Your Telegram bot token
-
-# API
-VITE_API_BASE_URL=http://localhost:8000/api   # Your API base URL
-
-# Feature Flags
-VITE_ENABLE_ANALYTICS=false   # Enable/disable analytics
-VITE_ENABLE_DARK_MODE=true    # Enable/disable dark mode
-
-# Build
-VITE_BUILD_MODE=development   # development | production | staging
-```
-
-### Telegram Bot Setup
-
-1. Create a new bot with [@BotFather](https://t.me/botfather) on Telegram
-2. Use the `/newbot` command and follow the instructions
-3. Copy the bot token provided by BotFather
-4. Set the bot token in your `.env` file as `VITE_TELEGRAM_BOT_TOKEN`
-5. Set the bot username in your `.env` file as `VITE_TELEGRAM_BOT_USERNAME`
-
-### Build Modes
-
-The application supports three build modes:
-
-- `development`: Development mode with hot reloading and debug features
-- `staging`: Staging environment for testing
-- `production`: Production build with optimizations
-
-Set the build mode in your `.env` file:
-```env
-VITE_BUILD_MODE=development  # or staging or production
-```
+#### Testing Configuration
+- Environment: JSDOM
+- Coverage provider: V8
+- Coverage reports: text, JSON, and HTML
+- Excludes test files and types from coverage
 
 ### Telegram Web App Integration
 

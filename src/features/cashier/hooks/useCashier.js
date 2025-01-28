@@ -1,38 +1,74 @@
 import { useState } from 'react';
+import { useLoading } from '@/hooks/useLoading';
+import { useNotification } from '@/hooks/useNotification';
 import { cashierApi } from '../api';
 
 export const useCashier = () => {
   // Feature-specific state
-  // const [balance, setBalance] = useState(null);
-  // const [transactions, setTransactions] = useState([]);
-  // const [isProcessing, setIsProcessing] = useState(false);
+  const [balance, setBalance] = useState(null);
+  const [transactions, setTransactions] = useState([]);
+
+  // Loading and notification hooks
+  const { isLoading, withLoading } = useLoading();
+  const { showNotification } = useNotification();
 
   // Feature-specific methods that use cashierApi
-  // const loadBalance = async () => {
-  //   const data = await cashierApi.getBalance();
-  //   setBalance(data.balance);
-  // };
+  const loadBalance = async () => {
+    await withLoading(async () => {
+      const data = await cashierApi.getBalance();
+      setBalance(data.balance);
+    });
+  };
 
-  // const processDeposit = async (amount) => {
-  //   setIsProcessing(true);
-  //   try {
-  //     await cashierApi.deposit(amount);
-  //     await loadBalance();
-  //     // Show success notification
-  //   } catch (error) {
-  //     // Handle error
-  //   } finally {
-  //     setIsProcessing(false);
-  //   }
-  // };
+  const loadTransactions = async () => {
+    await withLoading(async () => {
+      const data = await cashierApi.getTransactions();
+      setTransactions(data);
+    });
+  };
+
+  const processDeposit = async (amount) => {
+    await withLoading(async () => {
+      await cashierApi.deposit(amount);
+      await loadBalance();
+      showNotification({
+        type: 'success',
+        message: 'Deposit processed successfully'
+      });
+    });
+  };
+
+  const processWithdraw = async (amount) => {
+    await withLoading(async () => {
+      await cashierApi.withdraw(amount);
+      await loadBalance();
+      showNotification({
+        type: 'success',
+        message: 'Withdrawal processed successfully'
+      });
+    });
+  };
+
+  const refreshCashier = async () => {
+    await withLoading(async () => {
+      await Promise.all([
+        loadBalance(),
+        loadTransactions()
+      ]);
+    });
+  };
 
   return {
-    // Feature-specific state and methods will be exposed here
-    // balance,
-    // transactions,
-    // isProcessing,
-    // loadBalance,
-    // processDeposit,
-    // processWithdraw,
+    // State
+    balance,
+    transactions,
+    isLoading,
+
+    // Methods
+    loadBalance,
+    loadTransactions,
+    processDeposit,
+    processWithdraw,
+    refreshCashier
   };
 };

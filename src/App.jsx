@@ -10,17 +10,21 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Initialize authentication state
-    const isAuthenticated = authService.initialize();
-    
-    // Redirect based on auth state
-    if (isAuthenticated) {
-      navigate(ROUTES.DASHBOARD);
-    } else {
-      // Clear any stale session data and redirect to landing
-      authService.clearSession();
-      navigate(ROUTES.HOME);
-    }
+    const initAuth = async () => {
+      // Initialize authentication state
+      const isAuthenticated = await authService.initialize();
+      
+      // Redirect based on auth state
+      if (isAuthenticated) {
+        navigate(ROUTES.DASHBOARD);
+      } else {
+        // Clear any stale session data and redirect to landing
+        await authService.clearSession();
+        navigate(ROUTES.HOME);
+      }
+    };
+
+    initAuth();
   }, [navigate]);
 
   return (
