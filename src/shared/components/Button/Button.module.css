@@ -35,10 +35,11 @@
 }
 
 .buttonSecondary:hover {
-  background-color: var(--color-text);
-  color: var(--color-background);
+  background-color: var(--color-primary-hover);
+  color: var(--color-white);
   transform: translateY(-2px);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 3px 10px rgba(0, 199, 244, 0.25);
+  border-color: var(--color-primary-hover);
 }
 
 @media (max-width: 576px) {

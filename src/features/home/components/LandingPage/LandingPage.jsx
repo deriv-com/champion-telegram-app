@@ -31,10 +31,10 @@ const LandingPage = () => {
         <div className={styles.buttons}>
           <Button 
             variant="secondary" 
-            aria-label="Access your account"
+            aria-label="Get started with Champion Trade"
             onClick={() => navigate(ROUTES.LOGIN)}
           >
-            Login
+            Get Started
           </Button>
         </div>
       </div>
