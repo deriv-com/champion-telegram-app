@@ -1,37 +1,55 @@
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes.config';
-import { RootLayout, ProtectedRoute } from '@/shared';
+import { RootLayout, ProtectedRoute, Loading } from '@/shared';
 import { LandingPage, Dashboard } from '@/features/home';
-import { LoginForm } from '@/features/auth/components/LoginForm';
-import { authService } from '@/services/auth.service';
+import LoginPage from '@/features/auth/components/LoginPage';
+import { useAuth } from '@/hooks';
 import { useEffect } from 'react';
 
 function App() {
   const navigate = useNavigate();
+  const { isAuthenticated, isLoading, initialize } = useAuth();
 
   useEffect(() => {
-    const initAuth = async () => {
-      // Initialize authentication state
-      const isAuthenticated = await authService.initialize();
-      
-      // Redirect based on auth state
-      if (isAuthenticated) {
-        navigate(ROUTES.DASHBOARD);
-      } else {
-        // Clear any stale session data and redirect to landing
-        await authService.clearSession();
-        navigate(ROUTES.HOME);
-      }
-    };
+    // Only handle OAuth callback redirect
+    if (window.location.search && window.location.pathname === '/') {
+      navigate(ROUTES.LOGIN + window.location.search, { replace: true });
+    }
+    
+    // Initialize auth state
+    initialize();
+  }, [navigate, initialize]);
 
-    initAuth();
-  }, [navigate]);
+  // Show loading state only during initial load
+  if (isLoading && !isAuthenticated) {
+    return (
+      <RootLayout>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '100vh' 
+        }}>
+          <Loading size="lg" text="Initializing..." />
+        </div>
+      </RootLayout>
+    );
+  }
 
   return (
     <RootLayout>
       <Routes>
-        <Route path={ROUTES.HOME} element={<LandingPage />} />
-        <Route path={ROUTES.LOGIN} element={<LoginForm />} />
+        <Route 
+          path={ROUTES.HOME} 
+          element={
+            isAuthenticated ? (
+              <Navigate to={ROUTES.DASHBOARD} replace />
+            ) : (
+              <LandingPage />
+            )
+          } 
+        />
+        <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route 
           path={ROUTES.DASHBOARD} 
           element={

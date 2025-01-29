@@ -2,18 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes.config';
-import { authService } from '@/services/auth.service';
-import { APP_CONFIG } from '@/config/app.config';
+import { useAuth } from '@/hooks';
+import { Loading } from '@/shared/components';
 
 const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = authService.isAuthenticated();
+  const { isAuthenticated, isLoading } = useAuth();
 
-  if (!isAuthenticated && !APP_CONFIG.environment.isDevelopment) {
-    // Clear any stale session data and redirect to login
-    authService.clearSession();
+  // Show loading state while checking auth
+  if (isLoading) {
+    return <Loading size="lg" text="Loading..." />;
+  }
+
+  // Redirect to login if not authenticated
+  if (!isAuthenticated) {
     return <Navigate to={ROUTES.LOGIN} replace />;
   }
 
+  // Render protected content if authenticated
   return children;
 };
 

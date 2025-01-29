@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_ENDPOINTS } from '@/constants/api.constants';
+import { authService } from '@/services/auth.service';
 
 class HttpService {
   constructor() {
@@ -17,10 +18,10 @@ class HttpService {
   initializeInterceptors() {
     this.client.interceptors.request.use(
       (config) => {
-        // Add auth token if available
-        const token = localStorage.getItem('auth_token');
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
+        // Get session from auth service
+        const session = authService.getStoredSession();
+        if (session?.token) {
+          config.headers.Authorization = `Bearer ${session.token}`;
         }
         return config;
       },
@@ -34,8 +35,8 @@ class HttpService {
       (error) => {
         // Handle specific error cases
         if (error.response?.status === 401) {
-          // Handle unauthorized
-          localStorage.removeItem('auth_token');
+          // Clear session through auth service
+          authService.clearSession();
           window.location.href = '/login';
         }
         return Promise.reject(error);

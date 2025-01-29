@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Loading } from '@/shared/components';
 import styles from './Dashboard.module.css';
 import { TradeView } from '@/features/trade';
 import { CashierView } from '@/features/cashier';
 import { PositionsView } from '@/features/positions';
 import { tradeIcon, cashierIcon, positionsIcon } from '@/assets/images';
 import { TabBar, AppBar } from '@/shared/components';
+import { useAuth } from '@/hooks';
 
 const TAB_ITEMS = [
   {
@@ -25,7 +27,16 @@ const TAB_ITEMS = [
 ];
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = React.useState('trade');
+  const [activeTab, setActiveTab] = useState('trade');
+  const { accountId, balance, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className={styles.dashboard}>
+        <Loading size="lg" text="Loading your account..." />
+      </div>
+    );
+  }
 
   const renderContent = () => {
     switch (activeTab) {
@@ -42,7 +53,7 @@ const Dashboard = () => {
 
   return (
     <div className={styles.dashboard}>
-      <AppBar accountId="CT123456" balance="10,000.00" />
+      <AppBar accountId={accountId} balance={balance} />
       <div className={styles.content}>
         {renderContent()}
       </div>

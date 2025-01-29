@@ -1,9 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes.config';
-import { useTelegram } from '@/hooks/useTelegram';
-import { useLoading } from '@/hooks/useLoading';
-import { authService } from '@/services/auth.service';
-import { APP_CONFIG } from '@/config/app.config';
+import { useTelegram, useAuth } from '@/hooks';
 import { Loading } from '@/shared/components/Loading';
 import React from 'react';
 import styles from './LoginForm.module.css';
@@ -11,38 +8,22 @@ import styles from './LoginForm.module.css';
 const LoginForm = () => {
   const navigate = useNavigate();
   const { webApp } = useTelegram();
-  const { isLoading, withLoading } = useLoading();
+  const { login, isLoading, isAuthenticated } = useAuth();
 
   React.useEffect(() => {
     const initializeSession = async () => {
-      await withLoading(async () => {
-        // If we have Telegram user data, store it and redirect
+      if (!isAuthenticated) {
         if (webApp?.initDataUnsafe?.user) {
-          await authService.setSession(webApp.initDataUnsafe.user);
-          navigate(ROUTES.DASHBOARD);
-        } else if (APP_CONFIG.environment.isDevelopment) {
-          // In development, create a test session when accessing login page
-          await authService.createTestSession();
-          navigate(ROUTES.DASHBOARD);
+          await login(webApp.initDataUnsafe.user);
         } else {
-          // If no Telegram data, check for stored session
-          const storedSession = await authService.getStoredSession();
-          if (storedSession) {
-            // If we have a valid stored session, redirect to dashboard
-            const isValid = await authService.validateSession(storedSession);
-            if (isValid) {
-              navigate(ROUTES.DASHBOARD);
-              return;
-            }
-          }
-          // If no valid session, ensure we're logged out
-          await authService.clearSession();
+          // Try login without Telegram data (for development)
+          await login();
         }
-      });
+      }
     };
 
     initializeSession();
-  }, [webApp, navigate, withLoading]);
+  }, [webApp, login, isAuthenticated]);
 
   return (
     <div className={styles.loginForm}>

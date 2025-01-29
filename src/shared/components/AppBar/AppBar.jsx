@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes.config';
-import { useTelegram } from '@/hooks/useTelegram';
-import { authService } from '@/services/auth.service';
+import { useTelegram, useAuth } from '@/hooks';
 import { APP_CONFIG } from '@/config/app.config';
 import styles from './AppBar.module.css';
 
@@ -25,6 +24,7 @@ const ChevronIcon = ({ className }) => (
 const AppBar = ({ accountId, balance }) => {
   const navigate = useNavigate();
   const { webApp, showConfirm } = useTelegram();
+  const { logout, isLoading } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const accountRef = useRef(null);
@@ -55,21 +55,26 @@ const AppBar = ({ accountId, balance }) => {
   };
 
   const handleLogout = async () => {
-    // In development mode, skip confirmation
-    const confirmed = APP_CONFIG.environment.isDevelopment ? true : await showConfirm('Are you sure you want to logout?');
-    if (confirmed) {
-      try {
-        // Clear session data first and wait for it to complete
-        await authService.clearSession();
-        
-        // Force navigation to landing page and clear history
-        navigate(ROUTES.HOME, { replace: true });
-        
-        // Close dropdown
-        setIsDropdownOpen(false);
-      } catch (error) {
-        console.error('Logout failed:', error);
+    try {
+      // In development mode, skip confirmation
+      const confirmed = APP_CONFIG.environment.isDevelopment ? true : await showConfirm('Are you sure you want to logout?');
+      if (!confirmed) return;
+
+      // Close dropdown immediately to prevent UI glitches
+      setIsDropdownOpen(false);
+
+      // Small delay to allow dropdown animation to complete
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Perform logout and wait for it to complete
+      const success = await logout();
+      
+      // If logout failed, show error
+      if (!success) {
+        console.error('Logout failed');
       }
+    } catch (error) {
+      console.error('Logout failed:', error);
     }
   };
 
@@ -89,10 +94,16 @@ const AppBar = ({ accountId, balance }) => {
             className={`${styles.accountInfo} ${isDropdownOpen ? styles.active : ''}`} 
             onClick={toggleDropdown}
           >
-            <div className={styles.accountDetails}>
-              <span className={styles.accountId}>{accountId}</span>
-              <span className={styles.balance}>${balance}</span>
-            </div>
+            {isLoading ? (
+              <div className={styles.accountDetails}>
+                <span className={styles.loading}>Loading...</span>
+              </div>
+            ) : (
+              <div className={styles.accountDetails}>
+                <span className={styles.accountId}>{accountId}</span>
+                <span className={styles.balance}>${balance}</span>
+              </div>
+            )}
             <ChevronIcon className={`${styles.chevron} ${isDropdownOpen ? styles.rotated : ''}`} />
           </div>
         </div>
