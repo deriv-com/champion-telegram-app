@@ -23,14 +23,6 @@ jobs:
       - name: Install Vercel Command Line Tools
         run: npm install --global vercel@latest
 
-      - name: Cache Vercel Dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.vercel
-          key: vercel-cache-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            vercel-cache-${{ runner.os }}-
-
       - name: Fetch Production Environment Configuration
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
