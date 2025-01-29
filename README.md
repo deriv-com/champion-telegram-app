@@ -79,6 +79,15 @@ src/
 
 ## Development
 
+### Authentication Configuration
+
+The application integrates with external authentication services. Configure the following environment variables for authentication:
+
+- `VITE_DERIV_OAUTH_URL`: External OAuth authentication URL
+- `VITE_DERIV_SIGNUP_URL`: External signup page URL
+
+These URLs are required for the authentication flow and account creation. Refer to `.env.example` for the required format.
+
 ### Build Configuration
 
 The application uses Vite with the following configuration:

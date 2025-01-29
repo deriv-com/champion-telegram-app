@@ -16,4 +16,12 @@ export const APP_CONFIG = {
     isProduction: process.env.VITE_BUILD_MODE === 'production',
     isStaging: process.env.VITE_BUILD_MODE === 'staging',
   },
+
+  /** Auth configuration */
+  auth: {
+    /** External Deriv OAuth URL for authentication */
+    oauthUrl: process.env.VITE_DERIV_OAUTH_URL,
+    /** External Deriv signup page URL */
+    signupUrl: process.env.VITE_DERIV_SIGNUP_URL,
+  },
 };

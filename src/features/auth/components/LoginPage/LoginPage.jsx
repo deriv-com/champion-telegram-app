@@ -2,11 +2,9 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Loading } from '@/shared';
 import { ROUTES } from '@/config/routes.config';
+import { APP_CONFIG } from '@/config/app.config';
 import { useTelegram, useAuth } from '@/hooks';
 import styles from './LoginPage.module.css';
-
-const OAUTH_URL = 'https://ws.derivws.com/oauth2/authorize?app_id=67845';
-const SIGNUP_URL = 'https://hub.deriv.com/tradershub/signup';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -41,11 +39,11 @@ const LoginPage = () => {
   }, [location.search, navigate, handleOAuthCallback, isAuthenticated]);
 
   const handleExistingAccountLogin = () => {
-    window.location.href = OAUTH_URL;
+    window.location.href = APP_CONFIG.auth.oauthUrl;
   };
 
   const handleSignupRedirect = () => {
-    window.open(SIGNUP_URL, '_blank');
+    window.open(APP_CONFIG.auth.signupUrl, '_blank');
   };
 
   if (isLoading) {
