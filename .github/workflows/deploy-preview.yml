@@ -1,0 +1,86 @@
+name: Vercel Preview Deployment
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency: 
+  group: preview-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  Deploy-Preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify Pull Request Author Access
+        uses: 'deriv-com/shared-actions/.github/actions/verify_user_in_organization@v1'
+        with:
+          username: ${{github.event.pull_request.user.login}}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Vercel Command Line Tools
+        run: npm install --global vercel@latest
+
+      - name: Cache Vercel Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.vercel
+          key: vercel-cache-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            vercel-cache-${{ runner.os }}-
+
+      - name: Fetch Preview Environment Configuration
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Application for Preview Deployment
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Preview Build to Vercel
+        id: deploy
+        run: |
+          DEPLOYMENT_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}) || exit 1
+          echo "url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+
+      - name: Add Preview URL to Pull Request Comments
+        if: github.event_name == 'pull_request' && success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deploymentUrl = '${{ steps.deploy.outputs.url }}';
+            const body = `🚀 Preview: ${deploymentUrl}`;
+            
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.data.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('Preview:')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
