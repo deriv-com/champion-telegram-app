@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes.config';
 import { useTelegram, useAuth } from '@/hooks';
 import { APP_CONFIG } from '@/config/app.config';
+import { ShimmerLoading } from '@/shared/components/Loading';
 import styles from './AppBar.module.css';
 
 const ChevronIcon = ({ className }) => (
@@ -16,12 +17,14 @@ const ChevronIcon = ({ className }) => (
     strokeWidth="2" 
     strokeLinecap="round" 
     strokeLinejoin="round"
+    data-testid="chevron-icon"
   >
     <path d="M6 9l6 6 6-6"/>
   </svg>
 );
 
-const AppBar = ({ accountId, balance }) => {
+const AppBar = ({ accountId, balance = '0.00', currency = 'USD' }) => {
+  console.log('AppBar props:', { accountId, balance, currency });
   const navigate = useNavigate();
   const { webApp, showConfirm } = useTelegram();
   const { logout, isLoading } = useAuth();
@@ -93,15 +96,24 @@ const AppBar = ({ accountId, balance }) => {
             ref={accountRef}
             className={`${styles.accountInfo} ${isDropdownOpen ? styles.active : ''}`} 
             onClick={toggleDropdown}
+            data-testid="account-info"
           >
             {isLoading ? (
               <div className={styles.accountDetails}>
-                <span className={styles.loading}>Loading...</span>
+                <ShimmerLoading 
+                  lines={[
+                    { width: '100px', height: '16px', style: { marginBottom: '2px' } }, // Account ID
+                    { width: '140px', height: '16px' }  // Balance with currency
+                  ]}
+                  gap={4}
+                  shape="rounded"
+                  containerStyle={{ alignItems: 'flex-end' }}
+                />
               </div>
             ) : (
-              <div className={styles.accountDetails}>
-                <span className={styles.accountId}>{accountId}</span>
-                <span className={styles.balance}>${balance}</span>
+              <div className={styles.accountDetails} data-testid="account-details">
+                <span className={styles.accountId} data-testid="account-id">{accountId}</span>
+                <span className={styles.balance} data-testid="balance">{currency} {balance}</span>
               </div>
             )}
             <ChevronIcon className={`${styles.chevron} ${isDropdownOpen ? styles.rotated : ''}`} />
@@ -111,12 +123,14 @@ const AppBar = ({ accountId, balance }) => {
       <div 
         ref={dropdownRef}
         className={`${styles.dropdown} ${isDropdownOpen ? styles.show : ''}`}
+        data-testid="dropdown"
       >
         <div className={styles.dropdownItem}>Account Details</div>
         <div className={styles.dropdownItem}>Settings</div>
         <div 
           className={`${styles.dropdownItem} ${styles.logout}`}
           onClick={handleLogout}
+          data-testid="logout-button"
         >
           Logout
         </div>

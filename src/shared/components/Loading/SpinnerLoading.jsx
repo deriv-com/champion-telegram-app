@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './Loading.module.css';
+import styles from './SpinnerLoading.module.css';
 
-export const Loading = ({ size = 'md', text }) => {
+export const SpinnerLoading = ({ size = 'md', text }) => {
   const sizeClass = {
     sm: styles.small,
     md: styles.medium,
@@ -9,7 +9,7 @@ export const Loading = ({ size = 'md', text }) => {
   }[size];
 
   return (
-    <div className={styles.loadingContainer}>
+    <div className={styles.loadingContainer} role="status" aria-live="polite">
       <div className={`${styles.spinner} ${sizeClass}`}>
         <div className={styles.dot}></div>
         <div className={styles.dot}></div>

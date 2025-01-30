@@ -28,7 +28,8 @@ const TAB_ITEMS = [
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('trade');
-  const { accountId, balance, isLoading } = useAuth();
+  const { accountId, balance, currency, isLoading } = useAuth();
+  console.log('Dashboard auth state:', { accountId, balance, currency, isLoading });
 
   if (isLoading) {
     return (
@@ -53,7 +54,7 @@ const Dashboard = () => {
 
   return (
     <div className={styles.dashboard}>
-      <AppBar accountId={accountId} balance={balance} />
+      <AppBar accountId={accountId} balance={balance} currency={currency} />
       <div className={styles.content}>
         {renderContent()}
       </div>

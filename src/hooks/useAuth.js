@@ -8,21 +8,65 @@ export const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Check authentication status periodically
+  useEffect(() => {
+    let mounted = true;
+    
+    const checkAuth = () => {
+      try {
+        const isAuth = authService.isAuthenticated();
+        if (mounted) {
+          setIsAuthenticated(isAuth);
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        if (mounted) {
+          setIsAuthenticated(false);
+        }
+      }
+    };
+
+    // Initial check
+    checkAuth();
+
+    // Periodic check every minute
+    const interval = setInterval(checkAuth, 60000);
+
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
+  }, []);
+
   const initialize = useCallback(async () => {
     try {
       setIsLoading(true);
+      console.log('Starting auth initialization');
       const isInitialized = await authService.initialize();
+      console.log('Auth initialization result:', isInitialized);
+      
       if (isInitialized) {
         // Get all required data before any state updates
+        console.log('Fetching session and account data');
         const [session, account] = await Promise.all([
           authService.getStoredSession(),
           authService.getDefaultAccount()
         ]);
         
+        // Check auth synchronously
+        const isAuth = authService.isAuthenticated();
+        
+        console.log('Auth initialized:', {
+          session,
+          account,
+          accountId: account?.account || '',
+          isAuth
+        });
+        
         // Batch state updates
         setUser(session);
         setDefaultAccount(account);
-        setIsAuthenticated(true);
+        setIsAuthenticated(isAuth);
         return true;
       }
       return false;
@@ -40,7 +84,16 @@ export const useAuth = () => {
       let success = false;
       
       if (telegramUser) {
-        success = await authService.setSession(telegramUser);
+        const defaultAccount = {
+          account: `TG${telegramUser.id}`,
+          token: 'telegram-token',
+          currency: 'USD',
+          balance: '0.00'
+        };
+        
+        success = await authService.setSession(telegramUser) &&
+                 await authService.setTradingAccounts([defaultAccount]) &&
+                 await authService.setDefaultAccount(defaultAccount);
       } else if (oauthData?.tradingAccounts?.length > 0) {
         const defaultAccount = oauthData.tradingAccounts[0];
         const sessionData = {
@@ -58,15 +111,16 @@ export const useAuth = () => {
       
       if (success) {
         // Get all required data before any state updates
-        const [session, account] = await Promise.all([
+        const [session, account, isAuth] = await Promise.all([
           authService.getStoredSession(),
-          authService.getDefaultAccount()
+          authService.getDefaultAccount(),
+          authService.isAuthenticated()
         ]);
         
         // Batch state updates
         setUser(session);
         setDefaultAccount(account);
-        setIsAuthenticated(true);
+        setIsAuthenticated(isAuth);
         return true;
       }
       
@@ -88,10 +142,16 @@ export const useAuth = () => {
         const account = searchParams.get(`acct${index}`);
         const token = searchParams.get(`token${index}`);
         const currency = searchParams.get(`cur${index}`);
+        const balance = searchParams.get(`bal${index}`);
         
         if (!account || !token || !currency) break;
         
-        tradingAccounts.push({ account, token, currency });
+        tradingAccounts.push({ 
+          account, 
+          token, 
+          currency,
+          balance: balance || '0.00'
+        });
         index++;
       }
 
@@ -109,10 +169,11 @@ export const useAuth = () => {
   const logout = useCallback(async () => {
     try {
       setIsLoading(true);
+      // Clear session first - this will handle navigation
       const success = await authService.clearSession();
       
       if (success) {
-        // Batch state updates to prevent race conditions
+        // Reset all auth state
         setUser(null);
         setDefaultAccount(null);
         setIsAuthenticated(false);
@@ -131,11 +192,23 @@ export const useAuth = () => {
     initialize();
   }, [initialize]);
 
+  // Log the state before returning
+  console.log('useAuth state:', { 
+    user, 
+    defaultAccount,
+    accountId: defaultAccount?.account || '',
+    balance: defaultAccount?.balance || '0.00',
+    currency: defaultAccount?.currency || 'USD',
+    isAuthenticated,
+    isLoading 
+  });
+
   return {
     user,
     defaultAccount,
     accountId: defaultAccount?.account || '',
     balance: defaultAccount?.balance || '0.00',
+    currency: defaultAccount?.currency || 'USD',
     isAuthenticated,
     isLoading,
     login,

@@ -25,6 +25,12 @@ const LoginForm = () => {
     initializeSession();
   }, [webApp, login, isAuthenticated]);
 
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      navigate(ROUTES.DASHBOARD);
+    }
+  }, [isAuthenticated, navigate]);
+
   return (
     <div className={styles.loginForm}>
       <div className={styles.container}>

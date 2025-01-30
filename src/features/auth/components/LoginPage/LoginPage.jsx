@@ -96,9 +96,13 @@ const LoginPage = () => {
               variant="primary"
               onClick={handleTelegramLogin}
               fullWidth
+              disabled
             >
               Continue with Telegram
             </Button>
+            <p className={styles.restrictionMessage}>
+              Please open this app directly through Telegram
+            </p>
           </div>
         </div>
       </div>

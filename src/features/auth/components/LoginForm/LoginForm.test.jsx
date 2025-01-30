@@ -2,137 +2,92 @@ import { screen, waitFor } from '@testing-library/react';
 import { renderWithRouter } from '@/test/test-utils';
 import LoginForm from './LoginForm';
 import { ROUTES } from '@/config/routes.config';
-import { useTelegram } from '@/hooks/useTelegram';
-import { useLoading } from '@/hooks/useLoading';
-import { authService } from '@/services/auth.service';
-import { APP_CONFIG } from '@/config/app.config';
+import { vi } from 'vitest';
+import { useNavigate } from 'react-router-dom';
 
-// Mock implementations must be defined before vi.mock() calls
-vi.mock('@/hooks/useTelegram', () => ({
-  useTelegram: vi.fn()
+const mockNavigate = vi.fn();
+const mockLogin = vi.fn();
+
+// Mock hooks
+const mockTelegramUser = { id: 123456789, username: 'testuser' };
+let mockIsLoading = false;
+let mockIsAuthenticated = false;
+let mockWebAppUser = null;
+
+vi.mock('@/hooks', () => ({
+  useTelegram: () => ({
+    webApp: {
+      initDataUnsafe: {
+        user: mockWebAppUser
+      }
+    }
+  }),
+  useAuth: () => ({
+    login: mockLogin,
+    isLoading: mockIsLoading,
+    isAuthenticated: mockIsAuthenticated
+  })
 }));
 
-vi.mock('@/hooks/useLoading', () => ({
-  useLoading: vi.fn()
-}));
-
-vi.mock('@/services/auth.service', () => ({
-  authService: {
-    setSession: vi.fn(),
-    createTestSession: vi.fn(),
-    getStoredSession: vi.fn(),
-    validateSession: vi.fn(),
-    clearSession: vi.fn()
-  }
-}));
-
+// Mock router
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
-    useNavigate: () => mockNavigate
+    useNavigate: () => mockNavigate,
+    MemoryRouter: actual.MemoryRouter
   };
 });
 
+// Mock app config
 vi.mock('@/config/app.config', () => ({
   APP_CONFIG: {
-    environment: {
-      isDevelopment: false
+    telegram: {
+      botToken: 'mock-token',
+      validateInitData: () => true
     }
   }
 }));
 
-const mockNavigate = vi.fn();
-const mockWithLoading = vi.fn((cb) => cb());
-
-beforeAll(() => {
-  useTelegram.mockImplementation(() => ({
-    webApp: {
-      initDataUnsafe: {
-        user: null
-      }
-    }
-  }));
-
-  useLoading.mockImplementation(() => ({
-    isLoading: false,
-    withLoading: mockWithLoading
-  }));
-});
-
 describe('LoginForm', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockNavigate.mockClear();
-    // Default to no user
-    useTelegram.mockImplementation(() => ({
-      webApp: {
-        initDataUnsafe: {
-          user: null
-        }
-      }
-    }));
+    mockWebAppUser = null;
+    mockIsLoading = false;
+    mockIsAuthenticated = false;
   });
 
-  it('renders welcome message and instructions when no user data is present', async () => {
-    authService.getStoredSession.mockResolvedValue(null);
-    
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('shows telegram message when not accessed through telegram', () => {
+    renderWithRouter(<LoginForm />);
+    expect(screen.getByText(/please open this app through telegram/i)).toBeInTheDocument();
+  });
+
+  it('shows loading state while authenticating', () => {
+    mockIsLoading = true;
+    renderWithRouter(<LoginForm />);
+    expect(screen.getByText(/preparing your trading dashboard/i)).toBeInTheDocument();
+  });
+
+  it('attempts login with telegram user data', async () => {
+    mockWebAppUser = mockTelegramUser;
     renderWithRouter(<LoginForm />);
     
     await waitFor(() => {
-      expect(screen.getByText(/welcome to champion trade/i)).toBeInTheDocument();
-      expect(screen.getByText(/please open this app through telegram/i)).toBeInTheDocument();
+      expect(mockLogin).toHaveBeenCalledWith(mockTelegramUser);
     });
-    
-    expect(authService.clearSession).toHaveBeenCalled();
   });
 
-  it('redirects to dashboard when Telegram user data is present', async () => {
-    const mockUser = {
-      id: 123456789,
-      username: 'testuser'
-    };
-    
-    useTelegram.mockImplementation(() => ({
-      webApp: {
-        initDataUnsafe: {
-          user: mockUser
-        }
-      }
-    }));
-
+  it('redirects to dashboard after successful authentication', async () => {
+    mockWebAppUser = mockTelegramUser;
+    mockIsAuthenticated = true;
     renderWithRouter(<LoginForm />);
-
+    
     await waitFor(() => {
-      expect(authService.setSession).toHaveBeenCalledWith(mockUser);
       expect(mockNavigate).toHaveBeenCalledWith(ROUTES.DASHBOARD);
-    });
-  });
-
-  it('redirects to dashboard when valid stored session exists', async () => {
-    const storedSession = { token: 'valid-token' };
-    authService.getStoredSession.mockResolvedValue(storedSession);
-    authService.validateSession.mockResolvedValue(true);
-
-    renderWithRouter(<LoginForm />);
-
-    await waitFor(() => {
-      expect(authService.validateSession).toHaveBeenCalledWith(storedSession);
-      expect(mockNavigate).toHaveBeenCalledWith(ROUTES.DASHBOARD);
-    });
-  });
-
-  it('clears session when stored session is invalid', async () => {
-    const storedSession = { token: 'invalid-token' };
-    authService.getStoredSession.mockResolvedValue(storedSession);
-    authService.validateSession.mockResolvedValue(false);
-
-    renderWithRouter(<LoginForm />);
-
-    await waitFor(() => {
-      expect(authService.validateSession).toHaveBeenCalledWith(storedSession);
-      expect(authService.clearSession).toHaveBeenCalled();
-      expect(mockNavigate).not.toHaveBeenCalled();
     });
   });
 });
