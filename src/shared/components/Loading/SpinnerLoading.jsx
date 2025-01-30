@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styles from './SpinnerLoading.module.css';
 
 export const SpinnerLoading = ({ size = 'md', text }) => {
@@ -18,4 +19,9 @@ export const SpinnerLoading = ({ size = 'md', text }) => {
       {text && <p className={styles.text}>{text}</p>}
     </div>
   );
+};
+
+SpinnerLoading.propTypes = {
+  size: PropTypes.oneOf(['sm', 'md', 'lg']),
+  text: PropTypes.string
 };

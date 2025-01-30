@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderWithRouter, screen, fireEvent } from '@/test/test-utils';
+import { renderWithRouter, screen, fireEvent, act } from '@/test/test-utils';
 import AppBar from './AppBar';
 import { useTelegram, useAuth } from '@/hooks';
 import { APP_CONFIG } from '@/config/app.config';
+import { authService } from '@/services/auth.service';
 import styles from './AppBar.module.css';
 
 // Mock hooks
@@ -18,6 +19,11 @@ vi.mock('@/config/app.config', () => ({
       isDevelopment: false
     }
   }
+}));
+
+// Mock images
+vi.mock('@/assets/images', () => ({
+  logoutIcon: 'mock-logout-icon.svg'
 }));
 
 describe('AppBar', () => {
@@ -44,27 +50,43 @@ describe('AppBar', () => {
 
     useAuth.mockReturnValue({
       logout: mockLogout,
-      isLoading: false
+      isLoading: false,
+      accountId: defaultProps.accountId,
+      balance: defaultProps.balance,
+      currency: defaultProps.currency,
+      defaultAccount: {
+        account: defaultProps.accountId,
+        currency: defaultProps.currency
+      },
+      switchAccount: vi.fn().mockResolvedValue(true)
     });
   });
 
-  it('renders account details when not loading', () => {
-    renderWithRouter(<AppBar {...defaultProps} />);
+  it('renders account details when not loading', async () => {
+    await act(async () => {
+      renderWithRouter(<AppBar {...defaultProps} />);
+    });
     const accountDetails = screen.getByTestId('account-details');
     expect(accountDetails).toHaveTextContent('ACC123');
     expect(accountDetails).toHaveTextContent('USD 1000');
   });
 
-  it('toggles dropdown on click', () => {
-    renderWithRouter(<AppBar {...defaultProps} />);
+  it('toggles dropdown on click', async () => {
+    await act(async () => {
+      renderWithRouter(<AppBar {...defaultProps} />);
+    });
     
     const accountInfo = screen.getByTestId('account-info');
     expect(accountInfo.className).not.toContain(styles.active);
     
-    fireEvent.click(accountInfo);
+    await act(async () => {
+      fireEvent.click(accountInfo);
+    });
     expect(accountInfo.className).toContain(styles.active);
     
-    fireEvent.click(accountInfo);
+    await act(async () => {
+      fireEvent.click(accountInfo);
+    });
     expect(accountInfo.className).not.toContain(styles.active);
   });
 
@@ -75,10 +97,14 @@ describe('AppBar', () => {
     renderWithRouter(<AppBar {...defaultProps} />);
     
     // Open dropdown and click logout
-    fireEvent.click(screen.getByTestId('account-info'));
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('account-info'));
+    });
     const logoutButton = screen.getByTestId('logout-button');
     
-    fireEvent.click(logoutButton);
+    await act(async () => {
+      fireEvent.click(logoutButton);
+    });
     await new Promise(resolve => setTimeout(resolve, 150));
 
     expect(mockShowConfirm).toHaveBeenCalledWith('Are you sure you want to logout?');

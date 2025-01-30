@@ -1,4 +1,4 @@
-import { expect, afterEach, beforeAll, vi } from 'vitest';
+import { afterEach, beforeAll, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { configure } from '@testing-library/react';
@@ -10,9 +10,6 @@ configure({
 
 // Make vi available globally for all tests
 globalThis.vi = vi;
-
-// Setup test environment variables
-import { APP_CONFIG } from '@/config/app.config';
 
 // Override environment variables for testing
 vi.stubEnv('VITE_API_BASE_URL', 'http://test-api.example.com');
@@ -35,6 +32,10 @@ vi.mock('@/services/auth.service', () => ({
     isAuthenticated: vi.fn().mockReturnValue(false),
     getSession: vi.fn().mockReturnValue(null),
     clearSession: vi.fn(),
+    getTradingAccounts: vi.fn().mockResolvedValue([
+      { account: 'ACC123', currency: 'USD' },
+      { account: 'ACC456', currency: 'EUR' }
+    ]),
   },
 }));
 

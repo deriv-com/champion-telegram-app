@@ -40,5 +40,13 @@ export function renderWithContainer(ui, options = {}) {
   return render(ui, { container, ...options });
 }
 
-// Re-export everything
-export * from '@testing-library/react';
+// Re-export specific components and utilities
+export { 
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+  cleanup,
+  within 
+} from '@testing-library/react';

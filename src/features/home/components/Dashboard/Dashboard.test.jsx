@@ -31,7 +31,8 @@ vi.mock('@/features/positions', () => ({
 vi.mock('@/assets/images', () => ({
   tradeIcon: '/mock-trade-icon.svg',
   cashierIcon: '/mock-cashier-icon.svg',
-  positionsIcon: '/mock-positions-icon.svg'
+  positionsIcon: '/mock-positions-icon.svg',
+  logoutIcon: '/mock-logout-icon.svg'
 }));
 
 describe('Dashboard', () => {

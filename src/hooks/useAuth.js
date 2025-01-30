@@ -169,7 +169,7 @@ export const useAuth = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [initialize]);
+  }, []);
 
   const handleOAuthCallback = useCallback(async (searchParams) => {
     try {

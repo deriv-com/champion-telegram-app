@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '@/config/routes.config';
+import PropTypes from 'prop-types';
 import { useTelegram, useAuth } from '@/hooks';
 import { APP_CONFIG } from '@/config/app.config';
 import { ShimmerLoading } from '@/shared/components/Loading';
@@ -25,9 +24,12 @@ const ChevronIcon = ({ className }) => (
   </svg>
 );
 
+ChevronIcon.propTypes = {
+  className: PropTypes.string
+};
+
 const AppBar = () => {
-  const navigate = useNavigate();
-  const { webApp, showConfirm } = useTelegram();
+  const { showConfirm } = useTelegram();
   const { 
     logout, 
     isLoading, 

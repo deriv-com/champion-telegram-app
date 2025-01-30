@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styles from './ShimmerLoading.module.css';
 
 export const ShimmerLoading = ({ 
@@ -49,4 +50,16 @@ export const ShimmerLoading = ({
       ))}
     </div>
   );
+};
+
+ShimmerLoading.propTypes = {
+  lines: PropTypes.arrayOf(PropTypes.shape({
+    width: PropTypes.string,
+    height: PropTypes.string,
+    style: PropTypes.object
+  })),
+  gap: PropTypes.number,
+  shape: PropTypes.oneOf(['rounded', 'circular', 'square']),
+  containerStyle: PropTypes.object,
+  className: PropTypes.string
 };
