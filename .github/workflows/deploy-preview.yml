@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Verify Pull Request Author Access
-        uses: 'deriv-com/shared-actions/.github/actions/verify_user_in_organization@v1'
+        uses: 'deriv-com/shared-actions/.github/actions/verify_user_in_organization@v3'
         with:
           username: ${{github.event.pull_request.user.login}}
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.ORG_READ_PAT }}
 
       - name: Checkout Repository
         uses: actions/checkout@v4
