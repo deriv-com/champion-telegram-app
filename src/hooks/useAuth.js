@@ -7,6 +7,14 @@ export const useAuth = () => {
   const [defaultAccount, setDefaultAccount] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSwitchingAccount, setIsSwitchingAccount] = useState(false);
+
+  // Custom event for account changes
+  const ACCOUNT_CHANGE_EVENT = 'accountChange';
+  const emitAccountChange = (account) => {
+    const event = new CustomEvent(ACCOUNT_CHANGE_EVENT, { detail: account });
+    window.dispatchEvent(event);
+  };
 
   // Check authentication status periodically
   useEffect(() => {
@@ -36,6 +44,36 @@ export const useAuth = () => {
       mounted = false;
       clearInterval(interval);
     };
+  }, []);
+
+  const switchAccount = useCallback(async (account) => {
+    try {
+      setIsSwitchingAccount(true);
+      const success = await authService.setDefaultAccount(account);
+      
+      if (success) {
+        // Update local state immediately
+        setDefaultAccount(account);
+        
+        // Reload trading accounts to ensure consistency
+        const accounts = await authService.getTradingAccounts();
+        if (accounts) {
+          await authService.setTradingAccounts(accounts);
+        }
+        
+        // Notify other components
+        emitAccountChange(account);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Failed to switch account:', error);
+      return false;
+    } finally {
+      setTimeout(() => {
+        setIsSwitchingAccount(false);
+      }, 300); // Small delay to ensure smooth transition
+    }
   }, []);
 
   const initialize = useCallback(async () => {
@@ -211,9 +249,12 @@ export const useAuth = () => {
     currency: defaultAccount?.currency || 'USD',
     isAuthenticated,
     isLoading,
+    isSwitchingAccount,
     login,
     logout,
     initialize,
-    handleOAuthCallback
+    handleOAuthCallback,
+    switchAccount,
+    ACCOUNT_CHANGE_EVENT
   };
 };

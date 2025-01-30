@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes.config';
 import { useTelegram, useAuth } from '@/hooks';
 import { APP_CONFIG } from '@/config/app.config';
 import { ShimmerLoading } from '@/shared/components/Loading';
+import { authService } from '@/services/auth.service';
+import { logoutIcon } from '@/assets/images';
 import styles from './AppBar.module.css';
 
 const ChevronIcon = ({ className }) => (
@@ -23,14 +25,55 @@ const ChevronIcon = ({ className }) => (
   </svg>
 );
 
-const AppBar = ({ accountId, balance = '0.00', currency = 'USD' }) => {
-  console.log('AppBar props:', { accountId, balance, currency });
+const AppBar = () => {
   const navigate = useNavigate();
   const { webApp, showConfirm } = useTelegram();
-  const { logout, isLoading } = useAuth();
+  const { 
+    logout, 
+    isLoading, 
+    isSwitchingAccount, 
+    switchAccount,
+    defaultAccount,
+    accountId,
+    balance,
+    currency
+  } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [tradingAccounts, setTradingAccounts] = useState([]);
+  const [isLoadingAccounts, setIsLoadingAccounts] = useState(false);
   const dropdownRef = useRef(null);
   const accountRef = useRef(null);
+
+  const loadTradingAccounts = useCallback(async () => {
+    try {
+      setIsLoadingAccounts(true);
+      const accounts = await authService.getTradingAccounts();
+      if (accounts) {
+        // Filter out the current account
+        setTradingAccounts(accounts.filter(acc => acc.account !== defaultAccount?.account));
+      }
+    } catch (error) {
+      console.error('Failed to load trading accounts:', error);
+    } finally {
+      setIsLoadingAccounts(false);
+    }
+  }, [defaultAccount?.account]);
+
+  // Listen for account changes
+  useEffect(() => {
+    const handleAccountChange = () => {
+      loadTradingAccounts();
+    };
+    window.addEventListener('accountChange', handleAccountChange);
+    return () => window.removeEventListener('accountChange', handleAccountChange);
+  }, [loadTradingAccounts]);
+
+  // Load accounts initially and when default account changes
+  useEffect(() => {
+    if (!isLoading) {
+      loadTradingAccounts();
+    }
+  }, [loadTradingAccounts, isLoading]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -55,6 +98,17 @@ const AppBar = ({ accountId, balance = '0.00', currency = 'USD' }) => {
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleAccountSwitch = async (account) => {
+    try {
+      const success = await switchAccount(account);
+      if (success) {
+        setIsDropdownOpen(false);
+      }
+    } catch (error) {
+      console.error('Failed to switch account:', error);
+    }
   };
 
   const handleLogout = async () => {
@@ -92,32 +146,35 @@ const AppBar = ({ accountId, balance = '0.00', currency = 'USD' }) => {
           />
         </div>
         <div className={styles.trailing}>
-          <div 
+          <button 
             ref={accountRef}
             className={`${styles.accountInfo} ${isDropdownOpen ? styles.active : ''}`} 
             onClick={toggleDropdown}
             data-testid="account-info"
+            type="button"
           >
-            {isLoading ? (
-              <div className={styles.accountDetails}>
-                <ShimmerLoading 
-                  lines={[
-                    { width: '100px', height: '16px', style: { marginBottom: '2px' } }, // Account ID
-                    { width: '140px', height: '16px' }  // Balance with currency
-                  ]}
-                  gap={4}
-                  shape="rounded"
-                  containerStyle={{ alignItems: 'flex-end' }}
-                />
-              </div>
-            ) : (
-              <div className={styles.accountDetails} data-testid="account-details">
-                <span className={styles.accountId} data-testid="account-id">{accountId}</span>
-                <span className={styles.balance} data-testid="balance">{currency} {balance}</span>
-              </div>
-            )}
-            <ChevronIcon className={`${styles.chevron} ${isDropdownOpen ? styles.rotated : ''}`} />
-          </div>
+            <div className={styles.accountContent}>
+              {isLoading || isSwitchingAccount ? (
+                <div className={styles.accountDetails}>
+                  <ShimmerLoading 
+                    lines={[
+                      { width: '100px', height: '16px', style: { marginBottom: '2px' } },
+                      { width: '140px', height: '16px' }
+                    ]}
+                    gap={4}
+                    shape="rounded"
+                    containerStyle={{ alignItems: 'flex-end' }}
+                  />
+                </div>
+              ) : (
+                <div className={styles.accountDetails} data-testid="account-details">
+                  <span className={styles.accountId} data-testid="account-id">{accountId}</span>
+                  <span className={styles.balance} data-testid="balance">{currency} {balance}</span>
+                </div>
+              )}
+              <ChevronIcon className={`${styles.chevron} ${isDropdownOpen ? styles.rotated : ''}`} />
+            </div>
+          </button>
         </div>
       </div>
       <div 
@@ -125,14 +182,41 @@ const AppBar = ({ accountId, balance = '0.00', currency = 'USD' }) => {
         className={`${styles.dropdown} ${isDropdownOpen ? styles.show : ''}`}
         data-testid="dropdown"
       >
-        <div className={styles.dropdownItem}>Account Details</div>
-        <div className={styles.dropdownItem}>Settings</div>
+        {isLoadingAccounts ? (
+          <div className={styles.accountsList}>
+            <div className={styles.accountItem}>
+              <ShimmerLoading 
+                lines={[
+                  { width: '80px', height: '16px', style: { marginBottom: '4px' } },
+                  { width: '120px', height: '14px' }
+                ]}
+                gap={4}
+                shape="rounded"
+              />
+            </div>
+          </div>
+        ) : tradingAccounts.length > 0 ? (
+          <div className={styles.accountsList}>
+            {tradingAccounts.map((account) => (
+              <div
+                key={account.account}
+                className={`${styles.dropdownItem} ${styles.accountItem}`}
+                onClick={() => handleAccountSwitch(account)}
+                data-testid={`account-${account.account}`}
+              >
+                <span className={styles.accountItemCurrency}>{account.currency}</span>
+                <span className={styles.accountItemId}>{account.account}</span>
+              </div>
+            ))}
+          </div>
+        ) : null}
         <div 
           className={`${styles.dropdownItem} ${styles.logout}`}
           onClick={handleLogout}
           data-testid="logout-button"
         >
-          Logout
+          <img src={logoutIcon} alt="" className={styles.logoutIcon} />
+          <span>Logout</span>
         </div>
       </div>
     </>
