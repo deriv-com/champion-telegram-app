@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Loading } from '@/shared';
 import { ROUTES } from '@/config/routes.config';
@@ -9,34 +9,61 @@ import styles from './LoginPage.module.css';
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { handleTelegramLogin } = useTelegram();
-  const { handleOAuthCallback, isLoading, isAuthenticated } = useAuth();
+  const { handleTelegramLogin, webApp } = useTelegram();
+  const { handleOAuthCallback, isLoading, isAuthenticated, initialize } = useAuth();
+  const isTelegramWebApp = Boolean(webApp?.initDataUnsafe?.user);
+  const [processingAuth, setProcessingAuth] = useState(false);
 
-  React.useEffect(() => {
-    // Check if we're in the middle of a logout
-    const isLoggingOut = sessionStorage.getItem('logout_in_progress');
-    if (isLoggingOut) {
-      // Clear the flag
-      sessionStorage.removeItem('logout_in_progress');
-      return;
-    }
+  useEffect(() => {
+    let mounted = true;
+    
+    const processLogin = async () => {
+      // Check if we're in the middle of a logout
+      const isLoggingOut = sessionStorage.getItem('logout_in_progress');
+      if (isLoggingOut) {
+        // Clear the flag
+        sessionStorage.removeItem('logout_in_progress');
+        return;
+      }
 
-    // Handle normal login flow
-    if (isAuthenticated) {
-      navigate(ROUTES.DASHBOARD, { replace: true });
-      return;
-    }
+      try {
+        if (mounted) setProcessingAuth(true);
 
-    // Process OAuth callback if present
-    if (location.search) {
-      const searchParams = new URLSearchParams(location.search);
-      handleOAuthCallback(searchParams).then(success => {
-        if (success) {
+        // Re-initialize auth state first
+        await initialize();
+
+        // Process OAuth callback if present
+        if (location.search && mounted) {
+          const searchParams = new URLSearchParams(location.search);
+          console.log('Processing OAuth callback...');
+          const success = await handleOAuthCallback(searchParams);
+          console.log('OAuth callback processed:', success);
+          
+          if (success && mounted) {
+            console.log('Auth state confirmed, navigating to dashboard...');
+            navigate(ROUTES.DASHBOARD, { replace: true });
+            return;
+          }
+        }
+
+        // Handle normal authenticated state
+        if (isAuthenticated && mounted) {
+          console.log('User is authenticated, navigating to dashboard...');
           navigate(ROUTES.DASHBOARD, { replace: true });
         }
-      });
-    }
-  }, [location.search, navigate, handleOAuthCallback, isAuthenticated]);
+      } catch (error) {
+        console.error('Error processing login:', error);
+      } finally {
+        if (mounted) setProcessingAuth(false);
+      }
+    };
+
+    processLogin();
+
+    return () => {
+      mounted = false;
+    };
+  }, [location.search, navigate, handleOAuthCallback, isAuthenticated, initialize]);
 
   const handleExistingAccountLogin = () => {
     window.location.href = APP_CONFIG.auth.oauthUrl;
@@ -46,7 +73,7 @@ const LoginPage = () => {
     window.open(APP_CONFIG.auth.signupUrl, '_blank');
   };
 
-  if (isLoading) {
+  if (isLoading || processingAuth) {
     return (
       <div className={styles.loginPage}>
         <div className={styles.container}>
@@ -96,13 +123,15 @@ const LoginPage = () => {
               variant="primary"
               onClick={handleTelegramLogin}
               fullWidth
-              disabled
+              disabled={!isTelegramWebApp}
             >
               Continue with Telegram
             </Button>
-            <p className={styles.restrictionMessage}>
-              Please open this app directly through Telegram
-            </p>
+            {!isTelegramWebApp && (
+              <p className={styles.restrictionMessage}>
+                Please open this app directly through Telegram
+              </p>
+            )}
           </div>
         </div>
       </div>

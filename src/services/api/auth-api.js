@@ -1,4 +1,5 @@
 import { BaseApi } from './base-api';
+import { WS_MESSAGE_TYPES } from '@/constants/websocket.constants';
 
 /**
  * API class for Deriv WebSocket authorization
@@ -21,7 +22,7 @@ export class AuthApi extends BaseApi {
     }
 
     return this.send({
-      authorize: token
+      [WS_MESSAGE_TYPES.Authorize]: token
     });
   }
 

@@ -80,6 +80,7 @@ export const useAuth = () => {
     try {
       setIsLoading(true);
       console.log('Starting auth initialization');
+
       const isInitialized = await authService.initialize();
       console.log('Auth initialization result:', isInitialized);
       
@@ -129,20 +130,31 @@ export const useAuth = () => {
           balance: '0.00'
         };
         
+        // Set session and accounts first
         success = await authService.setSession(telegramUser) &&
-                 await authService.setTradingAccounts([defaultAccount]) &&
-                 await authService.setDefaultAccount(defaultAccount);
+                 await authService.setTradingAccounts([defaultAccount]);
+        
+        if (success) {
+          // Then set default account which will handle WebSocket authorization
+          success = await authService.setDefaultAccount(defaultAccount);
+        }
       } else if (oauthData?.tradingAccounts?.length > 0) {
         const defaultAccount = oauthData.tradingAccounts[0];
         const sessionData = {
           accountId: defaultAccount.account,
           token: defaultAccount.token,
-          currency: defaultAccount.currency
+          currency: defaultAccount.currency,
+          loginTime: Date.now()
         };
         
+        // Set session and accounts first
         success = await authService.setSession(sessionData) &&
-                 await authService.setTradingAccounts(oauthData.tradingAccounts) &&
-                 await authService.setDefaultAccount(defaultAccount);
+                 await authService.setTradingAccounts(oauthData.tradingAccounts);
+        
+        if (success) {
+          // Then set default account which will handle WebSocket authorization
+          success = await authService.setDefaultAccount(defaultAccount);
+        }
       } else if (APP_CONFIG.environment.isDevelopment) {
         success = await authService.createTestSession();
       }
@@ -173,9 +185,11 @@ export const useAuth = () => {
 
   const handleOAuthCallback = useCallback(async (searchParams) => {
     try {
+      console.log('Processing OAuth callback params...');
       const tradingAccounts = [];
       let index = 1;
       
+      // Extract all trading accounts from URL params
       while (true) {
         const account = searchParams.get(`acct${index}`);
         const token = searchParams.get(`token${index}`);
@@ -193,21 +207,105 @@ export const useAuth = () => {
         index++;
       }
 
+      console.log(`Found ${tradingAccounts.length} trading accounts`);
+
       if (tradingAccounts.length > 0) {
-        return login(null, { tradingAccounts });
+        // Create session data from first trading account
+        const defaultAccount = tradingAccounts[0];
+        const sessionData = {
+          accountId: defaultAccount.account,
+          token: defaultAccount.token,
+          currency: defaultAccount.currency,
+          loginTime: Date.now()
+        };
+
+        console.log('Setting up session with data:', {
+          accountId: sessionData.accountId,
+          currency: sessionData.currency
+        });
+
+        // Store session
+        const sessionSuccess = await authService.setSession(sessionData);
+        if (!sessionSuccess) {
+          console.error('Failed to store session data');
+          return false;
+        }
+
+        // Store trading accounts
+        const accountsSuccess = await authService.setTradingAccounts(tradingAccounts);
+        if (!accountsSuccess) {
+          console.error('Failed to store trading accounts');
+          await authService.clearSession();
+          return false;
+        }
+
+        // Set default account (which will handle WebSocket authorization)
+        const defaultSuccess = await authService.setDefaultAccount(defaultAccount);
+        if (!defaultSuccess) {
+          console.error('Failed to set default account');
+          await authService.clearSession();
+          return false;
+        }
+
+        console.log('OAuth setup completed successfully');
+        console.log('Successfully stored all auth data');
+
+        // Return a promise that resolves when state is actually updated
+        return new Promise(resolve => {
+          // Batch state updates
+          setUser(sessionData);
+          setDefaultAccount(defaultAccount);
+          setIsAuthenticated(true);
+          
+          // Use effect cleanup to ensure state is updated
+          const cleanup = () => {
+            console.log('Local state updated, auth status:', { 
+              hasUser: Boolean(sessionData),
+              hasDefaultAccount: Boolean(defaultAccount),
+              isAuthenticated: true
+            });
+            resolve(true);
+          };
+          
+          // Check state updates every 50ms for up to 2 seconds
+          let attempts = 0;
+          const maxAttempts = 40; // 2 seconds total
+          
+          const checkState = () => {
+            if (attempts >= maxAttempts) {
+              console.error('Timed out waiting for auth state update');
+              cleanup();
+              return;
+            }
+            
+            // Get latest auth state
+            const isAuth = authService.isAuthenticated();
+            if (isAuth) {
+              cleanup();
+              return;
+            }
+            
+            attempts++;
+            setTimeout(checkState, 50);
+          };
+          
+          checkState();
+        });
       }
       
+      console.error('No trading accounts found in OAuth callback');
       return false;
     } catch (error) {
       console.error('OAuth callback failed:', error);
       return false;
     }
-  }, [login]);
+  }, []);
 
   const logout = useCallback(async () => {
     try {
       setIsLoading(true);
-      // Clear session first - this will handle navigation
+      
+      // Clear session - this will handle navigation
       const success = await authService.clearSession();
       
       if (success) {

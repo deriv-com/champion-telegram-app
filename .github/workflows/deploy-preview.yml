@@ -1,9 +1,5 @@
 name: Vercel Preview Deployment
 
-permissions:
-  contents: read        # For repository checkout
-  pull-requests: write  # For preview URL comments
-
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -21,6 +17,9 @@ concurrency:
 jobs:
   Deploy-Preview:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read        # For repository checkout
+      pull-requests: write  # For preview URL comments
     steps:
       - name: Verify Pull Request Author Access
         uses: 'deriv-com/shared-actions/.github/actions/verify_user_in_organization@v3'

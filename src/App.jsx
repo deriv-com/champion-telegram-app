@@ -5,20 +5,68 @@ import { LandingPage, Dashboard } from '@/features/home';
 import LoginPage from '@/features/auth/components/LoginPage';
 import { useAuth } from '@/hooks';
 import { useEffect } from 'react';
+import websocketService from '@/services/websocket.service';
+import { authService } from '@/services/auth.service';
 
 function App() {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading, initialize } = useAuth();
 
   useEffect(() => {
-    // Only handle OAuth callback redirect
-    if (window.location.search && window.location.pathname === '/') {
-      navigate(ROUTES.LOGIN + window.location.search, { replace: true });
-    }
+    const handleInitialization = async () => {
+      try {
+        console.log('Starting app initialization...');
+        
+        // Initialize auth state first
+        const initResult = await initialize();
+        console.log('Auth initialization result:', initResult);
+
+        // Only establish WebSocket connection if auth is successful and not already connected
+        if (initResult && !websocketService.isConnected()) {
+          try {
+            console.log('Establishing WebSocket connection...');
+            await websocketService.connect();
+            console.log('WebSocket connected successfully');
+          } catch (error) {
+            console.error('WebSocket connection failed:', error);
+            // If WebSocket fails due to auth, clear session
+            if (error.code === 'AuthorizationRequired' || error.code === 'InvalidToken') {
+              console.error('WebSocket authorization failed, clearing session');
+              await authService.clearSession();
+              return;
+            }
+            console.warn('Some features may be limited due to WebSocket connection failure');
+          }
+        }
+        
+        // Handle navigation after successful initialization
+        const currentPath = window.location.pathname;
+        const hasSearchParams = window.location.search.length > 0;
+        
+        // OAuth callback handling
+        if (hasSearchParams && currentPath === '/') {
+          console.log('Redirecting OAuth callback to login page...');
+          navigate(ROUTES.LOGIN + window.location.search, { replace: true });
+          return;
+        }
+        
+        // Skip navigation if on login page
+        if (currentPath === ROUTES.LOGIN) {
+          return;
+        }
+        
+        // Redirect authenticated users to dashboard if at root
+        if (initResult && currentPath === '/') {
+          console.log('Authenticated user at root, redirecting to dashboard...');
+          navigate(ROUTES.DASHBOARD, { replace: true });
+        }
+      } catch (error) {
+        console.error('App initialization error:', error);
+      }
+    };
     
-    // Initialize auth state
-    initialize();
-  }, [navigate, initialize]);
+    handleInitialization();
+  }, [navigate, initialize, isAuthenticated]);
 
   // Show loading state only during initial load
   if (isLoading && !isAuthenticated) {
