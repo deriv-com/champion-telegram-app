@@ -1,135 +1,189 @@
+import { Validator } from '@/utils/validator.js';
+import WebSocketManager from '@/services/websocket.service';
+
+/**
+ * @typedef {import('@/schemas/api/base.js').ApiEndpoint} ApiEndpoint
+ * @typedef {import('@/schemas/api/base.js').BaseRequest} BaseRequest
+ * @typedef {import('@/schemas/api/base.js').BaseResponse} BaseResponse
+ */
+
 /**
  * Base class for WebSocket API endpoints
  * Based on https://developers.deriv.com/docs/websockets
  */
 export class BaseApi {
+  /**
+   * @param {WebSocketManager} websocket WebSocket manager instance
+   */
   constructor(websocket) {
     if (!websocket) {
       throw new Error('WebSocket instance is required');
     }
     this.ws = websocket;
+    this.endpoints = {};
+  }
+
+  /**
+   * Format request with common parameters
+   * @param {BaseRequest} request Original request
+   * @param {Object} [options] Request options
+   * @param {number} [options.reqId] Custom request ID
+   * @param {Object} [options.passthrough] Custom passthrough data
+   * @param {number} [options.timeout] Request timeout
+   * @returns {BaseRequest} Formatted request with common parameters
+   * @private
+   */
+  _formatRequest(request, options = {}) {
+    return {
+      ...request,
+      passthrough: options.passthrough,
+      req_id: options.reqId
+    };
   }
 
   /**
    * Send a request through WebSocket
-   * @param {Object} request Request object
-   * @param {Object} options Request options
-   * @returns {Promise} Promise that resolves with the response
+   * @param {ApiEndpoint} endpoint API endpoint definition
+   * @param {BaseRequest} request Request object
+   * @param {Object} [options] Request options
+   * @param {number} [options.reqId] Custom request ID
+   * @param {Object} [options.passthrough] Custom passthrough data
+   * @param {number} [options.timeout] Request timeout
+   * @returns {Promise<BaseResponse>} Promise that resolves with the response
    */
-  send(request, options = {}) {
-    return this.ws.send({
-      ...request,
-      passthrough: options.passthrough,
-      req_id: options.reqId
-    }, options);
+  async send(endpoint, request, options = {}) {
+    // Validate request
+    const validatedRequest = Validator.validateRequest(endpoint, request);
+
+    // Send request
+    const response = await this.ws.send(
+      this._formatRequest(validatedRequest, options),
+      options
+    );
+
+    // Validate response
+    return Validator.validateResponse(endpoint, response);
   }
 
   /**
    * Subscribe to a WebSocket stream
-   * @param {Object} request Subscription request
-   * @param {Function} callback Callback function
-   * @param {Object} options Subscription options
-   * @returns {Promise} Promise that resolves with subscription details
+   * @param {ApiEndpoint} endpoint API endpoint definition
+   * @param {BaseRequest} request Subscription request
+   * @param {function(BaseResponse): void} callback Callback function
+   * @param {Object} [options] Subscription options
+   * @param {number} [options.reqId] Custom request ID
+   * @param {Object} [options.passthrough] Custom passthrough data
+   * @param {number} [options.timeout] Request timeout
+   * @returns {Promise<{reqId: number, request: BaseRequest}>} Promise that resolves with subscription details
    */
-  subscribe(request, callback, options = {}) {
-    return this.ws.subscribe({
-      ...request,
-      subscribe: 1,
-      passthrough: options.passthrough,
-      req_id: options.reqId
-    }, callback, options);
+  async subscribe(endpoint, request, callback, options = {}) {
+    // Validate request
+    const validatedRequest = Validator.validateRequest(endpoint, request);
+
+    // Subscribe
+    const subscription = await this.ws.subscribe(
+      {
+        ...this._formatRequest(validatedRequest, options),
+        subscribe: 1
+      },
+      (response) => {
+        // Validate response before passing to callback
+        try {
+          const validatedResponse = Validator.validateResponse(endpoint, response);
+          callback(validatedResponse);
+        } catch (error) {
+          console.error('Subscription response validation failed:', error);
+        }
+      },
+      options
+    );
+
+    return {
+      reqId: subscription.reqId,
+      request: validatedRequest
+    };
   }
 
   /**
    * Create an API error from response
    * @param {Object} errorResponse Error response from API
+   * @param {string} errorResponse.code Error code
+   * @param {string} errorResponse.message Error message
+   * @param {*} [errorResponse.details] Additional error details
    * @returns {Error} Enhanced error object
    */
   createApiError(errorResponse) {
     // Error codes from https://developers.deriv.com/docs/error-codes
     const error = new Error(errorResponse.message);
-    error.code = errorResponse.code;
-    error.details = errorResponse.details;
-    
-    // Map error codes to specific error types
-    switch (error.code) {
-      // Authentication & Authorization
-      case 'AuthorizationRequired':
-        error.name = 'AuthorizationError';
-        break;
-      case 'InvalidAppID':
-        error.name = 'ConfigurationError';
-        break;
-      case 'InputValidationFailed':
-        error.name = 'ValidationError';
-        break;
-      case 'PermissionDenied':
-        error.name = 'PermissionError';
-        break;
-      case 'InvalidToken':
-        error.name = 'AuthenticationError';
-        break;
-
-      // Network Related
-      case 'NetworkError':
-        error.name = 'NetworkError';
-        break;
-      case 'ConnectionLost':
-        error.name = 'NetworkError';
-        break;
-      case 'RequestTimeout':
-        error.name = 'TimeoutError';
-        break;
-
-      // Server Errors
-      case 'InternalServerError':
-        error.name = 'ServerError';
-        break;
-      case 'ServiceUnavailable':
-        error.name = 'ServerError';
-        break;
-      case 'MaintenanceError':
-        error.name = 'ServerError';
-        break;
-
-      // Rate Limiting
-      case 'RateLimit':
-        error.name = 'RateLimitError';
-        break;
-      case 'ConcurrentRequestLimit':
-        error.name = 'RateLimitError';
-        break;
-
-      // Business Logic Errors
-      case 'MarketIsClosed':
-        error.name = 'MarketError';
-        break;
-      case 'ContractValidationError':
-        error.name = 'ContractError';
-        break;
-      case 'ResourceNotFound':
-        error.name = 'NotFoundError';
-        break;
-      case 'DataError':
-        error.name = 'DataProcessingError';
-        break;
-
-      default:
-        error.name = 'ApiError';
-    }
-
+    Object.assign(error, {
+      code: errorResponse.code,
+      details: errorResponse.details,
+      name: this._getErrorName(errorResponse.code)
+    });
     return error;
   }
 
   /**
-   * Format request parameters
+   * Get error name based on error code
+   * @param {string} code Error code
+   * @returns {string} Error name
+   * @private
+   */
+  _getErrorName(code) {
+    switch (code) {
+      // Authentication & Authorization
+      case 'AuthorizationRequired':
+        return 'AuthorizationError';
+      case 'InvalidAppID':
+        return 'ConfigurationError';
+      case 'InputValidationFailed':
+        return 'ValidationError';
+      case 'PermissionDenied':
+        return 'PermissionError';
+      case 'InvalidToken':
+        return 'AuthenticationError';
+
+      // Network Related
+      case 'NetworkError':
+      case 'ConnectionLost':
+        return 'NetworkError';
+      case 'RequestTimeout':
+        return 'TimeoutError';
+
+      // Server Errors
+      case 'InternalServerError':
+      case 'ServiceUnavailable':
+      case 'MaintenanceError':
+        return 'ServerError';
+
+      // Rate Limiting
+      case 'RateLimit':
+      case 'ConcurrentRequestLimit':
+        return 'RateLimitError';
+
+      // Business Logic Errors
+      case 'MarketIsClosed':
+        return 'MarketError';
+      case 'ContractValidationError':
+        return 'ContractError';
+      case 'ResourceNotFound':
+        return 'NotFoundError';
+      case 'DataError':
+        return 'DataProcessingError';
+
+      default:
+        return 'ApiError';
+    }
+  }
+
+  /**
+   * Format request parameters from camelCase to snake_case
    * @param {Object} params Request parameters
    * @returns {Object} Formatted parameters
    */
   formatRequestParams(params) {
     const formatted = {};
     
-    // Convert camelCase to snake_case
     Object.entries(params).forEach(([key, value]) => {
       const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
       formatted[snakeKey] = value;
@@ -139,81 +193,18 @@ export class BaseApi {
   }
 
   /**
-   * Format response data
+   * Format response data from snake_case to camelCase
    * @param {Object} response Response from API
    * @returns {Object} Formatted response
    */
   formatResponseData(response) {
     const formatted = {};
     
-    // Convert snake_case to camelCase
     Object.entries(response).forEach(([key, value]) => {
       const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
       formatted[camelKey] = value;
     });
 
     return formatted;
-  }
-
-  /**
-   * Validate required parameters
-   * @param {Object} params Parameters to validate
-   * @param {Array<string>} required Required parameter names
-   * @throws {Error} If required parameters are missing
-   */
-  validateRequired(params, required) {
-    for (const param of required) {
-      if (params[param] === undefined) {
-        throw new Error(`${param} is required`);
-      }
-    }
-  }
-
-  /**
-   * Validate parameter type
-   * @param {*} value Value to validate
-   * @param {string} type Expected type
-   * @param {string} name Parameter name
-   * @throws {Error} If type is invalid
-   */
-  validateType(value, type, name) {
-    let valid = false;
-
-    switch (type) {
-      case 'string':
-        valid = typeof value === 'string';
-        break;
-      case 'number':
-        valid = typeof value === 'number';
-        break;
-      case 'boolean':
-        valid = typeof value === 'boolean';
-        break;
-      case 'array':
-        valid = Array.isArray(value);
-        break;
-      case 'object':
-        valid = typeof value === 'object' && value !== null && !Array.isArray(value);
-        break;
-      default:
-        valid = true;
-    }
-
-    if (!valid) {
-      throw new Error(`${name} must be of type ${type}`);
-    }
-  }
-
-  /**
-   * Validate parameter value against enum
-   * @param {*} value Value to validate
-   * @param {Array} enumValues Allowed values
-   * @param {string} name Parameter name
-   * @throws {Error} If value is not in enum
-   */
-  validateEnum(value, enumValues, name) {
-    if (!enumValues.includes(value)) {
-      throw new Error(`${name} must be one of: ${enumValues.join(', ')}`);
-    }
   }
 }

@@ -220,6 +220,7 @@ export class TradingApi extends BaseApi {
     });
   }
 
+
   /**
    * Copy trading: List copyable traders
    * Example:
