@@ -66,6 +66,7 @@ class AuthService {
         const existingAccount = await this.getDefaultAccount();
         let account = existingAccount;
         
+        // TODO: Remove this once we implement Telegram login
         if (!existingAccount && success) {
           account = {
             account: `TG${telegramUser.id}`,
@@ -377,6 +378,23 @@ class AuthService {
     try {
       console.log('Setting default account:', account);
       
+      // Store account first
+      this._memoryDefaultAccount = account;
+
+      // Try localStorage if available
+      if (this.isStorageAvailable()) {
+        const encryptedAccount = this.encrypt(account);
+        if (!encryptedAccount) {
+          console.error('Failed to encrypt account data');
+          return false;
+        }
+        
+        localStorage.setItem(this.defaultAccountKey, encryptedAccount);
+        console.log('Default account stored successfully');
+      } else {
+        console.warn('localStorage not available, using memory storage for default account');
+      }
+
       // Authorize WebSocket if token is present
       if (account?.token) {
         try {
@@ -384,31 +402,12 @@ class AuthService {
           console.log('WebSocket authorized successfully for new account');
         } catch (error) {
           console.error('WebSocket authorization failed:', error);
-          if (error.code === 'AuthorizationRequired' || error.code === 'InvalidToken') {
-            return false;
-          }
-          // For other errors, log but don't fail
+          // Don't fail the account switch for WebSocket errors
+          // The WebSocket service will handle reconnection and re-authorization
           console.warn('Non-critical WebSocket error:', error);
         }
       }
 
-      // Only store account after successful WebSocket authorization
-      this._memoryDefaultAccount = account;
-
-      // Try localStorage if available
-      if (!this.isStorageAvailable()) {
-        console.warn('localStorage not available, using memory storage for default account');
-        return true;
-      }
-
-      const encryptedAccount = this.encrypt(account);
-      if (!encryptedAccount) {
-        console.error('Failed to encrypt account data');
-        return false;
-      }
-      
-      localStorage.setItem(this.defaultAccountKey, encryptedAccount);
-      console.log('Default account stored successfully');
       return true;
     } catch (error) {
       console.error('Failed to set default account:', error);

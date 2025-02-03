@@ -28,10 +28,17 @@ const TAB_ITEMS = [
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('trade');
-  const { accountId, balance, currency, isLoading } = useAuth();
-  console.log('Dashboard auth state:', { accountId, balance, currency, isLoading });
+  const { accountId, balance, currency, isLoading, isSwitchingAccount } = useAuth();
+  console.log('Dashboard auth state:', { 
+    accountId, 
+    balance, 
+    currency, 
+    isLoading,
+    isSwitchingAccount 
+  });
 
-  if (isLoading) {
+  // Show loading during initial load or account switching
+  if (isLoading || isSwitchingAccount) {
     return (
       <div className={styles.dashboard}>
         <Loading size="lg" text="Loading your account..." />
@@ -61,7 +68,12 @@ const Dashboard = () => {
       <TabBar
         items={TAB_ITEMS}
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={(tabId) => {
+          // Prevent tab changes during account switching
+          if (!isSwitchingAccount) {
+            setActiveTab(tabId);
+          }
+        }}
       />
     </div>
   );

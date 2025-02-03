@@ -53,6 +53,7 @@ export class BaseApi {
     
     // Map error codes to specific error types
     switch (error.code) {
+      // Authentication & Authorization
       case 'AuthorizationRequired':
         error.name = 'AuthorizationError';
         break;
@@ -65,18 +66,54 @@ export class BaseApi {
       case 'PermissionDenied':
         error.name = 'PermissionError';
         break;
+      case 'InvalidToken':
+        error.name = 'AuthenticationError';
+        break;
+
+      // Network Related
+      case 'NetworkError':
+        error.name = 'NetworkError';
+        break;
+      case 'ConnectionLost':
+        error.name = 'NetworkError';
+        break;
+      case 'RequestTimeout':
+        error.name = 'TimeoutError';
+        break;
+
+      // Server Errors
+      case 'InternalServerError':
+        error.name = 'ServerError';
+        break;
+      case 'ServiceUnavailable':
+        error.name = 'ServerError';
+        break;
+      case 'MaintenanceError':
+        error.name = 'ServerError';
+        break;
+
+      // Rate Limiting
       case 'RateLimit':
         error.name = 'RateLimitError';
         break;
+      case 'ConcurrentRequestLimit':
+        error.name = 'RateLimitError';
+        break;
+
+      // Business Logic Errors
       case 'MarketIsClosed':
         error.name = 'MarketError';
-        break;
-      case 'InvalidToken':
-        error.name = 'AuthenticationError';
         break;
       case 'ContractValidationError':
         error.name = 'ContractError';
         break;
+      case 'ResourceNotFound':
+        error.name = 'NotFoundError';
+        break;
+      case 'DataError':
+        error.name = 'DataProcessingError';
+        break;
+
       default:
         error.name = 'ApiError';
     }

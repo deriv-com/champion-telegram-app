@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { authService } from '@/services/auth.service';
 import { APP_CONFIG } from '@/config/app.config';
+import { ACCOUNT_SWITCH_TRANSITION_DELAY } from '@/constants/ui';
+import websocketService from '@/services/websocket.service';
 
 export const useAuth = () => {
   const [user, setUser] = useState(null);
@@ -16,63 +18,75 @@ export const useAuth = () => {
     window.dispatchEvent(event);
   };
 
-  // Check authentication status periodically
+  // Listen for WebSocket auth errors
   useEffect(() => {
-    let mounted = true;
-    
-    const checkAuth = () => {
-      try {
-        const isAuth = authService.isAuthenticated();
-        if (mounted) {
-          setIsAuthenticated(isAuth);
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        if (mounted) {
-          setIsAuthenticated(false);
-        }
+    const handleError = (error) => {
+      if (error.code === 'AuthorizationRequired' || error.code === 'InvalidToken') {
+        setIsAuthenticated(false);
+        authService.clearSession();
       }
     };
 
-    // Initial check
-    checkAuth();
-
-    // Periodic check every minute
-    const interval = setInterval(checkAuth, 60000);
+    // Subscribe to WebSocket errors
+    websocketService.on('error', handleError);
 
     return () => {
-      mounted = false;
-      clearInterval(interval);
+      websocketService.off('error', handleError);
     };
   }, []);
 
   const switchAccount = useCallback(async (account) => {
     try {
       setIsSwitchingAccount(true);
-      const success = await authService.setDefaultAccount(account);
       
-      if (success) {
-        // Update local state immediately
-        setDefaultAccount(account);
-        
-        // Reload trading accounts to ensure consistency
-        const accounts = await authService.getTradingAccounts();
-        if (accounts) {
-          await authService.setTradingAccounts(accounts);
-        }
-        
-        // Notify other components
-        emitAccountChange(account);
-        return true;
+      // Create new session data for the account
+      const sessionData = {
+        accountId: account.account,
+        token: account.token,
+        currency: account.currency,
+        loginTime: Date.now()
+      };
+      
+      // Update session first
+      const sessionSuccess = await authService.setSession(sessionData);
+      if (!sessionSuccess) {
+        console.error('Failed to update session for new account');
+        return false;
       }
-      return false;
+      
+      // Then update default account which will handle WebSocket authorization
+      const success = await authService.setDefaultAccount(account);
+      if (!success) {
+        console.error('Failed to set default account');
+        return false;
+      }
+      
+      // Reload and update trading accounts to ensure consistency
+      const accounts = await authService.getTradingAccounts();
+      if (!accounts || !await authService.setTradingAccounts(accounts)) {
+        console.error('Failed to update trading accounts');
+        return false;
+      }
+      
+      // Update all state after successful switch
+      setUser(sessionData);
+      setDefaultAccount(account);
+      setIsAuthenticated(true);
+      
+      // Notify other components only after successful switch
+      emitAccountChange(account);
+      return true;
     } catch (error) {
       console.error('Failed to switch account:', error);
+      await authService.clearSession();
+      setUser(null);
+      setDefaultAccount(null);
+      setIsAuthenticated(false);
       return false;
     } finally {
       setTimeout(() => {
         setIsSwitchingAccount(false);
-      }, 300); // Small delay to ensure smooth transition
+      }, ACCOUNT_SWITCH_TRANSITION_DELAY);
     }
   }, []);
 
