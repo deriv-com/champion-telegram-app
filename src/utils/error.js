@@ -1,4 +1,5 @@
 import { ERROR_CODES, ERROR_MESSAGES } from '@/constants/error.constants';
+import { APP_CONFIG } from '@/config/app.config';
 
 export class AppError extends Error {
   constructor(code, message, details = null) {
@@ -79,32 +80,94 @@ export const errorHandler = {
   },
 
   logError(error) {
-    // In development, log the full error
-    if (import.meta.env.DEV) {
-      console.error('Error:', {
-        code: error.code,
-        message: error.message,
-        details: error.details,
-        stack: error.stack,
-      });
+    const errorData = {
+      code: error.code,
+      message: error.message,
+      timestamp: new Date().toISOString(),
+      environment: APP_CONFIG.environment.mode,
+      // Remove sensitive data
+      details: this.sanitizeErrorDetails(error.details),
+    };
+
+    if (APP_CONFIG.environment.isDevelopment) {
+      console.error('Error:', { ...errorData, stack: error.stack });
     } else {
-      // In production, log to error tracking service
-      // TODO: Implement production error logging
-      console.error('Error:', {
-        code: error.code,
-        message: error.message,
+      // Production error logging
+      this.logToErrorService(errorData);
+    }
+  },
+
+  sanitizeErrorDetails(details) {
+    if (!details) return null;
+    
+    // Remove sensitive fields
+    const sensitiveFields = ['password', 'token', 'key', 'secret', 'auth', 'credentials'];
+    return JSON.parse(JSON.stringify(details, (key, value) => {
+      if (sensitiveFields.includes(key.toLowerCase())) {
+        return '[REDACTED]';
+      }
+      return value;
+    }));
+  },
+
+  async logToErrorService(errorData) {
+    if (!APP_CONFIG.api.errorLoggingUrl) {
+      console.error('Error logging URL not configured');
+      return;
+    }
+
+    try {
+      const response = await fetch(APP_CONFIG.api.errorLoggingUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Error-Source': 'champion-telegram-app',
+        },
+        body: JSON.stringify(errorData),
       });
+
+      if (!response.ok) {
+        throw new Error(`Error logging failed: ${response.statusText}`);
+      }
+    } catch (e) {
+      // Fallback to console in case error service is down
+      console.error('Failed to log error:', e);
+      console.error('Original error:', errorData);
     }
   },
 
   showErrorNotification(error) {
-    // Use the Telegram WebApp's native alert for now
-    // This can be replaced with a more sophisticated notification system
+    const message = this.formatErrorMessage(error);
+    
+    // Use the Telegram WebApp's native alert in production
     if (window.Telegram?.WebApp) {
-      window.Telegram.WebApp.showAlert(error.message);
+      window.Telegram.WebApp.showAlert(message);
+    } else if (APP_CONFIG.environment.isDevelopment) {
+      // In development, show more details
+      console.error('Error details:', error);
+      alert(`${message}\n\nCheck console for details.`);
     } else {
-      alert(error.message);
+      alert(message);
     }
+  },
+
+  formatErrorMessage(error) {
+    // Format user-friendly error message
+    let message = error.message;
+
+    // Add error code if available
+    if (error.code) {
+      message = `[${error.code}] ${message}`;
+    }
+
+    // Add specific handling for known error types
+    if (this.isNetworkError(error)) {
+      message = 'Network error: Please check your connection and try again.';
+    } else if (this.isAuthError(error)) {
+      message = 'Authentication error: Please log in again.';
+    }
+
+    return message;
   },
 
   isAppError(error) {

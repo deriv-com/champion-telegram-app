@@ -2,6 +2,12 @@
 
 A mini version of [Champion Trade](https://champion.trade/) platform designed specifically for Telegram users. This app provides a seamless trading experience within the Telegram ecosystem by integrating Champion Trade's powerful trading capabilities with Telegram's native features.
 
+## Quick Links
+
+- 🤖 **Telegram Bot**: [Champion Trade Bot](https://t.me/champion_trade_bot)
+- 📱 **Mini App**: [Champion Trader](https://t.me/champion_trade_bot/championtrader)
+- 📦 **Bot Repository**: [champion-telegram-bot](https://github.com/aliakbar-deriv/champion-telegram-bot)
+
 Key benefits:
 - **Native Telegram Experience**: Seamless authentication and payments using Telegram's built-in systems
 - **Simplified Trading**: Streamlined interface optimized for Telegram's mini-app format
@@ -78,6 +84,25 @@ src/
 ```
 
 ## Development
+
+### Environment Configuration
+
+The following environment variables are required to run the application:
+
+```bash
+# API Configuration
+VITE_API_BASE_URL=      # Base URL for API requests
+VITE_WS_URL=            # WebSocket server URL
+
+# Security Configuration
+VITE_ENCRYPTION_KEY=    # Key used for encrypting sensitive data
+
+# Deriv OAuth Configuration
+VITE_DERIV_OAUTH_URL=   # Deriv OAuth authorization URL
+VITE_DERIV_SIGNUP_URL=  # Deriv signup page URL
+```
+
+Create a `.env` file in the root directory with these required variables. Additional optional configurations can be found in `.env.example`.
 
 ### Build Configuration
 

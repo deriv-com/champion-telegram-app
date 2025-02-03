@@ -15,11 +15,10 @@
   "dependencies": {
     "@twa-dev/sdk": "^8.0.1",
     "@twa-dev/types": "^8.0.2",
-    "clsx": "^2.1.0",
+    "crypto-js": "^4.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.28.2",
-    "zustand": "^4.4.7"
+    "react-router-dom": "^6.28.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -40,6 +39,7 @@
     "prettier": "^3.1.1",
     "rimraf": "^6.0.1",
     "sass": "^1.69.6",
+    "terser": "^5.37.0",
     "vite": "^5.0.10",
     "vitest": "^1.1.1"
   }

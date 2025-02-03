@@ -1,6 +1,9 @@
 import { useEffect, useCallback, useState } from 'react';
 import WebApp from '@twa-dev/sdk';
 import { haptic } from '@/utils/telegram';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/config/routes.config';
 
 // Initialize Telegram WebApp
 export const initializeTelegramWebApp = () => {
@@ -129,6 +132,34 @@ export const useTelegram = () => {
     });
   }, []);
 
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleTelegramLogin = useCallback(async () => {
+    try {
+      // Get Telegram user data
+      const telegramUser = WebApp?.initDataUnsafe?.user;
+      if (!telegramUser) {
+        showAlert('Please open this app through Telegram');
+        return;
+      }
+
+      // Attempt login
+      const success = await login(telegramUser);
+      if (success) {
+        haptic.impact();
+        navigate(ROUTES.DASHBOARD, { replace: true });
+      } else {
+        haptic.notification();
+        showAlert('Login failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Telegram login failed:', error);
+      haptic.notification();
+      showAlert('Login failed. Please try again.');
+    }
+  }, [login, navigate, showAlert]);
+
   return {
     // State
     isExpanded,
@@ -139,6 +170,7 @@ export const useTelegram = () => {
     // Button handlers
     handleBackButton,
     handleMainButton,
+    handleTelegramLogin,
     
     // Closing confirmation
     enableClosingConfirmation,

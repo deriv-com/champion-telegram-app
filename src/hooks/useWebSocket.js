@@ -1,119 +1,85 @@
-import { useEffect, useCallback, useRef, useReducer } from 'react';
-import { websocketService } from '@/services/websocket.service';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import websocketService from '@/services/websocket.service';
 
-const initialState = {
-  isConnected: false,
-  isConnecting: true,
-  error: null,
-  reconnectAttempt: 0
-};
+export const useWebSocket = (options = {}) => {
+  const { debug = false } = options;
 
-const connectionReducer = (state, action) => {
-  switch (action.type) {
-    case 'CONNECT_SUCCESS':
-      return {
-        ...state,
-        isConnected: true,
-        isConnecting: false,
-        error: null,
-        reconnectAttempt: 0
-      };
-    case 'CONNECT_START':
-      return {
-        ...state,
-        isConnected: false,
-        isConnecting: true,
-        error: null
-      };
-    case 'CONNECT_ERROR':
-      return {
-        ...state,
-        error: action.payload,
-        isConnecting: false
-      };
-    case 'RECONNECT_ATTEMPT':
-      return {
-        ...state,
-        isConnecting: true,
-        reconnectAttempt: action.payload
-      };
-    default:
-      return state;
-  }
-};
+  const [isConnected, setIsConnected] = useState(websocketService.isConnected);
+  const [messageHistory, setMessageHistory] = useState([]);
+  const [error, setError] = useState(null);
 
-export const useWebSocket = (channels = [], handlers = {}) => {
-  const handlersRef = useRef(handlers);
-  handlersRef.current = handlers;
-  
-  const [connectionState, dispatch] = useReducer(connectionReducer, initialState);
-
-  const setupListeners = useCallback(() => {
-    // Setup message handlers
-    const messageHandler = ({ type, payload }) => {
-      if (handlersRef.current[type]) {
-        handlersRef.current[type](payload);
+  // Memoized logger
+  const log = useMemo(() => {
+    return (...args) => {
+      if (debug) {
+        console.log('[WebSocket]', ...args);
       }
     };
+  }, [debug]);
 
-    const connectedHandler = () => {
-      dispatch({ type: 'CONNECT_SUCCESS' });
-      // Resubscribe to channels on reconnection
-      channels.forEach(channel => websocketService.subscribe(channel));
-    };
-
-    const disconnectedHandler = () => {
-      dispatch({ type: 'CONNECT_START' });
-    };
-
-    const errorHandler = (error) => {
-      dispatch({ type: 'CONNECT_ERROR', payload: error });
-    };
-
-    const reconnectHandler = (attempt) => {
-      dispatch({ type: 'RECONNECT_ATTEMPT', payload: attempt });
-    };
-
-    websocketService.on('message', messageHandler);
-    websocketService.on('connected', connectedHandler);
-    websocketService.on('disconnected', disconnectedHandler);
-    websocketService.on('error', errorHandler);
-    websocketService.on('reconnect_attempt', reconnectHandler);
-
-    // Cleanup function
-    return () => {
-      websocketService.off('message', messageHandler);
-      websocketService.off('connected', connectedHandler);
-      websocketService.off('disconnected', disconnectedHandler);
-      websocketService.off('error', errorHandler);
-      websocketService.off('reconnect_attempt', reconnectHandler);
-      channels.forEach(channel => websocketService.unsubscribe(channel));
-    };
-  }, [channels]);
-
+  // Subscribe to WebSocket events
   useEffect(() => {
-    // Connect to WebSocket if not already connected
-    websocketService.connect();
-
-    // Setup event listeners
-    const cleanup = setupListeners();
-
-    // Subscribe to initial channels
-    channels.forEach(channel => websocketService.subscribe(channel));
-
-    return () => {
-      cleanup();
+    const handleConnect = () => {
+      log('Connected');
+      setIsConnected(true);
+      setError(null);
     };
-  }, [channels, setupListeners]);
 
-  const send = useCallback((type, payload) => {
-    websocketService.send(type, payload);
+    const handleDisconnect = (event) => {
+      log('Disconnected:', event);
+      setIsConnected(false);
+    };
+
+    const handleError = (error) => {
+      log('Error:', error);
+      setError(error);
+    };
+
+    const handleMessage = (message) => {
+      log('Message received:', message);
+      setMessageHistory(prev => [...prev, message]);
+    };
+
+    // Subscribe to WebSocket events
+    websocketService.on('connected', handleConnect);
+    websocketService.on('disconnected', handleDisconnect);
+    websocketService.on('error', handleError);
+    websocketService.on('message', handleMessage);
+
+    // Cleanup subscriptions
+    return () => {
+      websocketService.off('connected', handleConnect);
+      websocketService.off('disconnected', handleDisconnect);
+      websocketService.off('error', handleError);
+      websocketService.off('message', handleMessage);
+    };
+  }, [log]);
+
+  // Expose WebSocket service methods
+  const send = useCallback((request, options = {}) => {
+    return websocketService.send(request, options);
   }, []);
 
-  return {
+  const subscribe = useCallback((request, callback, options = {}) => {
+    return websocketService.subscribe(request, callback, options);
+  }, []);
+
+  const unsubscribe = useCallback((id) => {
+    return websocketService.unsubscribe(id);
+  }, []);
+
+  const unsubscribeAll = useCallback(() => {
+    return websocketService.unsubscribeAll();
+  }, []);
+
+  // Memoize return values
+  return useMemo(() => ({
+    isConnected,
+    messageHistory,
+    error,
     send,
-    subscribe: websocketService.subscribe.bind(websocketService),
-    unsubscribe: websocketService.unsubscribe.bind(websocketService),
-    connectionState
-  };
+    subscribe,
+    unsubscribe,
+    unsubscribeAll
+  }), [isConnected, messageHistory, error, send, subscribe, unsubscribe, unsubscribeAll]);
 };

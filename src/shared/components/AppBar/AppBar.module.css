@@ -43,24 +43,57 @@
 }
 
 .accountInfo {
+  appearance: none;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+}
+
+.accountContent {
   display: flex;
   align-items: center;
   gap: 12px;
-  cursor: pointer;
   padding: 8px 20px;
-  border-radius: 14px;
+  border-radius: 16px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   background: linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.08),
-    rgba(255, 255, 255, 0.04)
+    color-mix(in srgb, var(--color-primary) 8%, transparent),
+    color-mix(in srgb, var(--color-primary) 4%, transparent)
   );
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 15%, transparent);
   backdrop-filter: blur(8px);
 }
 
-.active {
-  border-color: rgba(255, 255, 255, 0.2);
+.accountInfo:hover .accountContent {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-primary) 12%, transparent),
+    color-mix(in srgb, var(--color-primary) 6%, transparent)
+  );
+  border-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
+  transform: translateY(-1px);
+}
+
+.accountInfo:active .accountContent {
+  transform: translateY(0);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-primary) 16%, transparent),
+    color-mix(in srgb, var(--color-primary) 8%, transparent)
+  );
+}
+
+.active .accountContent {
+  border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+  box-shadow: 
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 1px 2px -1px rgba(0, 0, 0, 0.04),
+    0 0 0 2px color-mix(in srgb, var(--color-primary) 15%, transparent);
 }
 
 .accountDetails {
@@ -68,6 +101,7 @@
   flex-direction: column;
   gap: 4px;
   min-width: min(120px, 30vw);
+  text-align: left;
 }
 
 .accountId {
@@ -86,6 +120,27 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+.loading {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
 .chevron {
   color: var(--color-text-secondary);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -101,48 +156,126 @@
   position: fixed;
   top: var(--app-bar-height, 72px);
   right: clamp(16px, 5vw, 32px);
-  background: var(--color-background);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 8px 0;
-  width: 280px;
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.2);
+  background: color-mix(in srgb, var(--color-background) 95%, var(--color-primary));
+  border: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
+  border-radius: 16px;
+  width: 300px;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-10px) scale(0.98);
   pointer-events: none;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 3;
   visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - var(--app-bar-height, 72px) - 32px);
+  backdrop-filter: blur(8px);
 }
 
 .show {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
   pointer-events: auto;
   visibility: visible;
 }
 
+.accountsList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 30%, transparent);
+  margin: 0 4px;
+}
+
+.accountItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  margin: 4px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: color-mix(in srgb, var(--color-background) 97%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-border) 15%, transparent);
+  text-align: left;
+}
+
+.accountItem:hover {
+  background: color-mix(in srgb, var(--color-background) 98%, var(--color-primary));
+  border-color: color-mix(in srgb, var(--color-primary) 15%, transparent);
+  transform: translateY(-1px);
+  box-shadow: 
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 1px 2px -1px rgba(0, 0, 0, 0.04);
+}
+
+.accountItem:active {
+  background: color-mix(in srgb, var(--color-background) 95%, var(--color-primary));
+  transform: translateY(0);
+}
+
+.accountItemCurrency {
+  font-size: 16px;
+  color: var(--color-text-primary);
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.accountItemId {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
 .dropdownItem {
-  padding: 12px 20px;
+  padding: 16px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   color: var(--color-text-primary);
   font-size: 14px;
   font-weight: 500;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   position: relative;
-  margin: 0 8px;
-  border-radius: 8px;
+  margin: 4px 12px;
+  border-radius: 12px;
+  background: transparent;
+  text-align: left;
 }
 
 .dropdownItem:active {
-  background: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.08),
-    rgba(0, 0, 0, 0.04)
-  );
+  background: color-mix(in srgb, var(--color-background) 95%, var(--color-primary));
+}
+
+.logout {
+  color: var(--color-error, #ff4d4f);
+  margin: 8px 12px 12px;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--color-error) 8%, transparent);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoutIcon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.logout:hover {
+  background: color-mix(in srgb, var(--color-error) 12%, transparent);
+}
+
+.logout:active {
+  background: color-mix(in srgb, var(--color-error) 16%, transparent);
 }
 
 @media (max-width: 480px) {
@@ -179,6 +312,10 @@
     font-size: 14px;
   }
 
+  .loading {
+    font-size: 13px;
+  }
+
   .chevron {
     width: 16px;
     height: 16px;
@@ -195,7 +332,6 @@
     border: none;
     border-radius: 0;
     border-top: 1px solid var(--color-border);
-    padding: 0;
     transform: translateY(-100%);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
     background: var(--color-background);
@@ -209,27 +345,20 @@
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0s;
   }
 
-  .dropdownItem {
-    padding: 16px 24px;
-    margin: 0;
-    border-radius: 0;
+  .accountsList {
     border-bottom: 1px solid var(--color-border);
   }
 
-  .dropdownItem:last-child {
-    padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
-    border-bottom: none;
+  .accountItem {
+    padding: 16px 24px;
+    margin: 0;
+    border-radius: 0;
   }
-}
 
-.logout {
-  color: var(--color-error, #ff4d4f);
-}
-
-.logout:active {
-  background: linear-gradient(
-    to right,
-    rgba(255, 77, 79, 0.08),
-    rgba(255, 77, 79, 0.04)
-  );
+  .logout {
+    padding: 16px 24px;
+    margin: 0;
+    border-radius: 0;
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+  }
 }

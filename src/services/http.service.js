@@ -1,63 +1,23 @@
-import axios from 'axios';
-import { API_ENDPOINTS } from '@/constants/api.constants';
-
 class HttpService {
-  constructor() {
-    this.client = axios.create({
-      baseURL: import.meta.env.VITE_API_URL,
-      timeout: 10000,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    this.initializeInterceptors();
+  // Mock CRUD methods that return promises with demo data
+  async get(endpoint, params = {}) {
+    console.log('GET request to:', endpoint, 'with params:', params);
+    return Promise.resolve({ success: true, data: {} });
   }
 
-  initializeInterceptors() {
-    this.client.interceptors.request.use(
-      (config) => {
-        // Add auth token if available
-        const token = localStorage.getItem('auth_token');
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
-
-    this.client.interceptors.response.use(
-      (response) => response.data,
-      (error) => {
-        // Handle specific error cases
-        if (error.response?.status === 401) {
-          // Handle unauthorized
-          localStorage.removeItem('auth_token');
-          window.location.href = '/login';
-        }
-        return Promise.reject(error);
-      }
-    );
+  async post(endpoint, data = {}) {
+    console.log('POST request to:', endpoint, 'with data:', data);
+    return Promise.resolve({ success: true, data: {} });
   }
 
-  // Generic CRUD methods
-  get(endpoint, params = {}) {
-    return this.client.get(endpoint, { params });
+  async put(endpoint, data = {}) {
+    console.log('PUT request to:', endpoint, 'with data:', data);
+    return Promise.resolve({ success: true, data: {} });
   }
 
-  post(endpoint, data = {}) {
-    return this.client.post(endpoint, data);
-  }
-
-  put(endpoint, data = {}) {
-    return this.client.put(endpoint, data);
-  }
-
-  delete(endpoint) {
-    return this.client.delete(endpoint);
+  async delete(endpoint) {
+    console.log('DELETE request to:', endpoint);
+    return Promise.resolve({ success: true });
   }
 }
 

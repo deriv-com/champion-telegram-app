@@ -1,23 +1,42 @@
 import React from 'react';
-import { Loading } from '@/shared/components/Loading';
+import { useAccountChange } from '@/hooks/useAccountChange';
+import { ShimmerLoading } from '@/shared/components/Loading';
 import styles from './PositionsView.module.css';
 
 const PositionsView = () => {
-  // Future positions-specific state management
-  const [isLoading] = React.useState(false);
+  const { isChanging } = useAccountChange(async () => {
+    // Example: Reload positions data when account changes
+    // await positionsService.loadPositions(defaultAccount.account);
+    // await loadOrders();
+    // etc.
+  });
 
-  // Future positions-specific effects
-  // React.useEffect(() => {
-  //   // Fetch positions data, setup real-time updates, etc.
-  // }, []);
+  if (isChanging) {
+    return (
+      <div className={styles.loadingContainer}>
+        <ShimmerLoading 
+          lines={[
+            { width: '100%', height: '60px', repeat: 3 }
+          ]}
+          gap={12}
+          shape="rounded"
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className={styles.positionsView}>
-      {isLoading ? (
-        <Loading size="lg" text="Loading positions..." />
-      ) : (
-        <p>Positions page under development</p>
-      )}
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: 'calc(100vh - var(--app-bar-height, 72px))',
+      fontSize: '24px',
+      fontWeight: '600',
+      color: 'var(--color-text-secondary)',
+      opacity: '0.8'
+    }}>
+      Positions page under development
     </div>
   );
 };

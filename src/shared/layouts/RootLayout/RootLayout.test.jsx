@@ -1,57 +1,72 @@
-import { render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { renderWithContainer, screen, waitFor } from '@/test/test-utils';
+import { act } from '@testing-library/react';
 import RootLayout from './RootLayout';
 import styles from './RootLayout.module.css';
 
 describe('RootLayout', () => {
+  const mockMatchMedia = (matches) => {
+    const listeners = new Set();
+    return {
+      matches,
+      addEventListener: (_, listener) => listeners.add(listener),
+      removeEventListener: (_, listener) => listeners.delete(listener),
+      dispatchChange: (matches) => {
+        listeners.forEach(listener => listener({ matches }));
+      },
+    };
+  };
+
+  let originalMatchMedia;
+
   beforeEach(() => {
-    // Mock matchMedia
-    window.matchMedia = vi.fn().mockImplementation(query => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: vi.fn(), // Deprecated
-      removeListener: vi.fn(), // Deprecated
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn(),
-    }));
+    originalMatchMedia = window.matchMedia;
   });
 
-  it('renders main content correctly', () => {
-    const testContent = <div data-testid="test-content">Test Content</div>;
-    render(<RootLayout>{testContent}</RootLayout>);
-    
-    // Check if main content is rendered
-    expect(screen.getByRole('main')).toBeInTheDocument();
-    expect(screen.getByTestId('test-content')).toBeInTheDocument();
+  afterEach(() => {
+    window.matchMedia = originalMatchMedia;
+    vi.clearAllMocks();
   });
 
-  it('has correct structure and styles for Telegram WebApp', () => {
-    render(<RootLayout>Test Content</RootLayout>);
+  it('handles errors with ErrorBoundary', () => {
+    window.matchMedia = vi.fn().mockImplementation(() => mockMatchMedia(false));
     
-    const rootElement = document.querySelector(`.${styles.root}`);
-    const mainElement = screen.getByRole('main');
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const ThrowError = () => { throw new Error('Test error'); };
     
-    // Check root element styles
-    expect(rootElement).toHaveClass(styles.root);
-
-    // Check main element styles
-    expect(mainElement).toHaveClass(styles.main);
+    renderWithContainer(
+      <RootLayout>
+        <ThrowError />
+      </RootLayout>
+    );
+    
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+    expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+    
+    errorSpy.mockRestore();
   });
 
-  it('handles content overflow correctly for scrolling', () => {
-    const longContent = <div style={{ height: '200vh' }}>Very long content</div>;
-    render(<RootLayout>{longContent}</RootLayout>);
+  it('handles responsive layout', async () => {
+    const mediaQuery = mockMatchMedia(false);
+    window.matchMedia = vi.fn().mockImplementation(() => mediaQuery);
     
-    const mainElement = screen.getByRole('main');
-    expect(mainElement).toHaveClass(styles.main);
-  });
+    renderWithContainer(
+      <RootLayout>
+        <div>Test Content</div>
+      </RootLayout>
+    );
+    
+    const rootDiv = screen.getByRole('main').parentElement;
+    expect(rootDiv.className).toContain(styles.root);
+    expect(rootDiv.className).not.toContain(styles.mobile);
 
-  it('maintains safe area insets for notched devices', () => {
-    render(<RootLayout>Test Content</RootLayout>);
+    // Test mobile view
+    await act(async () => {
+      mediaQuery.dispatchChange(true);
+    });
     
-    const mainElement = screen.getByRole('main');
-    expect(mainElement).toHaveClass(styles.main);
+    await waitFor(() => {
+      expect(rootDiv.className).toContain(styles.mobile);
+    });
   });
 });
