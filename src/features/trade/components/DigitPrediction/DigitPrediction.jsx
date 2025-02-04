@@ -1,4 +1,5 @@
 import React from 'react';
+import { haptic } from '@/utils/telegram';
 import styles from './DigitPrediction.module.css';
 
 const DigitPrediction = ({
@@ -29,7 +30,12 @@ const DigitPrediction = ({
         {digits.map((digit) => (
           <button
             key={digit}
-            onClick={() => !isTrading && onDigitSelect(digit)}
+            onClick={() => {
+              if (!isTrading) {
+                haptic.impact();
+                onDigitSelect(digit);
+              }
+            }}
             className={`${styles.digitButton}
               ${currentDigit === digit ? styles.highlight : ''}
               ${selectedDigit === digit ? styles.selected : ''}

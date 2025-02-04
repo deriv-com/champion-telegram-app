@@ -10,15 +10,19 @@
 }
 
 /* Root element styles */
-html,
-body,
-#root {
-  height: 100%;
+html {
+  height: -webkit-fill-available;
   background-color: var(--color-background);
-  overflow: auto;
 }
 
 body {
+  min-height: 100vh;
+  /* mobile viewport bug fix */
+  min-height: -webkit-fill-available;
+  background-color: var(--color-background);
+  overflow-x: hidden;
+  /* Prevent bounce in modern mobile browsers */
+  overscroll-behavior-y: none;
   font-family: var(--font-family);
   line-height: var(--line-height-normal);
   color: var(--color-text);
@@ -34,9 +38,13 @@ body {
   margin: 0 auto;
   padding: var(--spacing-md);
   min-height: 100vh;
+  /* mobile viewport bug fix */
+  min-height: -webkit-fill-available;
   background-color: var(--color-background);
   display: flex;
   flex-direction: column;
+  /* Ensure proper padding for iOS devices */
+  padding-bottom: calc(var(--spacing-md) + env(safe-area-inset-bottom, 0px));
 }
 
 /* Button Base */
@@ -79,5 +87,16 @@ body {
   .container,
   .tg-container {
     padding: 0 var(--spacing-sm);
+    padding-bottom: calc(var(--spacing-sm) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* iOS-specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .container,
+  .tg-container {
+    /* Prevent rubber-band scroll effect on iOS */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
