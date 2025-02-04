@@ -1,29 +1,99 @@
 .cashierView {
+  padding: 2rem;
+  width: 100%;
+  min-height: var(--tg-viewport-stable-height);
+  padding-bottom: calc(var(--tg-safe-area-bottom, 0px) + var(--tab-bar-height, 0px));
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.optionsGrid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  margin-bottom: 3rem;
+}
+
+.optionCard {
+  background: var(--color-white);
+  border-radius: var(--border-radius);
+  padding: 1.5rem 1.25rem;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+  border: 2px solid var(--color-background);
+}
+
+.optionCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--box-shadow-lg);
+  border-color: var(--color-primary);
+}
+
+.optionCard:active {
+  transform: translateY(0);
+  box-shadow: var(--box-shadow);
+}
+
+.optionIcon {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  transition: transform 0.3s ease;
+  padding: 0.25rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+}
+
+.optionCard:hover .optionIcon {
+  transform: scale(1.1);
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.optionIcon img {
   width: 100%;
   height: 100%;
-  justify-content: flex-start;
-  align-items: center;
+}
+
+.optionLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
   text-align: center;
-  position: relative;
-  /* Remove nested scrolling since parent handles it */
-  overflow: visible;
+  transition: color 0.3s ease;
+  letter-spacing: 0.3px;
 }
 
-/* Future cashier-specific component styles */
-/* .balanceSection {
-  margin-bottom: var(--spacing-xl);
-}
 
-.transactionHistory {
-  flex: 1;
-  overflow-y: auto;
-}
+@media (min-width: 768px) {
+  .cashierView {
+    padding: 2.5rem;
+  }
+  
+  .optionsGrid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2rem;
+  }
+  
+  .optionCard {
+    padding: 2rem 1.5rem;
+  }
 
-.actionButtons {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-lg);
-} */
+  .optionIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .optionLabel {
+    font-size: var(--font-size-base);
+  }
+}
