@@ -163,7 +163,7 @@ const AppBar = () => {
               ) : (
                 <div className={styles.accountDetails} data-testid="account-details">
                   <span className={styles.accountId} data-testid="account-id">{accountId}</span>
-                  <span className={styles.balance} data-testid="balance">{currency} {balance}</span>
+                  <span className={styles.balance} data-testid="balance">{balance} {currency}</span>
                 </div>
               )}
               <ChevronIcon className={`${styles.chevron} ${isDropdownOpen ? styles.rotated : ''}`} />
@@ -198,8 +198,11 @@ const AppBar = () => {
                 onClick={() => handleAccountSwitch(account)}
                 data-testid={`account-${account.account}`}
               >
-                <span className={styles.accountItemCurrency}>{account.currency}</span>
-                <span className={styles.accountItemId}>{account.account}</span>
+                <div className={styles.accountItemLeading}>
+                  <span className={styles.accountItemCurrency}>{account.currency}</span>
+                  <span className={styles.accountItemId}>{account.account}</span>
+                </div>
+                <span className={styles.accountItemBalance}>1,000.00 {account.currency}</span>
               </div>
             ))}
           </div>
