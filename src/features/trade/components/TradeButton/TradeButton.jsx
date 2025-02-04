@@ -5,7 +5,8 @@ import styles from './TradeButton.module.css';
 
 const TradeButton = ({ 
   variant = 'positive',
-  children,
+  label,
+  payoutAmount,
   onClick,
   ...props 
 }) => {
@@ -17,14 +18,21 @@ const TradeButton = ({
       onClick={onClick}
       {...props}
     >
-      {children}
+      <div className={styles.buttonContent}>
+        <span className={styles.buttonLabel}>{label}</span>
+        <div className={styles.payoutRow}>
+          <span className={styles.payoutLabel}>Payout</span>
+          <span className={styles.payoutAmount}>{payoutAmount}</span>
+        </div>
+      </div>
     </Button>
   );
 };
 
 TradeButton.propTypes = {
   variant: PropTypes.oneOf(['positive', 'negative']),
-  children: PropTypes.node.isRequired,
+  label: PropTypes.string.isRequired,
+  payoutAmount: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired
 };
 

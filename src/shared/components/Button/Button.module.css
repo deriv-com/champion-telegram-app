@@ -11,12 +11,12 @@
   min-width: 200px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(0, 199, 244, 0.2);
+  box-shadow: 0 1px 4px rgba(0, 199, 244, 0.15);
 }
 
 .buttonPrimary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 3px 10px rgba(0, 199, 244, 0.25);
+  box-shadow: 0 2px 6px rgba(0, 199, 244, 0.2);
 }
 
 .buttonSecondary {

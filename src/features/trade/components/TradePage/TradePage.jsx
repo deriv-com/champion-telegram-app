@@ -1,5 +1,6 @@
 import React, { memo, useState } from 'react';
 import { ShimmerLoading } from '@/shared/components/Loading';
+import TradeButton from '../TradeButton';
 import MarketSelector from '../MarketSelector';
 import LiveQuote from '../LiveQuote';
 import DurationInput from '../DurationInput';
@@ -7,12 +8,13 @@ import StakeInput from '../StakeInput';
 import DigitPrediction from '../DigitPrediction';
 import { useTrade } from '../../hooks/useTrade';
 import { useNotification } from '@/hooks/useNotification';
-import { haptic } from '@/utils/telegram';
+import { useTelegram } from '@/hooks/useTelegram';
 import styles from './TradePage.module.css';
 
 const TradePage = () => {
   const { activeSymbols, isLoading } = useTrade();
   const { info } = useNotification();
+  const { haptic } = useTelegram();
   const [duration, setDuration] = useState(1);
   const [stake, setStake] = useState(0);
   const [selectedDigit, setSelectedDigit] = useState(null);
@@ -80,42 +82,28 @@ const TradePage = () => {
         </div>
       )}
       <div className={styles.tradeButtonsContainer}>
-        <button
-          className={`${styles.tradeButton} ${styles.positiveButton}`}
+        <TradeButton
+          variant="positive"
+          label="Matches"
+          payoutAmount="$25.50"
           onClick={() => {
             // Demo notification - actual trade implementation will come later
-            haptic.impact(); // Haptic feedback for button press
-            haptic.notification(); // Haptic feedback for trade placement
-            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Matches ${selectedDigit}\n📊 Market: ${selectedMarket?.display_name || 'Unknown'}`, { usePopup: true });
+            const marketName = selectedMarket && typeof selectedMarket === 'object' ? selectedMarket.display_name : 'Unknown';
+            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Matches ${selectedDigit}\n📊 Market: ${marketName}`, { usePopup: true });
           }}
           disabled={selectedDigit === null || selectedDigit === undefined}
-        >
-          <div className={styles.buttonContent}>
-            <span className={styles.buttonLabel}>Matches</span>
-            <div className={styles.payoutRow}>
-              <span className={styles.payoutLabel}>Payout</span>
-              <span className={styles.payoutAmount}>$25.50</span>
-            </div>
-          </div>
-        </button>
-        <button
-          className={`${styles.tradeButton} ${styles.negativeButton}`}
+        />
+        <TradeButton
+          variant="negative"
+          label="Differs"
+          payoutAmount="$25.50"
           onClick={() => {
             // Demo notification - actual trade implementation will come later
-            haptic.impact(); // Haptic feedback for button press
-            haptic.notification(); // Haptic feedback for trade placement
-            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Differs ${selectedDigit}\n📊 Market: ${selectedMarket?.display_name || 'Unknown'}`, { usePopup: true });
+            const marketName = selectedMarket && typeof selectedMarket === 'object' ? selectedMarket.display_name : 'Unknown';
+            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Differs ${selectedDigit}\n📊 Market: ${marketName}`, { usePopup: true });
           }}
           disabled={selectedDigit === null || selectedDigit === undefined}
-        >
-          <div className={styles.buttonContent}>
-            <span className={styles.buttonLabel}>Differs</span>
-            <div className={styles.payoutRow}>
-              <span className={styles.payoutLabel}>Payout</span>
-              <span className={styles.payoutAmount}>$25.50</span>
-            </div>
-          </div>
-        </button>
+        />
       </div>
     </div>
   );

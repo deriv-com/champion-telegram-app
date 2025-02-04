@@ -114,18 +114,35 @@ const AppBar = () => {
       // Close dropdown immediately to prevent UI glitches
       setIsDropdownOpen(false);
 
+      // Disable the logout button to prevent multiple clicks
+      const logoutButton = document.querySelector('[data-testid="logout-button"]');
+      if (logoutButton) {
+        logoutButton.style.pointerEvents = 'none';
+        logoutButton.style.opacity = '0.5';
+      }
+
       // Small delay to allow dropdown animation to complete
       await new Promise(resolve => setTimeout(resolve, 100));
 
       // Perform logout and wait for it to complete
       const success = await logout();
       
-      // If logout failed, show error
+      // If logout failed, show error and re-enable button
       if (!success) {
         console.error('Logout failed');
+        if (logoutButton) {
+          logoutButton.style.pointerEvents = '';
+          logoutButton.style.opacity = '';
+        }
       }
     } catch (error) {
       console.error('Logout failed:', error);
+      // Re-enable button on error
+      const logoutButton = document.querySelector('[data-testid="logout-button"]');
+      if (logoutButton) {
+        logoutButton.style.pointerEvents = '';
+        logoutButton.style.opacity = '';
+      }
     }
   };
 

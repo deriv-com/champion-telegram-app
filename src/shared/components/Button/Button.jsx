@@ -1,13 +1,21 @@
 import PropTypes from 'prop-types';
+import { useTelegram } from '@/hooks/useTelegram';
 import styles from './Button.module.css';
 
-const Button = ({ 
+const Button = ({
   variant = 'primary', 
   children, 
   className,
   loading,
-  ...props 
+  ...props
 }) => {
+  const { haptic } = useTelegram();
+  
+  const handleClick = (e) => {
+    haptic.impact();
+    props.onClick?.(e);
+  };
+
   const variantClass = variant === 'primary' ? styles.buttonPrimary : styles.buttonSecondary;
   const loadingClass = loading ? styles.loading : '';
   const combinedClasses = [variantClass, loadingClass, className].filter(Boolean).join(' ');
@@ -17,6 +25,7 @@ const Button = ({
       className={combinedClasses}
       disabled={loading || props.disabled}
       {...props}
+      onClick={handleClick}
     >
       {children}
     </button>
