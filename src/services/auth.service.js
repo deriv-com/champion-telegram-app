@@ -485,10 +485,11 @@ class AuthService {
    */
   async clearSession() {
     try {
-      // Clear memory storage
+      // Clear memory storage first
       this._memorySession = null;
       this._memoryTradingAccounts = null;
       this._memoryDefaultAccount = null;
+      this._lastAuthorizedToken = null;
 
       // Try to clear localStorage if available
       if (this.isStorageAvailable()) {
@@ -497,13 +498,20 @@ class AuthService {
         localStorage.removeItem(this.defaultAccountKey);
       }
 
+      // Close WebSocket connection
+      const ws = websocketService.instance;
+      if (ws.isConnected()) {
+        await ws.unsubscribeAll().catch(console.error);
+        ws.close();
+      }
+
       // Add small delay in development
       if (APP_CONFIG.environment.isDevelopment) {
         await new Promise(resolve => setTimeout(resolve, 500));
       }
 
-      // Always navigate to home route after clearing session
-      window.location.href = ROUTES.HOME;
+      // Use replace() for more reliable navigation during cleanup
+      window.location.replace(ROUTES.HOME);
       return true;
     } catch (error) {
       console.error('Failed to clear session:', error);

@@ -7,12 +7,12 @@ import StakeInput from '../StakeInput';
 import DigitPrediction from '../DigitPrediction';
 import { useTrade } from '../../hooks/useTrade';
 import { useNotification } from '@/hooks/useNotification';
-import { haptic } from '@/utils/telegram';
 import styles from './TradePage.module.css';
 
 const TradePage = () => {
   const { activeSymbols, isLoading } = useTrade();
   const { info } = useNotification();
+  const { haptic } = useTelegram();
   const [duration, setDuration] = useState(1);
   const [stake, setStake] = useState(0);
   const [selectedDigit, setSelectedDigit] = useState(null);
@@ -84,9 +84,9 @@ const TradePage = () => {
           className={`${styles.tradeButton} ${styles.positiveButton}`}
           onClick={() => {
             // Demo notification - actual trade implementation will come later
-            haptic.impact(); // Haptic feedback for button press
-            haptic.notification(); // Haptic feedback for trade placement
-            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Matches ${selectedDigit}\n📊 Market: ${selectedMarket?.display_name || 'Unknown'}`, { usePopup: true });
+            haptic.impact(); // Button press feedback
+            const marketName = selectedMarket && typeof selectedMarket === 'object' ? selectedMarket.display_name : 'Unknown';
+            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Matches ${selectedDigit}\n📊 Market: ${marketName}`, { usePopup: true });
           }}
           disabled={selectedDigit === null || selectedDigit === undefined}
         >
@@ -102,9 +102,9 @@ const TradePage = () => {
           className={`${styles.tradeButton} ${styles.negativeButton}`}
           onClick={() => {
             // Demo notification - actual trade implementation will come later
-            haptic.impact(); // Haptic feedback for button press
-            haptic.notification(); // Haptic feedback for trade placement
-            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Differs ${selectedDigit}\n📊 Market: ${selectedMarket?.display_name || 'Unknown'}`, { usePopup: true });
+            haptic.impact(); // Button press feedback
+            const marketName = selectedMarket && typeof selectedMarket === 'object' ? selectedMarket.display_name : 'Unknown';
+            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Differs ${selectedDigit}\n📊 Market: ${marketName}`, { usePopup: true });
           }}
           disabled={selectedDigit === null || selectedDigit === undefined}
         >
