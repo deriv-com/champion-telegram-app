@@ -1,6 +1,7 @@
 export { httpService } from './http.service';
 export { websocketService } from './websocket.service';
 export * from './auth.service';
+export * from './api';
 
 // Future services can be exported here
 // export { storageService } from './storage.service';

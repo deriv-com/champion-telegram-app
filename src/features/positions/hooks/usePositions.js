@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLoading } from '@/hooks/useLoading';
 import { useNotification } from '@/hooks/useNotification';
-import { positionsApi } from '../api';
+import websocketService from '@/services/websocket.service';
 
 export const usePositions = () => {
   // Feature-specific state
@@ -16,26 +16,35 @@ export const usePositions = () => {
   // Feature-specific methods that use positionsApi
   const loadOpenPositions = async () => {
     await withLoading(async () => {
-      const data = await positionsApi.getOpenPositions();
-      setOpenPositions(data);
+      const ws = websocketService.instance;
+      const response = await ws.api.positions.getOpenPositions();
+      if (response?.proposal_open_contract) {
+        setOpenPositions([response.proposal_open_contract]);
+      }
     });
   };
 
   const loadClosedPositions = async () => {
     await withLoading(async () => {
-      const data = await positionsApi.getClosedPositions();
-      setClosedPositions(data);
+      const ws = websocketService.instance;
+      const response = await ws.api.positions.getClosedPositions();
+      if (response?.profit_table?.transactions) {
+        setClosedPositions(response.profit_table.transactions);
+      }
     });
   };
 
   const closePosition = async (positionId) => {
     await withLoading(async () => {
-      await positionsApi.closePosition(positionId);
-      await loadOpenPositions(); // Refresh open positions
-      showNotification({
-        type: 'success',
-        message: 'Position closed successfully'
-      });
+      const ws = websocketService.instance;
+      const response = await ws.api.positions.closePosition(positionId);
+      if (response?.sell?.sold_for) {
+        await loadOpenPositions(); // Refresh open positions
+        showNotification({
+          type: 'success',
+          message: 'Position closed successfully'
+        });
+      }
     });
   };
 

@@ -1,11 +1,10 @@
 .container {
   padding: 1rem;
-  max-width: 100%;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .marketSelectorWrapper {
-  max-width: 100%;
+  width: 100%;
   margin-bottom: 1.5rem;
 }
 

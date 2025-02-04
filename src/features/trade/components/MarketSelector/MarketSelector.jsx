@@ -40,12 +40,18 @@ const MarketSelector = ({ activeSymbols, onMarketChange, defaultMarket, disabled
 
   return (
     <div className={`${styles.container} ${disabled ? styles.disabled : ''}`}>
+      <label htmlFor="market-select" className={styles.label}>
+        Select Market
+      </label>
       <select
+        id="market-select"
         className={styles.select}
         value={selectedMarket}
         onChange={handleMarketChange}
         disabled={disabled}
         aria-label="Select trading market"
+        role="combobox"
+        aria-expanded="false"
       >
         {activeSymbols.map((market) => (
           <option key={market.symbol} value={market.symbol}>
