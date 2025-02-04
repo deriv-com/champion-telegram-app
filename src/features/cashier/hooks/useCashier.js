@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLoading } from '@/hooks/useLoading';
 import { useNotification } from '@/hooks/useNotification';
-import { cashierApi } from '../api';
+import websocketService from '@/services/websocket.service';
 
 export const useCashier = () => {
   // Feature-specific state
@@ -16,8 +16,11 @@ export const useCashier = () => {
   const loadBalance = async () => {
     await withLoading(async () => {
       try {
-        const data = await cashierApi.getBalance();
-        setBalance(data.balance);
+        const ws = websocketService.instance;
+        const response = await ws.api.cashier.getBalance();
+        if (response?.balance) {
+          setBalance(response.balance);
+        }
       } catch (error) {
         showNotification({
           type: 'error',
@@ -31,8 +34,11 @@ export const useCashier = () => {
   const loadTransactions = async () => {
     await withLoading(async () => {
       try {
-        const data = await cashierApi.getTransactions();
-        setTransactions(data);
+        const ws = websocketService.instance;
+        const response = await ws.api.cashier.getTransactionHistory();
+        if (response?.statement?.transactions) {
+          setTransactions(response.statement.transactions);
+        }
       } catch (error) {
         showNotification({
           type: 'error',
@@ -43,15 +49,18 @@ export const useCashier = () => {
     });
   };
 
-  const processDeposit = async (amount) => {
+  const processDeposit = async (params) => {
     await withLoading(async () => {
       try {
-        await cashierApi.deposit(amount);
-        await loadBalance();
-        showNotification({
-          type: 'success',
-          message: 'Deposit processed successfully'
-        });
+        const ws = websocketService.instance;
+        const response = await ws.api.cashier.deposit(params);
+        if (response?.cashier?.transaction_id) {
+          await loadBalance();
+          showNotification({
+            type: 'success',
+            message: 'Deposit processed successfully'
+          });
+        }
       } catch (error) {
         showNotification({
           type: 'error',
@@ -62,15 +71,18 @@ export const useCashier = () => {
     });
   };
 
-  const processWithdraw = async (amount) => {
+  const processWithdraw = async (params) => {
     await withLoading(async () => {
       try {
-        await cashierApi.withdraw(amount);
-        await loadBalance();
-        showNotification({
-          type: 'success',
-          message: 'Withdrawal processed successfully'
-        });
+        const ws = websocketService.instance;
+        const response = await ws.api.cashier.withdraw(params);
+        if (response?.cashier?.transaction_id) {
+          await loadBalance();
+          showNotification({
+            type: 'success',
+            message: 'Withdrawal processed successfully'
+          });
+        }
       } catch (error) {
         showNotification({
           type: 'error',

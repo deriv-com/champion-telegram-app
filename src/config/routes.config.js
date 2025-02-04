@@ -6,6 +6,9 @@ export const ROUTES = {
   HOME: '/',
   LOGIN: '/login',
   DASHBOARD: '/dashboard',
+  TRADE: '/dashboard/trade',
+  CASHIER: '/dashboard/cashier',
+  POSITIONS: '/dashboard/positions',
 };
 
 /**
@@ -14,4 +17,7 @@ export const ROUTES = {
  */
 export const PROTECTED_ROUTES = [
   ROUTES.DASHBOARD,
+  ROUTES.TRADE,
+  ROUTES.CASHIER,
+  ROUTES.POSITIONS,
 ];

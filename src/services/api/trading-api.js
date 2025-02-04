@@ -1,10 +1,19 @@
 import { BaseApi } from './base-api';
+import { TradingApiRegistry } from '@/schemas/api/trading.js';
 
 /**
  * API class for Deriv WebSocket trading operations
  * Based on https://developers.deriv.com/docs/websockets
  */
 export class TradingApi extends BaseApi {
+  /**
+   * @param {Object} [options] Optional configuration
+   */
+  constructor(ws, options = {}) {
+    super(ws, options);
+    this.endpoints = TradingApiRegistry.endpoints;
+  }
+
   /**
    * Buy contract
    * Example:
@@ -219,6 +228,7 @@ export class TradingApi extends BaseApi {
       topup_virtual: 1
     });
   }
+
 
   /**
    * Copy trading: List copyable traders

@@ -1,4 +1,11 @@
-import { BaseApi } from './base-api';
+import { BaseApi } from './base-api.js';
+import { MarketApiRegistry } from '@/schemas/api/market.js';
+import { API_METHODS } from '@/schemas/api/base.js';
+
+/**
+ * @typedef {import('@/schemas/api/base.js').BaseRequest} BaseRequest
+ * @typedef {import('@/schemas/api/base.js').BaseResponse} BaseResponse
+ */
 
 /**
  * API class for Deriv WebSocket market operations
@@ -6,237 +13,339 @@ import { BaseApi } from './base-api';
  */
 export class MarketApi extends BaseApi {
   /**
-   * Subscribe to tick stream
-   * Example:
-   * {
-   *   "ticks": "frxUSDJPY",
-   *   "subscribe": 1,
-   *   "req_id": 1
-   * }
-   * @param {string} symbol Symbol to subscribe to
-   * @param {Function} callback Callback for tick updates
-   * @returns {Promise<Object>} Tick subscription
+   * @param {Object} [options] Optional configuration
    */
-  subscribeTicks(symbol, callback) {
-    return this.subscribe({
-      ticks: symbol
-    }, callback);
+  constructor(ws, options = {}) {
+    super(ws, options);
+    this.endpoints = MarketApiRegistry.endpoints;
+  }
+
+  /**
+   * Get asset index
+   * @param {Object} [options] Request options
+   * @param {number} [options.reqId] Custom request ID
+   * @param {Object} [options.passthrough] Custom passthrough data
+   * @returns {Promise<BaseResponse>} Asset index containing available trade types and parameters
+   */
+  getAssetIndex(options = {}) {
+    const request = {
+      asset_index: 1
+    };
+    
+    return this.send(
+      this.endpoints.assetIndex,
+      request,
+      options
+    );
   }
 
   /**
    * Get active symbols
-   * Example:
-   * {
-   *   "active_symbols": "brief",
-   *   "product_type": "basic",
-   *   "req_id": 2
-   * }
-   * @param {Object} params Request parameters
-   * @param {string} [params.active_symbols="brief"] Type of active symbols data
+   * @param {Object} [params] Request parameters
+   * @param {string} [params.active_symbols="brief"] Type of active symbols data ("brief" or "full")
    * @param {string} [params.product_type] If specified, active symbols for this product type only
-   * @returns {Promise<Object>} Active symbols
+   * @param {string[]} [params.contract_type] Array of contract types to filter active symbols
+   * @param {Object} [options] Request options
+   * @param {number} [options.reqId] Custom request ID
+   * @param {Object} [options.passthrough] Custom passthrough data
+   * @returns {Promise<BaseResponse>} Active symbols
    */
-  getActiveSymbols(params = {}) {
-    return this.send({
-      active_symbols: params.active_symbols || 'brief',
-      product_type: params.product_type
-    });
+  getActiveSymbols(params = {}, options = {}) {
+    // Format request according to schema
+    const request = {
+      active_symbols: params.active_symbols || 'brief'
+    };
+
+    // Add optional parameters only if they exist
+    if (params.contract_type) {
+      request.contract_type = params.contract_type;
+    }
+    if (params.product_type) {
+      request.product_type = params.product_type;
+    }
+
+    return this.send(
+      this.endpoints.activeSymbols,
+      request,
+      options
+    );
   }
 
   /**
    * Get contracts for symbol
-   * Example:
-   * {
-   *   "contracts_for": "R_50",
-   *   "currency": "USD",
-   *   "landing_company": "svg",
-   *   "product_type": "basic",
-   *   "req_id": 3
-   * }
    * @param {Object} params Request parameters
    * @param {string} params.symbol Symbol code
    * @param {string} [params.currency] Currency to get contracts for
    * @param {string} [params.landing_company] Landing company
    * @param {string} [params.product_type] Product type
-   * @returns {Promise<Object>} Contracts for symbol
+   * @param {Object} [options] Request options
+   * @param {number} [options.reqId] Custom request ID
+   * @param {Object} [options.passthrough] Custom passthrough data
+   * @returns {Promise<BaseResponse>} Contracts for symbol
    */
-  getContractsFor(params) {
+  getContractsFor(params, options = {}) {
     if (!params.symbol) {
-      throw new Error('Symbol is required');
+      throw new Error('Symbol is required for contracts_for request');
     }
 
-    return this.send({
-      contracts_for: params.symbol,
-      currency: params.currency,
-      landing_company: params.landing_company,
-      product_type: params.product_type
-    });
+    // Format request according to schema
+    const request = {
+      contracts_for: params.symbol
+    };
+
+    // Add optional parameters in specific order as per API docs
+    if (params.currency) {
+      request.currency = params.currency;
+    }
+    if (params.product_type) {
+      request.product_type = params.product_type;
+    }
+    if (params.landing_company) {
+      request.landing_company = params.landing_company;
+    }
+
+    return this.send(
+      this.endpoints.contractsFor,
+      request,
+      options
+    );
   }
 
   /**
-   * Get price proposal
+   * Subscribe to price proposal updates
    * Example:
    * {
    *   "proposal": 1,
-   *   "amount": 100,
-   *   "barrier": "+0.1",
-   *   "basis": "payout",
-   *   "contract_type": "CALL",
-   *   "currency": "USD",
-   *   "duration": 60,
-   *   "duration_unit": "s",
-   *   "symbol": "R_100",
-   *   "req_id": 4
-   * }
-   * @param {Object} params Proposal parameters
-   * @returns {Promise<Object>} Price proposal
-   */
-  getPriceProposal(params) {
-    const requiredParams = [
-      'amount',
-      'basis',
-      'contract_type',
-      'currency',
-      'duration',
-      'duration_unit',
-      'symbol'
-    ];
-
-    for (const param of requiredParams) {
-      if (!params[param]) {
-        throw new Error(`${param} is required`);
-      }
-    }
-
-    return this.send({
-      proposal: 1,
-      ...params
-    });
-  }
-
-  /**
-   * Subscribe to price proposal
-   * Example:
-   * {
-   *   "proposal": 1,
-   *   "amount": 100,
-   *   "barrier": "+0.1",
-   *   "basis": "payout",
-   *   "contract_type": "CALL",
-   *   "currency": "USD",
-   *   "duration": 60,
-   *   "duration_unit": "s",
-   *   "symbol": "R_100",
    *   "subscribe": 1,
-   *   "req_id": 5
+   *   "amount": 10,
+   *   "basis": "stake",
+   *   "contract_type": "DIGITMATCH",
+   *   "currency": "AUD",
+   *   "symbol": "1HZ100V",
+   *   "duration": 1,
+   *   "duration_unit": "t",
+   *   "barrier": 5
    * }
    * @param {Object} params Proposal parameters
+   * @param {number} params.amount Contract amount
+   * @param {string} params.basis "stake" or "payout"
+   * @param {string} params.contract_type Contract type
+   * @param {string} params.currency Currency code
+   * @param {string} params.symbol Market symbol
+   * @param {number} params.duration Contract duration
+   * @param {string} params.duration_unit Duration unit (t: ticks, s: seconds, m: minutes, h: hours, d: days)
+   * @param {string|number} [params.barrier] Contract barrier (required for some contract types)
    * @param {Function} callback Callback for proposal updates
+   * @param {Object} [options] Request options
    * @returns {Promise<Object>} Proposal subscription
    */
-  subscribePriceProposal(params, callback) {
-    const requiredParams = [
-      'amount',
-      'basis',
-      'contract_type',
-      'currency',
-      'duration',
-      'duration_unit',
-      'symbol'
-    ];
-
-    for (const param of requiredParams) {
-      if (!params[param]) {
-        throw new Error(`${param} is required`);
-      }
+  /**
+   * Subscribe to price proposal updates
+   * Example request:
+   * ```javascript
+   * const subscription = await marketApi.subscribeProposal({
+   *   amount: 10,
+   *   basis: 'stake',
+   *   contractType: 'DIGITMATCH',
+   *   currency: 'USD',
+   *   symbol: '1HZ100V',
+   *   duration: 1,
+   *   durationUnit: 't',
+   *   barrier: 5,
+   *   productType: 'basic'
+   * }, (response) => {
+   *   console.log('Price update:', response.proposal);
+   * });
+   * 
+   * // Later, to unsubscribe:
+   * await marketApi.unsubscribeProposal(subscription.reqId);
+   * ```
+   * 
+   * Error handling:
+   * ```javascript
+   * try {
+   *   const subscription = await marketApi.subscribeProposal({...}, callback);
+   * } catch (error) {
+   *   if (error.code === 'MarketIsClosed') {
+   *     console.error('Market is currently closed');
+   *   } else if (error.code === 'InvalidParameters') {
+   *     console.error('Invalid parameters:', error.message);
+   *   } else {
+   *     console.error('Subscription failed:', error);
+   *   }
+   * }
+   * ```
+   * 
+   * @param {Object} params Proposal parameters
+   * @param {number} params.amount Contract amount
+   * @param {string} params.basis "stake" or "payout"
+   * @param {string} params.contractType Contract type
+   * @param {string} params.currency Currency code (3 letters)
+   * @param {string} params.symbol Market symbol
+   * @param {number} params.duration Contract duration (minimum: 1)
+   * @param {string} params.durationUnit Duration unit (t: ticks, s: seconds, m: minutes, h: hours, d: days)
+   * @param {string|number} [params.barrier] Contract barrier (required for some contract types)
+   * @param {string} [params.productType] Product type
+   * @param {Function} callback Callback for proposal updates
+   * @param {Object} [options] Request options
+   * @returns {Promise<Object>} Proposal subscription details
+   * @throws {Error} If required parameters are missing or invalid
+   */
+  subscribeProposal(params, callback, options = {}) {
+    // Validate required parameters
+    if (!params.amount || !params.basis || !params.contractType || 
+        !params.currency || !params.symbol || !params.duration || 
+        !params.durationUnit) {
+      throw new Error('Required proposal parameters missing');
     }
 
-    return this.subscribe({
-      proposal: 1,
-      ...params
-    }, callback);
+    // Validate currency format
+    if (!/^[A-Z]{3}$/.test(params.currency)) {
+      throw new Error('Currency must be a 3-letter code');
+    }
+
+    // Validate amount and duration
+    if (params.amount <= 0) {
+      throw new Error('Amount must be greater than 0');
+    }
+    if (params.duration < 1) {
+      throw new Error('Duration must be at least 1');
+    }
+
+    // Format request according to schema
+    const request = {
+      proposal: 1
+    };
+
+    // Add required parameters in specific order as per API docs
+    request.amount = params.amount;
+    request.basis = params.basis;
+    request.contract_type = params.contractType;
+    request.currency = params.currency;
+    request.symbol = params.symbol;
+    request.duration = params.duration;
+    request.duration_unit = params.durationUnit;
+
+    // Add optional parameters in specific order
+    if (params.barrier !== undefined) {
+      request.barrier = params.barrier;
+    }
+    if (params.productType) {
+      request.product_type = params.productType;
+    }
+
+
+    // Subscribe with formatted parameters
+    return this.subscribe(
+      this.endpoints.proposal,
+      request,
+      (response) => {
+        // Format response from snake_case to camelCase before passing to callback
+        callback(this.formatResponseData(response));
+      },
+      options
+    );
   }
 
   /**
-   * Get trading times
-   * Example:
-   * {
-   *   "trading_times": "2023-03-01",
-   *   "req_id": 6
-   * }
-   * @param {string} date Trading date (YYYY-MM-DD)
-   * @returns {Promise<Object>} Trading times
+   * Unsubscribe from price proposal updates
+   * @param {string|number} subscriptionId Subscription ID to unsubscribe
+   * @returns {Promise<void>}
    */
-  getTradingTimes(date) {
-    if (!date) {
-      throw new Error('Date is required');
+  async unsubscribeProposal(subscriptionId) {
+    if (!subscriptionId) {
+      throw new Error('Subscription ID is required');
     }
-
-    return this.send({
-      trading_times: date
-    });
+    await this.ws.unsubscribe(subscriptionId);
   }
 
   /**
-   * Get price history
+   * Subscribe to ticks history for a symbol
    * Example:
-   * {
-   *   "ticks_history": "R_50",
-   *   "adjust_start_time": 1,
-   *   "count": 10,
-   *   "end": "latest",
-   *   "start": 1,
-   *   "style": "ticks",
-   *   "req_id": 7
-   * }
-   * @param {Object} params History parameters
-   * @returns {Promise<Object>} Price history
+   * ```javascript
+   * const subscription = await marketApi.subscribeTicksHistory({
+   *   symbol: '1HZ100V',
+   *   style: 'ticks',
+   *   end: 'latest',
+   *   count: 1000,
+   *   adjustStartTime: 1
+   * }, (response) => {
+   *   if (response.msg_type === 'history') {
+   *     console.log('Initial history:', response.history);
+   *   } else if (response.msg_type === 'tick') {
+   *     console.log('New tick:', response.tick);
+   *   }
+   * });
+   * 
+   * // Later, to unsubscribe:
+   * await marketApi.unsubscribeTicksHistory(subscription.reqId);
+   * ```
+   * 
+   * @param {Object} params Request parameters
+   * @param {string} params.symbol Symbol code (e.g. '1HZ100V')
+   * @param {string} params.style Data style ('ticks' or 'candles')
+   * @param {string|number} params.end End time ('latest' or epoch)
+   * @param {number} [params.count] Number of ticks/candles (default: 1000)
+   * @param {number} [params.adjustStartTime] Adjust start time to account for missing ticks (0 or 1)
+   * @param {string|number} [params.start] Start time (epoch)
+   * @param {Function} callback Callback for tick updates
+   * @param {Object} [options] Request options
+   * @returns {Promise<Object>} Subscription details
+   * @throws {Error} If required parameters are missing or invalid
    */
-  getPriceHistory(params) {
-    if (!params.ticks_history) {
-      throw new Error('Symbol is required');
+  subscribeTicksHistory(params, callback, options = {}) {
+    // Validate required parameters
+    if (!params.symbol || !params.style || !params.end) {
+      throw new Error('Required parameters missing: symbol, style, end');
     }
 
-    return this.send({
-      ticks_history: params.ticks_history,
-      adjust_start_time: params.adjust_start_time,
-      count: params.count,
-      end: params.end || 'latest',
-      start: params.start,
-      style: params.style || 'ticks'
-    });
+    // Validate style parameter
+    if (!['ticks', 'candles'].includes(params.style)) {
+      throw new Error('Style must be either "ticks" or "candles"');
+    }
+
+    // Format request according to schema
+    const request = {
+      ticks_history: params.symbol
+    };
+
+    // Add required parameters in specific order as per API docs
+    request.style = params.style;
+    request.end = params.end;
+    request.count = params.count || 1000;
+
+    // Add optional parameters in specific order
+    if (params.adjustStartTime !== undefined) {
+      request.adjust_start_time = params.adjustStartTime;
+    }
+    if (params.start !== undefined) {
+      request.start = params.start;
+    }
+
+    // Add subscription flag
+    request.subscribe = 1;
+
+    // Subscribe with formatted parameters
+    return this.subscribe(
+      this.endpoints.ticksHistory,
+      request,
+      (response) => {
+        // Format response from snake_case to camelCase before passing to callback
+        callback(this.formatResponseData(response));
+      },
+      options
+    );
   }
 
   /**
-   * Subscribe to candles
-   * Example:
-   * {
-   *   "ticks_history": "R_50",
-   *   "adjust_start_time": 1,
-   *   "count": 10,
-   *   "end": "latest",
-   *   "start": 1,
-   *   "style": "candles",
-   *   "subscribe": 1,
-   *   "req_id": 8
-   * }
-   * @param {Object} params Candle parameters
-   * @param {Function} callback Callback for candle updates
-   * @returns {Promise<Object>} Candle subscription
+   * Unsubscribe from ticks history updates
+   * @param {string|number} subscriptionId Subscription ID to unsubscribe
+   * @returns {Promise<void>}
    */
-  subscribeCandles(params, callback) {
-    if (!params.ticks_history) {
-      throw new Error('Symbol is required');
+  async unsubscribeTicksHistory(subscriptionId) {
+    if (!subscriptionId) {
+      throw new Error('Subscription ID is required');
     }
-
-    return this.subscribe({
-      ticks_history: params.ticks_history,
-      adjust_start_time: params.adjust_start_time,
-      count: params.count,
-      end: params.end || 'latest',
-      start: params.start,
-      style: 'candles',
-      granularity: params.granularity
-    }, callback);
+    await this.ws.unsubscribe(subscriptionId);
   }
 }

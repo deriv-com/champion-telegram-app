@@ -6,6 +6,13 @@ import { BaseApi } from './base-api';
  */
 export class AccountApi extends BaseApi {
   /**
+   * @param {Object} [options] Optional configuration
+   */
+  constructor(ws, options = {}) {
+    super(ws, options);
+  }
+
+  /**
    * Get account balance
    * Example:
    * {

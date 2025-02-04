@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
 import { useTelegram, useAuth } from '@/hooks';
 import { APP_CONFIG } from '@/config/app.config';
@@ -7,7 +7,8 @@ import { authService } from '@/services/auth.service';
 import { logoutIcon } from '@/assets/images';
 import styles from './AppBar.module.css';
 
-const ChevronIcon = ({ className }) => (
+// Move ChevronIcon outside component to prevent recreation
+const ChevronIcon = memo(({ className }) => (
   <svg 
     className={className} 
     width="20" 
@@ -22,7 +23,7 @@ const ChevronIcon = ({ className }) => (
   >
     <path d="M6 9l6 6 6-6"/>
   </svg>
-);
+));
 
 ChevronIcon.propTypes = {
   className: PropTypes.string
@@ -61,21 +62,12 @@ const AppBar = () => {
     }
   }, [defaultAccount?.account]);
 
-  // Listen for account changes
-  useEffect(() => {
-    const handleAccountChange = () => {
-      loadTradingAccounts();
-    };
-    window.addEventListener('accountChange', handleAccountChange);
-    return () => window.removeEventListener('accountChange', handleAccountChange);
-  }, [loadTradingAccounts]);
-
   // Load accounts initially and when default account changes
   useEffect(() => {
     if (!isLoading) {
       loadTradingAccounts();
     }
-  }, [loadTradingAccounts, isLoading]);
+  }, [loadTradingAccounts, isLoading, defaultAccount]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -171,7 +163,7 @@ const AppBar = () => {
               ) : (
                 <div className={styles.accountDetails} data-testid="account-details">
                   <span className={styles.accountId} data-testid="account-id">{accountId}</span>
-                  <span className={styles.balance} data-testid="balance">{currency} {balance}</span>
+                  <span className={styles.balance} data-testid="balance">{balance} {currency}</span>
                 </div>
               )}
               <ChevronIcon className={`${styles.chevron} ${isDropdownOpen ? styles.rotated : ''}`} />
@@ -206,8 +198,11 @@ const AppBar = () => {
                 onClick={() => handleAccountSwitch(account)}
                 data-testid={`account-${account.account}`}
               >
-                <span className={styles.accountItemCurrency}>{account.currency}</span>
-                <span className={styles.accountItemId}>{account.account}</span>
+                <div className={styles.accountItemLeading}>
+                  <span className={styles.accountItemCurrency}>{account.currency}</span>
+                  <span className={styles.accountItemId}>{account.account}</span>
+                </div>
+                <span className={styles.accountItemBalance}>1,000.00 {account.currency}</span>
               </div>
             ))}
           </div>
@@ -225,4 +220,4 @@ const AppBar = () => {
   );
 };
 
-export default AppBar;
+export default memo(AppBar);

@@ -1,3 +1,2 @@
-export { default as TradeView } from './components/TradeView';
-export { tradeApi } from './api';
+export { default as TradePage } from './components/TradePage';
 export { useTrade } from './hooks/useTrade';
