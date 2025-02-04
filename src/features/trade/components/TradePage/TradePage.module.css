@@ -32,8 +32,127 @@
   min-width: min-content;
 }
 
-.inputRow > *:first-child {
-  margin-right: auto;
+.halfWidth {
+  flex: 1 1 calc(50% - 0.5rem);
+  min-width: 150px;
+}
+
+.digitPredictionWrapper {
+  margin-top: 1.5rem;
+  width: 100%;
+  margin-bottom: calc(var(--tab-bar-height) + 80px);
+}
+
+.tradeButtonsContainer {
+  position: fixed;
+  bottom: calc(var(--tab-bar-height) + 1rem);
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 1rem;
+  z-index: 10;
+}
+
+.tradeButton {
+  flex: 1;
+  padding: 0.875rem 1.25rem;
+  border: none;
+  border-radius: var(--border-radius);
+  color: var(--color-white);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--box-shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.buttonContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  width: 100%;
+  position: relative;
+}
+
+.buttonLabel {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: 0.5px;
+}
+
+.payoutRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px !important;
+  padding: 0.2rem 0.75rem;
+}
+
+.payoutLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-white);
+  opacity: 0.9;
+  line-height: var(--line-height-normal);
+}
+
+.payoutAmount {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-white);
+  line-height: var(--line-height-normal);
+}
+
+.tradeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.positiveButton {
+  background: #03c390;
+  animation: buttonPulse 2s infinite;
+}
+
+.positiveButton:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(3, 195, 144, 0.3);
+}
+
+.positiveButton:not(:disabled):active {
+  transform: translateY(0);
+  box-shadow: 0 8px 16px rgba(3, 195, 144, 0.2);
+}
+
+.negativeButton {
+  background: #df0040;
+  animation: buttonPulse 2s infinite;
+  animation-delay: 0.5s;
+}
+
+.negativeButton:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(223, 0, 64, 0.3);
+}
+
+.negativeButton:not(:disabled):active {
+  transform: translateY(0);
+  box-shadow: 0 8px 16px rgba(223, 0, 64, 0.2);
+}
+
+@keyframes buttonPulse {
+  0% {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
 }
 
 .tradeButtonsRow {

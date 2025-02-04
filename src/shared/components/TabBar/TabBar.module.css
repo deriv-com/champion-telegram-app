@@ -1,8 +1,8 @@
 .tabBar {
   display: flex;
-  background-color: color-mix(in srgb, var(--color-white) 50%, var(--color-background));
-  padding: 0 0 env(safe-area-inset-bottom, 0px);
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  background: var(--color-white);
+  padding: 0.5rem 1rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--color-background-dark);
   position: fixed;
   bottom: 0;
   left: 0;
@@ -10,75 +10,70 @@
   width: 100%;
   height: calc(var(--tab-bar-height) + env(safe-area-inset-bottom, 0px));
   z-index: 2;
-  box-shadow: 0 -1px 1px rgba(0, 0, 0, 0.01);
+  box-shadow: var(--box-shadow-lg);
   box-sizing: border-box;
+  gap: 0.5rem;
 }
 
 .tabButton {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-xxs) 0;
-  margin: 0;
+  padding: 0.95rem 0.95rem;
+  margin: -0.25rem 0;
   border: none;
   background: none;
   color: var(--color-text-light);
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-normal);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   outline: none;
-  overflow: hidden;
-  box-sizing: border-box;
+  border-radius: var(--border-radius);
 }
 
-/* Hover effect */
 .tabButton:hover:not(.active) {
-  background-color: rgba(var(--color-primary-rgb), 0.05);
   color: var(--color-text);
+  background: var(--color-background);
 }
 
-/* Focus styles */
 .tabButton:focus-visible {
-  box-shadow: inset 0 0 0 2px var(--color-primary);
-  background-color: rgba(var(--color-primary-rgb), 0.05);
+  box-shadow: var(--box-shadow-primary);
+  background: var(--color-background);
 }
 
-/* Active touch feedback */
 .tabButton:active:not(.active) {
-  background-color: rgba(var(--color-primary-rgb), 0.1);
-  transform: scale(0.98);
+  transform: scale(0.95);
 }
 
 .tabButton.active {
   color: var(--color-primary);
-  font-weight: var(--font-weight-medium);
-  background-color: rgba(var(--color-primary-rgb), 0.15);
-}
-
-.tabButton:not(:last-child) {
-  border-right: 1px solid rgba(0, 0, 0, 0.03);
+  font-weight: var(--font-weight-bold);
+  background: var(--color-background);
 }
 
 .tabButton img {
   width: 24px;
   height: 24px;
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  opacity: 0.6;
-  filter: none;
-  will-change: transform, opacity, filter;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.7;
+  margin-bottom: 4px;
 }
 
 .tabButton.active img {
-  transform: scale(1.15);
   opacity: 1;
-  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(200deg) brightness(118%) contrast(119%);
+  filter: brightness(0) saturate(100%) invert(47%) sepia(98%) saturate(1783%) hue-rotate(167deg) brightness(99%) contrast(101%);
 }
 
 .tabButton span {
-  font-size: 11px;
+  font-size: var(--font-size-sm);
   line-height: 1;
-  padding-top: var(--spacing-xs);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tabButton.active span {
+  transform: translateY(1px);
 }

@@ -1,19 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './MarketSelector.module.css';
 
-/**
- * MarketSelector component for selecting trading markets
- * Displays markets from active symbols API for digit trading
- * 
- * @param {Object} props
- * @param {Array} props.activeSymbols - Array of active trading symbols from the API
- * @param {Function} props.onMarketChange - Callback function when market selection changes
- * @param {string} [props.defaultMarket] - Optional default market to select
- * @param {boolean} [props.disabled] - Whether the selector is disabled
- */
 const MarketSelector = ({ activeSymbols, onMarketChange, defaultMarket, disabled = false }) => {
-  // Initialize state with default market or first available market
   const [selectedMarket, setSelectedMarket] = useState(() => {
     if (!activeSymbols?.length) return '';
     if (defaultMarket && activeSymbols.some(market => market.symbol === defaultMarket)) {
@@ -22,14 +11,42 @@ const MarketSelector = ({ activeSymbols, onMarketChange, defaultMarket, disabled
     return activeSymbols[0].symbol;
   });
 
-  // Handle market selection change
-  const handleMarketChange = useCallback((event) => {
-    const newMarket = event.target.value;
-    setSelectedMarket(newMarket);
-    onMarketChange?.(newMarket);
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const dropdownRef = useRef(null);
+  const searchInputRef = useRef(null);
+
+  const handleClickOutside = useCallback((event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsOpen(false);
+      setSearchQuery('');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isOpen]);
+
+  const filteredMarkets = activeSymbols.filter(market => 
+    market.display_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    market.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [handleClickOutside]);
+
+  const handleMarketSelect = useCallback((market) => {
+    setSelectedMarket(market.symbol);
+    onMarketChange?.(market.symbol);
+    setIsOpen(false);
   }, [onMarketChange]);
 
-  // If no markets are available or loading, render a message
+  const selectedMarketName = activeSymbols?.find(m => m.symbol === selectedMarket)?.display_name || selectedMarket;
+
   if (!activeSymbols?.length) {
     return (
       <div className={styles.error}>
@@ -39,26 +56,85 @@ const MarketSelector = ({ activeSymbols, onMarketChange, defaultMarket, disabled
   }
 
   return (
-    <div className={`${styles.container} ${disabled ? styles.disabled : ''}`}>
-      <label htmlFor="market-select" className={styles.label}>
+    <div className={`${styles.container} ${disabled ? styles.disabled : ''}`} ref={dropdownRef}>
+      <label className={styles.label}>
         Select Market
       </label>
-      <select
-        id="market-select"
-        className={styles.select}
-        value={selectedMarket}
-        onChange={handleMarketChange}
+      <button
+        className={`${styles.trigger} ${isOpen ? styles.active : ''}`}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
-        aria-label="Select trading market"
-        role="combobox"
-        aria-expanded="false"
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
       >
-        {activeSymbols.map((market) => (
-          <option key={market.symbol} value={market.symbol}>
-            {market.display_name || market.symbol}
-          </option>
-        ))}
-      </select>
+        <span className={styles.selectedText}>{selectedMarketName}</span>
+        <svg 
+          className={`${styles.chevron} ${isOpen ? styles.open : ''}`} 
+          width="20" 
+          height="20" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          strokeWidth="2.5" 
+          strokeLinecap="round" 
+          strokeLinejoin="round"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      {isOpen && (
+        <div className={styles.dropdown} role="listbox">
+          <div className={styles.searchContainer}>
+            <input
+              ref={searchInputRef}
+              type="text"
+              className={styles.searchInput}
+              placeholder="Search markets..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <button
+                className={styles.clearButton}
+                onClick={() => setSearchQuery('')}
+                type="button"
+                aria-label="Clear search"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            )}
+          </div>
+          {filteredMarkets.length === 0 ? (
+            <div className={styles.noResults}>
+              No markets found
+            </div>
+          ) : (
+            filteredMarkets.map((market) => (
+            <button
+              key={market.symbol}
+              className={`${styles.option} ${market.symbol === selectedMarket ? styles.selected : ''}`}
+              onClick={() => handleMarketSelect(market)}
+              role="option"
+              aria-selected={market.symbol === selectedMarket}
+            >
+              {market.display_name || market.symbol}
+            </button>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 };

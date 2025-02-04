@@ -16,7 +16,7 @@ const DigitPrediction = ({
     <div className={styles.container}>
       <div className={styles.header}>
         <span className={styles.title}>
-          {contractType === 'DIGITMATCH' ? 'Matches' : 'Differs'}
+          Last Digit Prediction
         </span>
         {currentDigit !== null && (
           <span className={styles.currentDigit}>
@@ -45,7 +45,7 @@ const DigitPrediction = ({
       {isTrading && duration > 0 && (
         <div className={styles.tickCounter}>
           <div className={styles.progressBar}>
-            <div 
+            <div
               className={styles.progress}
               style={{
                 width: `${((duration - remainingTicks) / duration) * 100}%`
