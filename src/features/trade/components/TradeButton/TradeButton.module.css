@@ -1,0 +1,21 @@
+.buttonPositive {
+  background-color: #4CAF50 !important;
+  color: white !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+}
+
+.buttonNegative {
+  background-color: #F44336 !important;
+  color: white !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+}
+
+.buttonPositive:hover {
+  background-color: #43A047 !important;
+}
+
+.buttonNegative:hover {
+  background-color: #E53935 !important;
+}

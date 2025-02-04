@@ -8,7 +8,7 @@ import { useAuth } from './useAuth';
  * 
  * Example usage:
  * ```jsx
- * const TradeView = () => {
+ * const TradePage = () => {
  *   const { isChanging, defaultAccount } = useAccountChange(async () => {
  *     // Reload trade data for new account
  *     await loadTradeData();
@@ -30,14 +30,15 @@ export const useAccountChange = (onAccountChange) => {
   } = useAuth();
 
   const handleAccountChange = useCallback(async () => {
-    if (onAccountChange) {
+    if (onAccountChange && defaultAccount?.account !== lastAccountId) {
       try {
+        lastAccountId = defaultAccount?.account;
         await onAccountChange();
       } catch (error) {
         console.error('Error handling account change:', error);
       }
     }
-  }, [onAccountChange]);
+  }, [onAccountChange, defaultAccount]);
 
   useEffect(() => {
     // Listen for account changes
@@ -53,3 +54,6 @@ export const useAccountChange = (onAccountChange) => {
     defaultAccount
   };
 };
+
+// Module-level variable to track last account
+let lastAccountId = null;

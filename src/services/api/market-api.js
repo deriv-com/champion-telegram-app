@@ -13,10 +13,10 @@ import { API_METHODS } from '@/schemas/api/base.js';
  */
 export class MarketApi extends BaseApi {
   /**
-   * @param {import('@/services/websocket.service').default} websocket WebSocket manager instance
+   * @param {Object} [options] Optional configuration
    */
-  constructor(websocket) {
-    super(websocket);
+  constructor(ws, options = {}) {
+    super(ws, options);
     this.endpoints = MarketApiRegistry.endpoints;
   }
 
@@ -28,9 +28,13 @@ export class MarketApi extends BaseApi {
    * @returns {Promise<BaseResponse>} Asset index containing available trade types and parameters
    */
   getAssetIndex(options = {}) {
+    const request = {
+      asset_index: 1
+    };
+    
     return this.send(
       this.endpoints.assetIndex,
-      { asset_index: 1 },
+      request,
       options
     );
   }
@@ -47,13 +51,22 @@ export class MarketApi extends BaseApi {
    * @returns {Promise<BaseResponse>} Active symbols
    */
   getActiveSymbols(params = {}, options = {}) {
+    // Format request according to schema
+    const request = {
+      active_symbols: params.active_symbols || 'brief'
+    };
+
+    // Add optional parameters only if they exist
+    if (params.contract_type) {
+      request.contract_type = params.contract_type;
+    }
+    if (params.product_type) {
+      request.product_type = params.product_type;
+    }
+
     return this.send(
       this.endpoints.activeSymbols,
-      {
-        active_symbols: params.active_symbols || 'brief',
-        product_type: params.product_type,
-        contract_type: params.contract_type
-      },
+      request,
       options
     );
   }
@@ -71,14 +84,29 @@ export class MarketApi extends BaseApi {
    * @returns {Promise<BaseResponse>} Contracts for symbol
    */
   getContractsFor(params, options = {}) {
+    if (!params.symbol) {
+      throw new Error('Symbol is required for contracts_for request');
+    }
+
+    // Format request according to schema
+    const request = {
+      contracts_for: params.symbol
+    };
+
+    // Add optional parameters in specific order as per API docs
+    if (params.currency) {
+      request.currency = params.currency;
+    }
+    if (params.product_type) {
+      request.product_type = params.product_type;
+    }
+    if (params.landing_company) {
+      request.landing_company = params.landing_company;
+    }
+
     return this.send(
       this.endpoints.contractsFor,
-      {
-        contracts_for: params.symbol,
-        currency: params.currency,
-        landing_company: params.landing_company,
-        product_type: params.product_type
-      },
+      request,
       options
     );
   }
@@ -184,24 +212,33 @@ export class MarketApi extends BaseApi {
       throw new Error('Duration must be at least 1');
     }
 
-    // Format parameters from camelCase to snake_case
-    const formattedParams = this.formatRequestParams({
-      proposal: 1,
-      amount: params.amount,
-      basis: params.basis,
-      contractType: params.contractType,
-      currency: params.currency,
-      symbol: params.symbol,
-      duration: params.duration,
-      durationUnit: params.durationUnit,
-      barrier: params.barrier,
-      productType: params.productType
-    });
+    // Format request according to schema
+    const request = {
+      proposal: 1
+    };
+
+    // Add required parameters in specific order as per API docs
+    request.amount = params.amount;
+    request.basis = params.basis;
+    request.contract_type = params.contractType;
+    request.currency = params.currency;
+    request.symbol = params.symbol;
+    request.duration = params.duration;
+    request.duration_unit = params.durationUnit;
+
+    // Add optional parameters in specific order
+    if (params.barrier !== undefined) {
+      request.barrier = params.barrier;
+    }
+    if (params.productType) {
+      request.product_type = params.productType;
+    }
+
 
     // Subscribe with formatted parameters
     return this.subscribe(
       this.endpoints.proposal,
-      formattedParams,
+      request,
       (response) => {
         // Format response from snake_case to camelCase before passing to callback
         callback(this.formatResponseData(response));
@@ -267,21 +304,31 @@ export class MarketApi extends BaseApi {
       throw new Error('Style must be either "ticks" or "candles"');
     }
 
-    // Format parameters from camelCase to snake_case
-    const formattedParams = this.formatRequestParams({
-      ticksHistory: params.symbol,
-      style: params.style,
-      end: params.end,
-      count: params.count || 1000,
-      adjustStartTime: params.adjustStartTime,
-      start: params.start,
-      subscribe: 1
-    });
+    // Format request according to schema
+    const request = {
+      ticks_history: params.symbol
+    };
+
+    // Add required parameters in specific order as per API docs
+    request.style = params.style;
+    request.end = params.end;
+    request.count = params.count || 1000;
+
+    // Add optional parameters in specific order
+    if (params.adjustStartTime !== undefined) {
+      request.adjust_start_time = params.adjustStartTime;
+    }
+    if (params.start !== undefined) {
+      request.start = params.start;
+    }
+
+    // Add subscription flag
+    request.subscribe = 1;
 
     // Subscribe with formatted parameters
     return this.subscribe(
       this.endpoints.ticksHistory,
-      formattedParams,
+      request,
       (response) => {
         // Format response from snake_case to camelCase before passing to callback
         callback(this.formatResponseData(response));

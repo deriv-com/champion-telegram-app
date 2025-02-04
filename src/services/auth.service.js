@@ -16,6 +16,41 @@ class AuthService {
       throw new Error('Encryption key is required for secure storage');
     }
     this.encryptionKey = encryptionKey;
+
+    // Track last authorized token to prevent duplicate calls
+    this._lastAuthorizedToken = null;
+  }
+
+  /**
+   * Authorize user account with the given token
+   * Uses the authorize API to authenticate the user's selected/default account
+   * Note: WebSocket connection should already be established by App initialization
+   * @param {string} token Authorization token for the account
+   * @returns {Promise<boolean>} True if account authorization was successful
+   */
+  async authorizeAccount(token) {
+    try {
+      const ws = websocketService.instance;
+      
+      // Check if WebSocket is already connected and authorized with this token
+      if (ws.isConnected() && ws.currentToken === token) {
+        console.log('WebSocket already connected and authorized with current token');
+        return true;
+      }
+
+      // Only authorize if WebSocket is connected but not authorized, or has different token
+      if (ws.isConnected() && ws.currentToken !== token) {
+        await ws.api.auth.authorize(token);
+        console.log('WebSocket re-authorized with new token');
+      }
+      
+      ws.currentToken = token;
+      return true;
+    } catch (error) {
+      console.error('Account authorization failed:', error);
+      this._lastAuthorizedToken = null;
+      return false;
+    }
   }
 
   /**
@@ -51,11 +86,6 @@ class AuthService {
    */
   async initialize() {
     try {
-      // Add small delay to simulate network latency in development
-      if (APP_CONFIG.environment.isDevelopment) {
-        await new Promise(resolve => setTimeout(resolve, 500));
-      }
-
       // Check if we have valid Telegram WebApp data first
       const telegramUser = WebApp?.initDataUnsafe?.user;
       if (telegramUser) {
@@ -77,23 +107,6 @@ class AuthService {
           await this.setTradingAccounts([account]);
           await this.setDefaultAccount(account);
         }
-
-        // Authorize WebSocket connection with default account token
-        if (account?.token) {
-          try {
-            // Don't try to connect, just authorize using existing connection
-            await websocketService.auth.authorize(account.token);
-            console.log('WebSocket authorized successfully during initialization');
-          } catch (error) {
-            console.error('WebSocket authorization failed during initialization:', error);
-            if (error.code === 'AuthorizationRequired' || error.code === 'InvalidToken') {
-              await this.clearSession();
-              return false;
-            }
-            // For other errors, log but don't fail initialization
-            console.warn('Non-critical WebSocket error:', error);
-          }
-        }
         
         return true;
       }
@@ -102,7 +115,8 @@ class AuthService {
       const storedSession = await this.getStoredSession();
       if (storedSession) {
         // We have stored session, validate it
-        return this.validateSession(storedSession);
+        const isValid = await this.validateSession(storedSession);
+        return isValid;
       }
       
       return false;
@@ -277,27 +291,6 @@ class AuthService {
           return false;
         }
       }
-
-      // Only attempt WebSocket authorization for OAuth users with a token
-      if (session.accountId && defaultAccount?.token) {
-        try {
-          // Check if WebSocket is connected first
-          if (!websocketService.isConnected()) {
-            await websocketService.connect();
-          }
-          await websocketService.auth.authorize(defaultAccount.token);
-          console.log('WebSocket authorized successfully');
-        } catch (error) {
-          console.error('WebSocket authorization failed:', error);
-          if (error.code === 'AuthorizationRequired' || error.code === 'InvalidToken') {
-            await this.clearSession();
-            return false;
-          }
-          // For other errors, log but don't fail validation
-          // This allows the app to work in a degraded state if WebSocket is temporarily unavailable
-          console.warn('Non-critical WebSocket error:', error);
-        }
-      }
       
       return true;
     } catch (error) {
@@ -395,19 +388,8 @@ class AuthService {
         console.warn('localStorage not available, using memory storage for default account');
       }
 
-      // Authorize WebSocket if token is present
-      if (account?.token) {
-        try {
-          await websocketService.auth.authorize(account.token);
-          console.log('WebSocket authorized successfully for new account');
-        } catch (error) {
-          console.error('WebSocket authorization failed:', error);
-          // Don't fail the account switch for WebSocket errors
-          // The WebSocket service will handle reconnection and re-authorization
-          console.warn('Non-critical WebSocket error:', error);
-        }
-      }
-
+      // Only authorize if WebSocket connection needs it
+      await this.authorizeAccount(account.token);
       return true;
     } catch (error) {
       console.error('Failed to set default account:', error);

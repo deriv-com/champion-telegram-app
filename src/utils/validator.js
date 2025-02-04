@@ -49,8 +49,30 @@ export class Validator {
       return;
     }
 
-    // Validate type
-    switch (schema.type) {
+    // Handle array of types
+    if (Array.isArray(schema.type)) {
+      const isValid = schema.type.some(type => this._validateType(type, value, schema, path));
+      if (!isValid) {
+        throw new Error(`${path} must be one of types: ${schema.type.join(', ')}`);
+      }
+      return;
+    }
+
+    // Validate single type
+    this._validateType(schema.type, value, schema, path);
+  }
+
+  /**
+   * Validate value against a specific type
+   * @param {string} type Type to validate against
+   * @param {*} value Value to validate
+   * @param {Object} schema Full property schema
+   * @param {string} path Property path for error messages
+   * @returns {boolean} True if valid
+   * @private
+   */
+  static _validateType(type, value, schema, path) {
+    switch (type) {
       case 'string':
         if (typeof value !== 'string') {
           throw new Error(`${path} must be a string`);
@@ -59,7 +81,7 @@ export class Validator {
         if (schema.enum && !schema.enum.includes(value)) {
           throw new Error(`${path} must be one of: ${schema.enum.join(', ')}`);
         }
-        break;
+        return true;
 
       case 'number':
         if (typeof value !== 'number') {

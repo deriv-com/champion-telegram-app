@@ -27,11 +27,13 @@ export const useAuth = () => {
       }
     };
 
+    const ws = websocketService.instance;
+    
     // Subscribe to WebSocket errors
-    websocketService.on('error', handleError);
+    ws.on('error', handleError);
 
     return () => {
-      websocketService.off('error', handleError);
+      ws.off('error', handleError);
     };
   }, []);
 
@@ -129,7 +131,7 @@ export const useAuth = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, []); // Empty dependency array to ensure stable reference
 
   const login = useCallback(async (telegramUser, oauthData) => {
     try {

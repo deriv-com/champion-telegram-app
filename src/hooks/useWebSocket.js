@@ -3,8 +3,9 @@ import websocketService from '@/services/websocket.service';
 
 export const useWebSocket = (options = {}) => {
   const { debug = false } = options;
+  const ws = websocketService.instance;
 
-  const [isConnected, setIsConnected] = useState(websocketService.isConnected);
+  const [isConnected, setIsConnected] = useState(ws.isConnected());
   const [messageHistory, setMessageHistory] = useState([]);
   const [error, setError] = useState(null);
 
@@ -41,36 +42,36 @@ export const useWebSocket = (options = {}) => {
     };
 
     // Subscribe to WebSocket events
-    websocketService.on('connected', handleConnect);
-    websocketService.on('disconnected', handleDisconnect);
-    websocketService.on('error', handleError);
-    websocketService.on('message', handleMessage);
+    ws.on('connected', handleConnect);
+    ws.on('disconnected', handleDisconnect);
+    ws.on('error', handleError);
+    ws.on('message', handleMessage);
 
     // Cleanup subscriptions
     return () => {
-      websocketService.off('connected', handleConnect);
-      websocketService.off('disconnected', handleDisconnect);
-      websocketService.off('error', handleError);
-      websocketService.off('message', handleMessage);
+      ws.off('connected', handleConnect);
+      ws.off('disconnected', handleDisconnect);
+      ws.off('error', handleError);
+      ws.off('message', handleMessage);
     };
-  }, [log]);
+  }, [log, ws]);
 
   // Expose WebSocket service methods
   const send = useCallback((request, options = {}) => {
-    return websocketService.send(request, options);
-  }, []);
+    return ws.send(request, options);
+  }, [ws]);
 
   const subscribe = useCallback((request, callback, options = {}) => {
-    return websocketService.subscribe(request, callback, options);
-  }, []);
+    return ws.subscribe(request, callback, options);
+  }, [ws]);
 
   const unsubscribe = useCallback((id) => {
-    return websocketService.unsubscribe(id);
-  }, []);
+    return ws.unsubscribe(id);
+  }, [ws]);
 
   const unsubscribeAll = useCallback(() => {
-    return websocketService.unsubscribeAll();
-  }, []);
+    return ws.unsubscribeAll();
+  }, [ws]);
 
   // Memoize return values
   return useMemo(() => ({

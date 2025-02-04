@@ -1,0 +1,56 @@
+.container {
+  padding: 1rem;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.marketSelectorWrapper {
+  max-width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.tradeControls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+  background-color: var(--background-paper);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.inputRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.inputRow > * {
+  flex: 1 1 auto;
+  min-width: min-content;
+}
+
+.inputRow > *:first-child {
+  margin-right: auto;
+}
+
+.tradeButtonsRow {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  position: fixed;
+  bottom: calc(var(--tab-bar-height) + env(safe-area-inset-bottom, 0px) + 1.5rem);
+  left: 0;
+  right: 0;
+  padding: 0 1rem;
+  z-index: 3;
+  background: linear-gradient(to top, var(--background-default) 80%, transparent);
+  padding-top: 1rem;
+}
+
+.tradeButtonsRow > * {
+  flex: 1;
+}

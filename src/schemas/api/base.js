@@ -35,11 +35,24 @@
  */
 
 export const API_METHODS = {
+  // Market data
   ASSET_INDEX: 'asset_index',
   ACTIVE_SYMBOLS: 'active_symbols',
   CONTRACTS_FOR: 'contracts_for',
   PROPOSAL: 'proposal',
   TICKS: 'ticks',
   TICKS_HISTORY: 'ticks_history',
-  TRADING_TIMES: 'trading_times'
+  TRADING_TIMES: 'trading_times',
+
+  // Trading
+  BUY: 'buy',
+  SELL: 'sell',
+  CANCEL: 'cancel',
+  PORTFOLIO: 'portfolio',
+  PROPOSAL_OPEN_CONTRACT: 'proposal_open_contract',
+  PROFIT_TABLE: 'profit_table',
+  STATEMENT: 'statement',
+  TOPUP_VIRTUAL: 'topup_virtual',
+  COPYTRADING_LIST: 'copytrading_list',
+  COPYTRADING_STATISTICS: 'copytrading_statistics'
 };

@@ -17,15 +17,15 @@ vi.mock('@/hooks', () => ({
 
 // Mock child components
 vi.mock('@/features/trade', () => ({
-  TradeView: () => <div data-testid="trade-view">Trade View</div>
+  TradePage: () => <div data-testid="trade-view">Trade View</div>
 }));
 
 vi.mock('@/features/cashier', () => ({
-  CashierView: () => <div data-testid="cashier-view">Cashier View</div>
+  CashierPage: () => <div data-testid="cashier-view">Cashier View</div>
 }));
 
 vi.mock('@/features/positions', () => ({
-  PositionsView: () => <div data-testid="positions-view">Positions View</div>
+  PositionsPage: () => <div data-testid="positions-view">Positions View</div>
 }));
 // Mock assets to avoid import issues in tests
 vi.mock('@/assets/images', () => ({
