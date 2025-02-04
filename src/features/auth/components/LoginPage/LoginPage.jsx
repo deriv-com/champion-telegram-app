@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Loading } from '@/shared';
+import { useNotification } from '@/hooks';
 import { ROUTES } from '@/config/routes.config';
 import { APP_CONFIG } from '@/config/app.config';
 import { useTelegram, useAuth } from '@/hooks';
@@ -9,7 +10,8 @@ import styles from './LoginPage.module.css';
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { handleTelegramLogin, webApp } = useTelegram();
+  const { handleTelegramLogin, webApp, showAlert } = useTelegram();
+  const { showError } = useNotification();
   const { handleOAuthCallback, isLoading, isAuthenticated, initialize } = useAuth();
   const isTelegramWebApp = Boolean(webApp?.initDataUnsafe?.user);
   const [processingAuth, setProcessingAuth] = useState(false);
@@ -90,8 +92,32 @@ const LoginPage = () => {
         
         <div className={styles.loginOptions}>
           {/* Option 1: Login with existing account */}
+          {/* Option 1: Telegram login - Most prominent */}
           <div className={styles.loginOption}>
-            <h2>Have an account?</h2>
+            <h2>Quick Login with Telegram</h2>
+            <Button
+              variant="primary"
+              onClick={() => {
+                if (!isTelegramWebApp) {
+                  showAlert("This feature is currently not supported. Please use your Champion Trade account to login.");
+                  return;
+                }
+                handleTelegramLogin();
+              }}
+              fullWidth
+            >
+              Continue with Telegram
+            </Button>
+            {!isTelegramWebApp && (
+              <p className={styles.restrictionMessage}>
+                Telegram login is currently not supported
+              </p>
+            )}
+          </div>
+
+          {/* Option 2: Login with existing account */}
+          <div className={styles.loginOption}>
+            <h2>Have a Champion Trade Account?</h2>
             <Button
               variant="primary"
               onClick={handleExistingAccountLogin}
@@ -101,11 +127,12 @@ const LoginPage = () => {
             </Button>
           </div>
 
-          {/* Option 2: Account creation restriction */}
+          {/* Option 3: Account creation */}
           <div className={styles.loginOption}>
-            <h2>Need an account?</h2>
+            <h2>New to Champion Trade?</h2>
             <p className={styles.restrictionMessage}>
               Account creation is currently unavailable in this app.
+              Please visit our website to create a new account.
             </p>
             <Button
               variant="secondary"
@@ -114,24 +141,6 @@ const LoginPage = () => {
             >
               Create account on website
             </Button>
-          </div>
-
-          {/* Option 3: Telegram login */}
-          <div className={styles.loginOption}>
-            <h2>Use Telegram</h2>
-            <Button
-              variant="primary"
-              onClick={handleTelegramLogin}
-              fullWidth
-              disabled={!isTelegramWebApp}
-            >
-              Continue with Telegram
-            </Button>
-            {!isTelegramWebApp && (
-              <p className={styles.restrictionMessage}>
-                Please open this app directly through Telegram
-              </p>
-            )}
           </div>
         </div>
       </div>

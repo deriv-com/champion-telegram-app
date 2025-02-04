@@ -1,29 +1,194 @@
 .positionsView {
-  display: flex;
-  flex-direction: column;
+  padding: 1rem;
   width: 100%;
-  height: 100%;
-  justify-content: flex-start;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  /* Remove nested scrolling since parent handles it */
-  overflow: visible;
+  min-height: var(--tg-viewport-stable-height);
+  padding-bottom: calc(var(--tg-safe-area-bottom, 0px) + var(--tab-bar-height, 0px));
 }
 
-/* Future positions-specific component styles */
-/* .filters {
-  margin-bottom: var(--spacing-lg);
+.tabContainer {
+  background: var(--color-white);
+  border-radius: var(--border-radius);
+  padding: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  box-shadow: var(--box-shadow-lg);
+  margin-bottom: 1.5rem;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: var(--border-radius);
+  background: transparent;
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab:hover:not(.active) {
+  background: var(--color-background);
+}
+
+.tab.active {
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--box-shadow);
 }
 
 .positionsList {
-  flex: 1;
-  overflow-y: auto;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
 }
 
 .positionCard {
-  background: var(--color-background-elevated);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
-  margin-bottom: var(--spacing-md);
-} */
+  background: var(--color-white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow-lg);
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cardHeader {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.marketName {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+}
+
+.type {
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.matches {
+  background: rgba(3, 195, 144, 0.1);
+  color: #03c390;
+}
+
+.differs {
+  background: rgba(223, 0, 64, 0.1);
+  color: #df0040;
+}
+
+.cardBody {
+  padding: 1rem;
+}
+
+.digitRow {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+}
+
+.digitInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.digitInfo span:first-child {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.targetDigit, .lastDigit {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  font-family: monospace;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius);
+  background: var(--color-background);
+}
+
+.targetDigit {
+  color: var(--color-primary);
+}
+
+.lastDigit {
+  color: var(--color-text);
+}
+
+.lastDigit.match {
+  background: rgba(3, 195, 144, 0.1);
+  color: #03c390;
+}
+
+.ticksRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--color-background);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.ticksLeft {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  animation: pulse 2s infinite;
+}
+
+.cardFooter {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-background);
+  font-weight: var(--font-weight-bold);
+}
+
+.profit {
+  color: #03c390;
+}
+
+.loss {
+  color: #df0040;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .positionsView {
+    padding: 1.5rem;
+  }
+
+  .positionsList {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .positionCard:hover {
+    transform: translateY(-2px);
+  }
+}
