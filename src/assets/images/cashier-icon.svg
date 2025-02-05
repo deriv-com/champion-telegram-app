@@ -1,4 +1,1 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="24" height="24" rx="6" fill="currentColor" fill-opacity="0.1"/>
-  <path d="M12 4V20M16 8H10C8.34 8 7 9.34 7 11C7 12.66 8.34 14 10 14H14C15.66 14 17 15.34 17 17C17 18.66 15.66 20 14 20H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+<svg width="24" height="24" viewBox="0 -0.015 0.51 0.51" xmlns="http://www.w3.org/2000/svg" class="si-glyph si-glyph-wallet"><g fill="#434343" fill-rule="evenodd"><path d="M.27.319V.25C.27.228.287.209.308.209h.141V.166C.449.146.437.128.42.123H.37L.369.121H.148L.144.122H.066V.121a.04.04 0 0 0-.034.043v.239c0 .024.019.047.042.047H.41C.432.45.45.43.45.405V.361H.309C.288.361.271.342.271.319" class="si-glyph-fill"/><path d="M.48.242H.33a.03.03 0 0 0-.029.031v.024c0 .017.013.031.029.031h.15A.03.03 0 0 0 .509.297V.273A.03.03 0 0 0 .48.242M.391.301H.329V.27h.062zM.148.121l.2-.068.022.068h.039l.012.002L.379.002.061.107l.004.014.007-.002z" class="si-glyph-fill"/></g></svg>
