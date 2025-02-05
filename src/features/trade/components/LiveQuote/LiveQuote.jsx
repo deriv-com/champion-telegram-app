@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './LiveQuote.module.css';
 
-const LiveQuote = ({ price = '1.23456', isDigitsTradeType = false, movement = 'up' }) => {
+const LiveQuote = ({ price = '1.23456', isDigitsTradeType = false, movement = 'up', onLastDigitChange }) => {
   const digits = price.toString().split('');
   const lastDigitIndex = digits.length - 1;
 
@@ -18,6 +18,11 @@ const LiveQuote = ({ price = '1.23456', isDigitsTradeType = false, movement = 'u
                 ${styles.digit}
                 ${index === lastDigitIndex && isDigitsTradeType ? styles.lastDigit : ''}
               `}
+              onClick={() => {
+                if (index === lastDigitIndex && isDigitsTradeType && onLastDigitChange) {
+                  onLastDigitChange(digit);
+                }
+              }}
             >
               {digit}
             </span>
@@ -107,7 +112,8 @@ const LiveQuote = ({ price = '1.23456', isDigitsTradeType = false, movement = 'u
 LiveQuote.propTypes = {
   price: PropTypes.string,
   isDigitsTradeType: PropTypes.bool,
-  movement: PropTypes.oneOf(['up', 'down'])
+  movement: PropTypes.oneOf(['up', 'down']),
+  onLastDigitChange: PropTypes.func
 };
 
 export default LiveQuote;

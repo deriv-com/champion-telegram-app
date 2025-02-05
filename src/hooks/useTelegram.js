@@ -8,7 +8,19 @@ import { ROUTES } from '@/config/routes.config';
 // Initialize Telegram WebApp
 export const initializeTelegramWebApp = () => {
   try {
+    // Initialize WebApp
     WebApp.ready();
+
+    // Lock orientation to portrait mode
+    WebApp.lockOrientation();
+    
+    // Set initial viewport height
+    const root = document.documentElement;
+    root.style.setProperty('--tg-viewport-height', `${WebApp.viewportHeight}px`);
+    root.style.setProperty('--tg-viewport-stable-height', `${WebApp.viewportStableHeight}px`);
+
+    // Request fullscreen mode
+    WebApp.requestFullscreen();
     WebApp.expand();
   } catch (error) {
     console.warn('Telegram WebApp initialization failed:', error);
@@ -76,12 +88,26 @@ export const useTelegram = () => {
 
   // Handle viewport changes
   useEffect(() => {
-    const handleViewportChanged = () => {
+    const updateViewportHeight = () => {
+      const root = document.documentElement;
+      // Set viewport heights from Telegram WebApp
+      const viewportHeight = WebApp.viewportHeight;
+      const viewportStableHeight = WebApp.viewportStableHeight;
+      
+      // Update CSS variables
+      root.style.setProperty('--tg-viewport-height', `${viewportHeight}px`);
+      root.style.setProperty('--tg-viewport-stable-height', `${viewportStableHeight}px`);
+      
+      // Update expanded state
       setIsExpanded(WebApp.isExpanded);
     };
 
-    WebApp.onEvent('viewportChanged', handleViewportChanged);
-    return () => WebApp.offEvent('viewportChanged', handleViewportChanged);
+    // Set initial viewport height
+    updateViewportHeight();
+
+    // Update on viewport changes
+    WebApp.onEvent('viewportChanged', updateViewportHeight);
+    return () => WebApp.offEvent('viewportChanged', updateViewportHeight);
   }, []);
 
   // Handle theme changes
@@ -114,8 +140,22 @@ export const useTelegram = () => {
 
   // Utility functions
   const showPopup = useCallback((message, buttons = [{ type: 'close' }]) => {
-    WebApp.showPopup({ message, buttons });
-    haptic.notification();
+    try {
+      // Check if we're in a valid Telegram WebApp environment
+      if (!WebApp.initData) {
+        // Fallback for development/testing outside Telegram
+        console.warn('Not in Telegram environment, falling back to alert');
+        WebApp.showAlert(message);
+        return;
+      }
+      
+      WebApp.showPopup({ message, buttons });
+      haptic.notification();
+    } catch (error) {
+      // Handle case where method is unsupported
+      console.warn('showPopup not supported, falling back to alert:', error);
+      WebApp.showAlert(message);
+    }
   }, []);
 
   const showAlert = useCallback((message) => {
