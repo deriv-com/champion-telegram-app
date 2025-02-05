@@ -1,6 +1,7 @@
-import React, { useCallback, useState, useRef, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './MarketSelector.module.css';
+import Modal from '@/shared/components/Modal';
 
 const MarketSelector = ({ activeSymbols, onMarketChange, defaultMarket, disabled = false }) => {
   const [selectedMarket, setSelectedMarket] = useState(() => {
@@ -11,38 +12,19 @@ const MarketSelector = ({ activeSymbols, onMarketChange, defaultMarket, disabled
     return activeSymbols[0].symbol;
   });
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const dropdownRef = useRef(null);
-  const searchInputRef = useRef(null);
-
-  const handleClickOutside = useCallback((event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setIsOpen(false);
-      setSearchQuery('');
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isOpen && searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  }, [isOpen]);
 
   const filteredMarkets = activeSymbols.filter(market => 
     market.display_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     market.symbol.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [handleClickOutside]);
-
   const handleMarketSelect = useCallback((market) => {
     setSelectedMarket(market.symbol);
     onMarketChange?.(market.symbol);
-    setIsOpen(false);
+    setShowModal(false);
+    setSearchQuery('');
   }, [onMarketChange]);
 
   const selectedMarketName = activeSymbols?.find(m => m.symbol === selectedMarket)?.display_name || selectedMarket;
@@ -56,20 +38,20 @@ const MarketSelector = ({ activeSymbols, onMarketChange, defaultMarket, disabled
   }
 
   return (
-    <div className={`${styles.container} ${disabled ? styles.disabled : ''}`} ref={dropdownRef}>
+    <div className={`${styles.container} ${disabled ? styles.disabled : ''}`}>
       <label className={styles.label}>
         Select Market
       </label>
       <button
-        className={`${styles.trigger} ${isOpen ? styles.active : ''}`}
-        onClick={() => !disabled && setIsOpen(!isOpen)}
+        className={`${styles.trigger} ${showModal ? styles.active : ''}`}
+        onClick={() => !disabled && setShowModal(true)}
         disabled={disabled}
-        aria-haspopup="listbox"
-        aria-expanded={isOpen}
+        aria-haspopup="dialog"
+        aria-expanded={showModal}
       >
         <span className={styles.selectedText}>{selectedMarketName}</span>
         <svg 
-          className={`${styles.chevron} ${isOpen ? styles.open : ''}`} 
+          className={`${styles.chevron} ${showModal ? styles.open : ''}`} 
           width="20" 
           height="20" 
           viewBox="0 0 24 24" 
@@ -82,16 +64,23 @@ const MarketSelector = ({ activeSymbols, onMarketChange, defaultMarket, disabled
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
       </button>
-      {isOpen && (
-        <div className={styles.dropdown} role="listbox">
+      <Modal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+          setSearchQuery('');
+        }}
+        title="Select Market"
+      >
+        <div className={styles.modalContent}>
           <div className={styles.searchContainer}>
             <input
-              ref={searchInputRef}
               type="text"
               className={styles.searchInput}
               placeholder="Search markets..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
             />
             {searchQuery && (
               <button
@@ -116,25 +105,25 @@ const MarketSelector = ({ activeSymbols, onMarketChange, defaultMarket, disabled
               </button>
             )}
           </div>
-          {filteredMarkets.length === 0 ? (
-            <div className={styles.noResults}>
-              No markets found
-            </div>
-          ) : (
-            filteredMarkets.map((market) => (
-            <button
-              key={market.symbol}
-              className={`${styles.option} ${market.symbol === selectedMarket ? styles.selected : ''}`}
-              onClick={() => handleMarketSelect(market)}
-              role="option"
-              aria-selected={market.symbol === selectedMarket}
-            >
-              {market.display_name || market.symbol}
-            </button>
-            ))
-          )}
+          <div className={styles.marketList}>
+            {filteredMarkets.length === 0 ? (
+              <div className={styles.noResults}>
+                No markets found
+              </div>
+            ) : (
+              filteredMarkets.map((market) => (
+                <button
+                  key={market.symbol}
+                  className={`${styles.option} ${market.symbol === selectedMarket ? styles.selected : ''}`}
+                  onClick={() => handleMarketSelect(market)}
+                >
+                  {market.display_name || market.symbol}
+                </button>
+              ))
+            )}
+          </div>
         </div>
-      )}
+      </Modal>
     </div>
   );
 };

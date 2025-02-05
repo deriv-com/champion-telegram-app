@@ -2,7 +2,9 @@
   padding: 1rem;
   width: 100%;
   min-height: var(--tg-viewport-stable-height);
-  padding-bottom: calc(var(--tg-safe-area-bottom, 0px) + var(--tg-main-button-area, 0px) + 1rem);
+  padding-bottom: 20rem;
+  margin-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, 0px) + 120px);
+  position: relative;
 }
 
 .marketSelectorWrapper {
@@ -29,7 +31,7 @@
   margin-top: 0.5rem;
 }
 
-.inputRow > * {
+.inputRow>* {
   flex: 1 1 auto;
   min-width: min-content;
 }
@@ -42,19 +44,19 @@
 .digitPredictionWrapper {
   margin-top: 1.5rem;
   width: 100%;
-  margin-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, 0px) + 120px);
 }
 
 .tradeButtonsContainer {
   position: fixed;
-  bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, 0px) + 1rem);
-  left: 1rem;
-  right: 1rem;
+  bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, 0px));
+  left: 0rem;
+  right: 0rem;
   display: flex;
   gap: 1rem;
   z-index: 100;
-  background: linear-gradient(to top, var(--tg-theme-bg-color, var(--background-default)) 80%, transparent);
-  padding-top: 1rem;
+  background-color: transparent;
+  padding: 1rem 1rem;
+
   /* Ensure buttons are above Telegram's WebApp elements */
   transform: translateZ(0);
 }
@@ -153,9 +155,11 @@
   0% {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
+
   50% {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
   }
+
   100% {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
