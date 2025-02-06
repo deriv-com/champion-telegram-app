@@ -103,7 +103,7 @@ const TradePage = () => {
           onClick={() => {
             // Demo notification - actual trade implementation will come later
             const marketName = selectedMarket && typeof selectedMarket === 'object' ? selectedMarket.display_name : 'Unknown';
-            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Matches ${selectedDigit}\n📊 Market: ${marketName}`, { usePopup: true });
+            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Matches ${selectedDigit}\n📊 Market: ${marketName}`);
           }}
           disabled={selectedDigit === null || selectedDigit === undefined}
         />
@@ -114,7 +114,7 @@ const TradePage = () => {
           onClick={() => {
             // Demo notification - actual trade implementation will come later
             const marketName = selectedMarket && typeof selectedMarket === 'object' ? selectedMarket.display_name : 'Unknown';
-            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Differs ${selectedDigit}\n📊 Market: ${marketName}`, { usePopup: true });
+            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Differs ${selectedDigit}\n📊 Market: ${marketName}`);
           }}
           disabled={selectedDigit === null || selectedDigit === undefined}
         />

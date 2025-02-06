@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
+import { ToastProvider } from '../../../contexts/ToastContext';
 import styles from './RootLayout.module.css';
 
 const RootLayout = ({ children }) => {
@@ -20,9 +21,11 @@ const RootLayout = ({ children }) => {
 
   return (
     <ErrorBoundary>
-      <div className={rootClasses}>
-        <main className={styles.main}>{children}</main>
-      </div>
+      <ToastProvider maxToasts={3}>
+        <div className={rootClasses}>
+          <main className={styles.main}>{children}</main>
+        </div>
+      </ToastProvider>
     </ErrorBoundary>
   );
 };

@@ -139,22 +139,31 @@ export const useTelegram = () => {
   }, []);
 
   // Utility functions
-  const showPopup = useCallback((message, buttons = [{ type: 'close' }]) => {
+  const showPopup = useCallback((params) => {
     try {
       // Check if we're in a valid Telegram WebApp environment
       if (!WebApp.initData) {
         // Fallback for development/testing outside Telegram
         console.warn('Not in Telegram environment, falling back to alert');
-        WebApp.showAlert(message);
+        WebApp.showAlert(typeof params === 'string' ? params : params.message);
         return;
       }
-      
-      WebApp.showPopup({ message, buttons });
+
+      // Handle both string messages and object params
+      const popupParams = typeof params === 'string' 
+        ? { message: params } 
+        : params;
+
+      WebApp.showPopup({
+        message: popupParams.message,
+        title: popupParams.title,
+        buttons: popupParams.buttons || [{ type: 'default' }]
+      });
       haptic.notification();
     } catch (error) {
       // Handle case where method is unsupported
       console.warn('showPopup not supported, falling back to alert:', error);
-      WebApp.showAlert(message);
+      WebApp.showAlert(typeof params === 'string' ? params : params.message);
     }
   }, []);
 

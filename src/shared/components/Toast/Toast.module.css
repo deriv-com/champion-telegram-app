@@ -1,0 +1,152 @@
+.toast {
+  position: fixed;
+  display: flex;
+  align-items: flex-start;
+  width: auto;
+  min-width: 200px;
+  max-width: 400px;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  animation: slideIn 0.3s ease-out;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  font-size: 14px;
+  line-height: 1.4;
+  left: calc(var(--tg-safe-area-left, 0) + 8px);
+  right: calc(var(--tg-safe-area-right, 0) + 8px);
+  margin: 0 auto;
+}
+
+/* Positions */
+.top {
+  top: calc(var(--tg-safe-area-top, 0) + 4px);
+}
+
+.bottom {
+  bottom: calc(var(--tg-safe-area-bottom, 0) + 4px);
+}
+
+@media screen and (max-width: 320px) {
+  .toast {
+    padding: 8px;
+    font-size: 13px;
+  }
+}
+
+/* Types */
+.info {
+  background-color: var(--tg-theme-button-color, rgba(36, 129, 204, 0.95));
+  color: var(--tg-theme-button-text-color, #ffffff);
+}
+
+.success {
+  background-color: rgba(76, 175, 80, 0.95);
+  color: white;
+}
+
+.error {
+  background-color: rgba(244, 67, 54, 0.95);
+  color: white;
+}
+
+.warning {
+  background-color: rgba(255, 152, 0, 0.95);
+  color: white;
+}
+
+/* Content Layout */
+.content {
+  flex: 1;
+  margin: 0 6px;
+  min-width: 0; /* Enable text truncation */
+}
+
+.message {
+  white-space: pre-line;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  padding: 2px 0;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.icon {
+  font-size: 14px;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.7;
+  padding: 4px;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+  margin: 0;
+  line-height: 1;
+}
+
+.closeButton:hover {
+  opacity: 1;
+}
+
+.actionButton {
+  background: none;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+  font-size: 12px;
+  margin-top: 4px;
+  padding: 3px 8px;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+  display: inline-block;
+  line-height: 1.2;
+}
+
+.actionButton:hover {
+  opacity: 1;
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.exit {
+  animation: slideOut 0.3s ease-in forwards;
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
