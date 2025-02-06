@@ -24,6 +24,15 @@
   letter-spacing: 0.5px;
 }
 
+.infoText {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--color-text-light);
+  opacity: 0.6;
+  font-weight: var(--font-weight-normal);
+  margin-top: 0.15rem;
+}
+
 .currentDigit {
   color: var(--color-text-light);
   font-size: var(--font-size-sm);
@@ -73,18 +82,19 @@
   box-shadow: var(--box-shadow);
 }
 
-.digitButton.highlight {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+.digitButton.selected {
+  background: var(--color-primary) !important;
   color: var(--color-white);
-  animation: pulse 1.5s infinite;
   box-shadow: var(--box-shadow-primary);
+  transform: translateY(-2px) !important;
+  transition: none !important;
+  z-index: 1;
+  animation: pulse 1.5s infinite;
 }
 
-.digitButton.selected {
-  background: var(--color-primary);
-  color: var(--color-white);
-  border-color: var(--color-primary);
-  box-shadow: var(--box-shadow-primary);
+.digitButton.highlight:not(.selected) {
+  border-color: var(--highlight-color, var(--color-primary)) !important;
+  box-shadow: 0 0 10px var(--highlight-color, var(--color-primary));
 }
 
 .digitButton.disabled {

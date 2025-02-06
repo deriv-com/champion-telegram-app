@@ -18,9 +18,9 @@ export const haptic = {
   /**
    * Notification feedback - use for alerts, popups
    */
-  notification: () => {
+  notification: (type = 'success') => {
     try {
-      WebApp.HapticFeedback.notificationOccurred('success');
+      WebApp.HapticFeedback.notificationOccurred(type);
     } catch (error) {
       console.warn('Haptic feedback not available:', error);
     }

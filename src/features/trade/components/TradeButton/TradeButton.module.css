@@ -69,14 +69,13 @@
 .payoutAmount {
   font-size: 0.625rem;
   font-weight: var(--font-weight-normal);
-  color: var(--color-white);
   line-height: 1;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   margin-left: auto;
 }
 
 .buttonPositive {
-  background: linear-gradient(135deg, #03c390 0%, #00a77d 100%);
+  background: linear-gradient(135deg, var(--color-trade-button-positive) 0%, var(--color-trade-button-positive) 100%);
   box-shadow: 0 4px 12px rgba(3, 195, 144, 0.2),
               0 2px 4px rgba(3, 195, 144, 0.1),
               inset 0 1px 1px rgba(255, 255, 255, 0.1);
@@ -87,7 +86,7 @@
   box-shadow: 0 6px 16px rgba(3, 195, 144, 0.25),
               0 4px 8px rgba(3, 195, 144, 0.15),
               inset 0 1px 1px rgba(255, 255, 255, 0.15);
-  background: linear-gradient(135deg, #04d49d 0%, #00b98c 100%);
+  /* background: linear-gradient(135deg, #04d49d 0%, #00b98c 100%); */
 }
 
 .buttonPositive:not(:disabled):active {
@@ -98,7 +97,7 @@
 }
 
 .buttonNegative {
-  background: linear-gradient(135deg, #df0040 0%, #c7003a 100%);
+  background: linear-gradient(135deg, var(--color-trade-button-negative) 0%, var(--color-trade-button-negative) 100%);
   box-shadow: 0 4px 12px rgba(223, 0, 64, 0.2),
               0 2px 4px rgba(223, 0, 64, 0.1),
               inset 0 1px 1px rgba(255, 255, 255, 0.1);
@@ -119,12 +118,27 @@
               inset 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
-.buttonPositive:disabled,
-.buttonNegative:disabled {
-  opacity: 0.6;
+.buttonPositive:disabled {
+  background: linear-gradient(135deg, var(--color-trade-button-positive-disabled) 0%, var(--color-trade-button-positive-disabled) 100%);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.buttonNegative:disabled {
+  background: linear-gradient(135deg, var(--color-trade-button-negative-disabled) 0%, var(--color-trade-button-negative-disabled) 100%);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.buttonPositive:disabled .payoutLabel,
+.buttonNegative:disabled .payoutLabel,
+.buttonPositive:disabled .payoutAmount,
+.buttonNegative:disabled .payoutAmount {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 @keyframes shine {

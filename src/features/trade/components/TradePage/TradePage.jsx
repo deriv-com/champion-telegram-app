@@ -13,10 +13,14 @@ import styles from './TradePage.module.css';
 
 const TradePage = () => {
   const { activeSymbols, isLoading } = useTrade();
+  const [currentDigit, setCurrentDigit] = useState();
   const { info } = useNotification();
   const { haptic } = useTelegram();
   const [duration, setDuration] = useState(1);
   const [stake, setStake] = useState(0);
+  const handleDigitSelect = (digit) => {
+    setSelectedDigit(digit);
+  };
   const [selectedDigit, setSelectedDigit] = useState(null);
   const [selectedMarket, setSelectedMarket] = useState(null);
 
@@ -38,7 +42,17 @@ const TradePage = () => {
           </>
         ) : (
           <>
-            <LiveQuote isDigitsTradeType={true} />
+            <LiveQuote 
+              isDigitsTradeType={true}
+              price="1.23456"
+              movement="up"
+              onLastDigitChange={(digit) => {
+                const numDigit = parseInt(digit);
+                if (!isNaN(numDigit)) {
+                  setCurrentDigit(numDigit);
+                }
+              }}
+            />
             <MarketSelector
               activeSymbols={activeSymbols}
               onMarketChange={(symbol) => {
@@ -71,9 +85,9 @@ const TradePage = () => {
       {!isLoading && (
         <div className={styles.digitPredictionWrapper}>
           <DigitPrediction
-            currentDigit={null}
+            currentDigit={currentDigit}
             selectedDigit={selectedDigit}
-            onDigitSelect={setSelectedDigit}
+            onDigitSelect={handleDigitSelect}
             contractType={null}
             isTrading={false}
             duration={duration}
@@ -89,7 +103,7 @@ const TradePage = () => {
           onClick={() => {
             // Demo notification - actual trade implementation will come later
             const marketName = selectedMarket && typeof selectedMarket === 'object' ? selectedMarket.display_name : 'Unknown';
-            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Matches ${selectedDigit}\n📊 Market: ${marketName}`, { usePopup: true });
+            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Matches ${selectedDigit}\n📊 Market: ${marketName}`);
           }}
           disabled={selectedDigit === null || selectedDigit === undefined}
         />
@@ -100,7 +114,7 @@ const TradePage = () => {
           onClick={() => {
             // Demo notification - actual trade implementation will come later
             const marketName = selectedMarket && typeof selectedMarket === 'object' ? selectedMarket.display_name : 'Unknown';
-            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Differs ${selectedDigit}\n📊 Market: ${marketName}`, { usePopup: true });
+            info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Differs ${selectedDigit}\n📊 Market: ${marketName}`);
           }}
           disabled={selectedDigit === null || selectedDigit === undefined}
         />

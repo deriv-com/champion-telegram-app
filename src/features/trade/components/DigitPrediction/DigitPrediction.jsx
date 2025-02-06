@@ -18,30 +18,25 @@ const DigitPrediction = ({
       <div className={styles.header}>
         <span className={styles.title}>
           Last Digit Prediction
+          {!selectedDigit && !isTrading && (
+            <small className={styles.infoText}>Select any digit to start trading</small>
+          )}
         </span>
-        {currentDigit !== null && (
-          <span className={styles.currentDigit}>
-            Current: <strong>{currentDigit}</strong>
-          </span>
-        )}
       </div>
 
       <div className={styles.digitGrid}>
         {digits.map((digit) => (
           <button
             key={digit}
-            onClick={() => {
-              if (!isTrading) {
-                haptic.impact();
-                onDigitSelect(digit);
-              }
+            onClick={isTrading ? (undefined) : () => {
+              haptic.impact();
+              onDigitSelect(digit);
             }}
-            className={`${styles.digitButton}
-              ${currentDigit === digit ? styles.highlight : ''}
-              ${selectedDigit === digit ? styles.selected : ''}
-              ${isTrading ? styles.disabled : ''}`
-            }
-            disabled={isTrading}
+            className={`${styles.digitButton} ${selectedDigit === digit ? styles.selected : ''} ${currentDigit === digit ? styles.highlight : ''}`}
+            style={currentDigit === digit ? {
+              '--highlight-color': contractType === 'DIGITMATCH' ? 'var(--color-trade-button-positive)' : 'var(--color-trade-button-negative)',
+              '--highlight-color-rgba': contractType === 'DIGITMATCH' ? 'rgba(3, 195, 144, 0.4)' : 'rgba(223, 0, 64, 0.4)'
+            } : undefined}
           >
             {digit}
           </button>

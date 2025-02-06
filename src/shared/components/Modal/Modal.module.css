@@ -1,9 +1,9 @@
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: var(--tg-safe-area-top, 0px);
+  left: var(--tg-safe-area-left, 0px);
+  right: var(--tg-safe-area-right, 0px);
+  bottom: var(--tg-safe-area-bottom, 0px);
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
@@ -12,11 +12,11 @@
 }
 
 .modal {
-  background-color: var(--tg-theme-bg-color, var(--background-default));
+  background-color: var(--tg-theme-bg-color, var(--color-white, #ffffff));
   border-radius: 12px;
   width: 90%;
   max-width: 500px;
-  max-height: 90vh;
+  max-height: calc(100vh - var(--tg-safe-area-top, 0px) - var(--tg-safe-area-bottom, 0px) - 2rem);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -27,15 +27,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 1rem calc(1rem + var(--tg-safe-area-bottom, 0px));
+  border-bottom: 1px solid var(--tg-theme-secondary-bg-color, rgba(244, 244, 245, 0.3));
 }
 
 .title {
   margin: 0;
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
-  color: var(--text-primary);
+  color: var(--tg-theme-text-color, #000000);
 }
 
 .closeButton {
@@ -43,7 +43,7 @@
   border: none;
   padding: 0.5rem;
   cursor: pointer;
-  color: var(--text-secondary);
+  color: var(--tg-theme-hint-color, #999999);
   display: flex;
   align-items: center;
   justify-content: center;

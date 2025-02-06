@@ -1,8 +1,8 @@
 .container {
-  padding: 1rem;
+  padding: 0.5rem;
   width: 100%;
   min-height: var(--tg-viewport-stable-height);
-  padding-bottom: 20rem;
+  padding-bottom: 10rem;
   margin-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, 0px) + 120px);
   position: relative;
 }
@@ -54,9 +54,9 @@
   display: flex;
   gap: 1rem;
   z-index: 100;
-  background-color: transparent;
+  background-color: rgba(247, 250, 252, 0.2);
   padding: 1rem 1rem;
-
+  
   /* Ensure buttons are above Telegram's WebApp elements */
   transform: translateZ(0);
 }

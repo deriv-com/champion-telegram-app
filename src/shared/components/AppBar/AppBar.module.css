@@ -1,15 +1,11 @@
 .appBar {
-  height: calc(var(--app-bar-height, 72px) + env(safe-area-inset-top, 0px));
-  background: linear-gradient(90deg, 
-    var(--color-white) 0%,
-    color-mix(in srgb, var(--color-white) 97%, var(--color-primary)) 100%
-  );
+  height: calc(56px + var(--tg-safe-area-top, 0px));
+  background: var(--tg-theme-bg-color, #ffffff);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: env(safe-area-inset-top, 0px) max(env(safe-area-inset-right, 16px), clamp(16px, 5vw, 32px)) 0 max(env(safe-area-inset-left, 16px), clamp(16px, 5vw, 32px));
-  border-bottom: 1px solid var(--color-background-dark);
-  box-shadow: var(--box-shadow-lg);
+  padding: var(--tg-safe-area-top, 0px) var(--tg-safe-area-right, 16px) 0 var(--tg-safe-area-left, 16px);
+  border-bottom: 1px solid var(--tg-theme-secondary-bg-color, #f4f4f5);
   position: fixed;
   top: 0;
   left: 0;
@@ -23,12 +19,12 @@
   display: flex;
   align-items: center;
   height: 100%;
-  padding: 16px 0;
-  margin-left: -8px;
+  padding: 12px 0;
+  margin-left: 8px;
 }
 
 .logo {
-  height: 40px;
+  height: 32px;
   width: auto;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.05));
   transition: transform 0.2s ease;
@@ -39,7 +35,7 @@
   height: 100%;
   display: flex;
   align-items: center;
-  margin-right: -8px;
+  margin-right: 8px;
 }
 
 .accountInfo {
@@ -73,28 +69,28 @@
 }
 
 .accountId {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-light);
+  font-size: 12px;
+  color: var(--tg-theme-hint-color, #999999);
   letter-spacing: 0.5px;
 }
 
 .balance {
-  font-size: var(--font-size-lg);
+  font-size: 16px;
   font-weight: var(--font-weight-bold);
-  color: var(--color-text);
+  color: var(--tg-theme-text-color, #000000);
   letter-spacing: 0.5px;
 }
 
 .chevron {
-  color: var(--color-text-light);
+  color: var(--tg-theme-hint-color, #999999);
   width: 16px;
   height: 16px;
 }
 
 .loading {
   font-size: 14px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+  color: var(--tg-theme-hint-color, #999999);
   letter-spacing: 0.5px;
   opacity: 0.8;
   animation: pulse 1.5s ease-in-out infinite;
@@ -113,7 +109,7 @@
 }
 
 .chevron {
-  color: var(--color-text-secondary);
+  color: var(--tg-theme-hint-color, #999999);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   margin-left: 4px;
   opacity: 0.8;
@@ -125,13 +121,13 @@
 
 .dropdown {
   position: fixed;
-  top: var(--app-bar-height, 72px);
-  right: clamp(16px, 5vw, 32px);
-  background: var(--color-white);
-  border: 1px solid var(--color-background-dark);
-  border-radius: var(--border-radius);
+  top: calc(56px + var(--tg-safe-area-top, 0px));
+  right: 16px;
+  background: var(--tg-theme-bg-color, #ffffff);
+  border: 1px solid var(--tg-theme-secondary-bg-color, #f4f4f5);
+  border-radius: 14px;
   width: 300px;
-  box-shadow: var(--box-shadow-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   opacity: 0;
   transform: translateY(-10px) scale(0.98);
   pointer-events: none;
@@ -140,7 +136,7 @@
   visibility: hidden;
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - var(--app-bar-height, 72px) - 32px);
+  max-height: calc(100vh - 56px - var(--tg-safe-area-top, 0px) - 16px);
   backdrop-filter: blur(8px);
 }
 
@@ -154,36 +150,36 @@
 .accountsList {
   flex: 1;
   overflow-y: auto;
-  padding: 12px 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 30%, transparent);
-  margin: 0 4px;
+  padding: 8px 8px 0;
+  border-bottom: 1px solid var(--tg-theme-secondary-bg-color, rgba(244, 244, 245, 0.3));
+  margin: 0 0 8px;
 }
 
 .accountItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  margin: 4px 8px;
-  border-radius: var(--border-radius);
+  padding: 12px;
+  margin: 4px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: var(--color-white);
-  border: 2px solid var(--color-background);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--tg-theme-bg-color, #ffffff);
+  border: 1px solid var(--tg-theme-secondary-bg-color, #f4f4f5);
   text-align: left;
-  box-shadow: var(--box-shadow);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .accountItem:hover {
-  background: var(--color-background);
-  border-color: var(--color-primary);
+  background: var(--tg-theme-secondary-bg-color, #f4f4f5);
+  border-color: var(--tg-theme-button-color, #2481cc);
   transform: translateY(-2px);
-  box-shadow: var(--box-shadow-lg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .accountItem:active {
   transform: translateY(0);
-  box-shadow: var(--box-shadow);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .accountItemLeading {
@@ -194,21 +190,21 @@
 
 .accountItemCurrency {
   font-size: 16px;
-  color: var(--color-text);
+  color: var(--tg-theme-text-color, #000000);
   letter-spacing: 0.5px;
   font-weight: var(--font-weight-bold);
 }
 
 .accountItemId {
   font-size: 13px;
-  color: var(--color-text-light);
+  color: var(--tg-theme-hint-color, #999999);
   letter-spacing: 0.5px;
   opacity: 0.8;
 }
 
 .accountItemBalance {
   font-size: 16px;
-  color: var(--color-text);
+  color: var(--tg-theme-text-color, #000000);
   letter-spacing: 0.5px;
   font-weight: var(--font-weight-bold);
   text-align: right;
@@ -218,9 +214,9 @@
   padding: 16px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  color: var(--color-text-primary);
+  color: var(--tg-theme-text-color, #000000);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   display: flex;
   align-items: flex-start;
   position: relative;
@@ -231,7 +227,7 @@
 }
 
 .dropdownItem:active {
-  background: color-mix(in srgb, var(--color-background) 95%, var(--color-primary));
+  background: var(--tg-theme-secondary-bg-color, #f4f4f5);
 }
 
 .logout {
@@ -242,7 +238,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  border-radius: var(--border-radius);
+  border-radius: 14px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -267,18 +263,18 @@
 
 @media (max-width: 480px) {
   .appBar {
-    height: calc(56px + env(safe-area-inset-top, 0px));
+    height: calc(56px + var(--tg-safe-area-top, 0px));
     --app-bar-height: 56px;
   }
 
   .leading {
-    margin-left: -4px;
-    padding: calc(12px + env(safe-area-inset-top, 0px)) 0 12px;
+    margin-left: 8px;
+    padding: calc(12px + var(--tg-safe-area-top, 0px)) 0 12px;
   }
 
   .trailing {
-    margin-right: -4px;
-    padding-top: env(safe-area-inset-top, 0px);
+    margin-right: 8px;
+    padding-top: var(--tg-safe-area-top, 0px);
   }
 
   .logo {
@@ -288,7 +284,7 @@
   .accountInfo {
     padding: 6px 12px;
     gap: 8px;
-    margin-top: env(safe-area-inset-top, 0px);
+    margin-top: var(--tg-safe-area-top, 0px);
   }
 
   .accountId {
@@ -310,18 +306,18 @@
 
   .dropdown {
     position: fixed;
-    top: calc(var(--app-bar-height, 72px) - 1px);
-    right: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    max-height: calc(100vh - var(--app-bar-height, 72px));
+  top: calc(56px + var(--tg-safe-area-top, 0px));
+  right: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  max-height: calc(100vh - 56px - var(--tg-safe-area-top, 0px));
     border: none;
     border-radius: 0;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid var(--tg-theme-secondary-bg-color, rgba(244, 244, 245, 0.3));
     transform: translateY(-100%);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-    background: var(--color-background);
+    background: var(--tg-theme-bg-color, #ffffff);
     will-change: transform;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.3s;
   }
@@ -333,19 +329,22 @@
   }
 
   .accountsList {
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--tg-theme-secondary-bg-color, rgba(244, 244, 245, 0.3));
   }
 
   .accountItem {
-    padding: 16px 24px;
-    margin: 0;
-    border-radius: 0;
+  padding: 16px;
+  margin: 0 0 1px;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  background: transparent;
   }
 
   .logout {
-    padding: 16px 24px;
-    margin: 0;
-    border-radius: 0;
-    padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+  padding: 16px;
+  margin: 0;
+  border-radius: 0;
+  padding-bottom: calc(16px + var(--tg-safe-area-bottom, 0px));
   }
 }
