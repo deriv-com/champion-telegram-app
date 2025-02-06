@@ -1,6 +1,6 @@
 .root {
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: var(--tg-viewport-stable-height);
+  height: var(--tg-viewport-stable-height);
   width: 100%;
   background-color: var(--color-background);
   margin: 0;
@@ -17,6 +17,7 @@
   flex: 1;
   margin: 0;
   padding: var(--spacing-md);
+  padding-top: calc(56px + var(--tg-safe-area-top));
   box-sizing: border-box;
   background-color: var(--color-background);
   position: relative;

@@ -14,14 +14,30 @@ export const initializeTelegramWebApp = () => {
     // Lock orientation to portrait mode
     WebApp.lockOrientation();
     
-    // Set initial viewport height
-    const root = document.documentElement;
-    root.style.setProperty('--tg-viewport-height', `${WebApp.viewportHeight}px`);
-    root.style.setProperty('--tg-viewport-stable-height', `${WebApp.viewportStableHeight}px`);
-
-    // Request fullscreen mode
-    WebApp.requestFullscreen();
+    // Request fullscreen mode first
     WebApp.expand();
+    WebApp.requestFullscreen();
+
+    // Set initial viewport height and safe areas
+    const root = document.documentElement;
+    const updateViewportMetrics = () => {
+      // Set viewport heights
+      root.style.setProperty('--tg-viewport-height', `${WebApp.viewportHeight}px`);
+      root.style.setProperty('--tg-viewport-stable-height', `${WebApp.viewportStableHeight}px`);
+      
+      // Set safe areas
+      const safeAreaTop = WebApp.platform === 'ios' ? Math.max(WebApp.viewportHeight - WebApp.viewportStableHeight, 0) : 0;
+      root.style.setProperty('--tg-safe-area-top', `${safeAreaTop}px`);
+    };
+
+    // Initial update
+    updateViewportMetrics();
+
+    // Update on viewport changes
+    WebApp.onEvent('viewportChanged', updateViewportMetrics);
+
+    // Set header color to match theme
+    WebApp.setHeaderColor(WebApp.themeParams.bg_color || '#ffffff');
   } catch (error) {
     console.warn('Telegram WebApp initialization failed:', error);
   }

@@ -7,13 +7,26 @@ import { TradePage } from '@/features/trade';
 import { CashierPage } from '@/features/cashier';
 import { PositionsPage } from '@/features/positions';
 import { useAuth } from '@/hooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import websocketService from '@/services/websocket.service';
 import { authService } from '@/services/auth.service';
+import { initializeTelegramWebApp } from '@/hooks/useTelegram';
 
 function App() {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading, initialize } = useAuth();
+  const [isWebAppInitialized, setIsWebAppInitialized] = useState(false);
+
+  // Initialize Telegram WebApp
+  useEffect(() => {
+    try {
+      initializeTelegramWebApp();
+      setIsWebAppInitialized(true);
+    } catch (error) {
+      console.error('Failed to initialize Telegram WebApp:', error);
+      setIsWebAppInitialized(true); // Continue anyway to allow app to work in browser
+    }
+  }, []);
 
   useEffect(() => {
     const handleInitialization = async () => {
@@ -73,8 +86,8 @@ function App() {
     handleInitialization();
   }, [navigate, initialize]);
 
-  // Show loading state only during initial load
-  if (isLoading && !isAuthenticated) {
+  // Show loading state during initial load or WebApp initialization
+  if ((isLoading && !isAuthenticated) || !isWebAppInitialized) {
     return (
       <RootLayout>
         <div style={{ 
