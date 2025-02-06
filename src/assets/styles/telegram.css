@@ -1,14 +1,14 @@
 /* Telegram WebApp CSS Variables */
 :root {
-  /* Safe Areas */
-  --tg-safe-area-top: env(safe-area-inset-top);
-  --tg-safe-area-right: env(safe-area-inset-right);
-  --tg-safe-area-bottom: env(safe-area-inset-bottom);
-  --tg-safe-area-left: env(safe-area-inset-left);
+  /* Safe Areas - These will be set by WebApp SDK */
+  --tg-safe-area-top: 0px;
+  --tg-safe-area-right: 0px;
+  --tg-safe-area-bottom: 0px;
+  --tg-safe-area-left: 0px;
 
-  /* Viewport Heights */
-  --tg-viewport-height: var(--tg-viewport-height, 100vh);
-  --tg-viewport-stable-height: var(--tg-viewport-stable-height, 100vh);
+  /* Viewport Heights - These will be set by WebApp SDK */
+  --tg-viewport-height: 100vh;
+  --tg-viewport-stable-height: 100vh;
 
   /* Theme Colors (will be set by WebApp) */
   --tg-theme-bg-color: #ffffff;

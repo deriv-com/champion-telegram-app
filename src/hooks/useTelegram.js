@@ -25,19 +25,55 @@ export const initializeTelegramWebApp = () => {
       root.style.setProperty('--tg-viewport-height', `${WebApp.viewportHeight}px`);
       root.style.setProperty('--tg-viewport-stable-height', `${WebApp.viewportStableHeight}px`);
       
+      // Calculate safe areas based on platform
+      const viewportDiff = WebApp.viewportHeight - WebApp.viewportStableHeight;
+      let safeAreaTop = 0;
+      let safeAreaBottom = 0;
+
+      if (WebApp.platform === 'ios') {
+        // On iOS, split the difference between top and bottom
+        safeAreaTop = Math.max(Math.floor(viewportDiff / 2), 0);
+        safeAreaBottom = Math.max(Math.ceil(viewportDiff / 2), 0);
+      } else if (WebApp.platform === 'android') {
+        // On Android, most devices have bottom safe area
+        safeAreaBottom = Math.max(viewportDiff, 0);
+      }
+      
       // Set safe areas
-      const safeAreaTop = WebApp.platform === 'ios' ? Math.max(WebApp.viewportHeight - WebApp.viewportStableHeight, 0) : 0;
       root.style.setProperty('--tg-safe-area-top', `${safeAreaTop}px`);
+      root.style.setProperty('--tg-safe-area-right', '0px');
+      root.style.setProperty('--tg-safe-area-bottom', `${safeAreaBottom}px`);
+      root.style.setProperty('--tg-safe-area-left', '0px');
+
+      // Set background color to match theme
+      document.body.style.backgroundColor = WebApp.backgroundColor;
     };
 
-    // Initial update
+    // Initial setup
     updateViewportMetrics();
-
+    
+    // Request fullscreen first, then expand
+    WebApp.requestFullscreen();
+    setTimeout(() => {
+      WebApp.expand();
+      updateViewportMetrics(); // Update metrics after expansion
+    }, 50);
+    
+    // Set header color to match theme
+    WebApp.setHeaderColor(WebApp.backgroundColor);
+    
     // Update on viewport changes
     WebApp.onEvent('viewportChanged', updateViewportMetrics);
+    
+    // Update on theme changes
+    WebApp.onEvent('themeChanged', () => {
+      document.body.style.backgroundColor = WebApp.backgroundColor;
+      WebApp.setHeaderColor(WebApp.backgroundColor);
+      updateViewportMetrics();
+    });
 
-    // Set header color to match theme
-    WebApp.setHeaderColor(WebApp.themeParams.bg_color || '#ffffff');
+    // Handle orientation changes
+    WebApp.onEvent('orientationChanged', updateViewportMetrics);
   } catch (error) {
     console.warn('Telegram WebApp initialization failed:', error);
   }

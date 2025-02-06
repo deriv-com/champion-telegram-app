@@ -11,12 +11,6 @@
   --tab-bar-height: 4rem;
   --app-bar-height: 72px;
 
-  /* Use Telegram's safe area variables */
-  --safe-area-top: var(--tg-safe-area-top, 0px);
-  --safe-area-bottom: var(--tg-safe-area-bottom, 0px);
-  --safe-area-left: var(--tg-safe-area-left, 0px);
-  --safe-area-right: var(--tg-safe-area-right, 0px);
-
   /* Colors */
   --color-primary: #00C7F4;
   --color-primary-rgb: 0, 199, 244;
@@ -69,21 +63,24 @@ body {
   line-height: var(--line-height-normal);
   /* Prevent overscroll bounce on mobile */
   overscroll-behavior-y: none;
-  /* Ensure proper safe area handling */
-  padding: var(--tg-safe-area-top) var(--tg-safe-area-right) var(--tg-safe-area-bottom) var(--tg-safe-area-left);
   /* Prevent content shift when switching between pages with/without scrollbar */
   width: 100vw;
   min-height: 100vh;
   min-height: 100dvh;
   margin: 0;
   box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 /* Mobile adjustments */
 @media (max-width: 480px) {
   :root {
     --app-bar-height: 56px;
-    --tab-bar-height: 3.5rem;
+    --tab-bar-height: 56px;
   }
 }
 

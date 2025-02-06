@@ -8,6 +8,11 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .main {
@@ -17,7 +22,10 @@
   flex: 1;
   margin: 0;
   padding: var(--spacing-md);
-  padding-top: calc(56px + var(--tg-safe-area-top));
+  padding-top: calc(var(--app-bar-height) + var(--tg-safe-area-top));
+  padding-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom));
+  padding-left: max(var(--spacing-md), var(--tg-safe-area-left));
+  padding-right: max(var(--spacing-md), var(--tg-safe-area-right));
   box-sizing: border-box;
   background-color: var(--color-background);
   position: relative;
@@ -46,11 +54,13 @@
   display: none;
 }
 
-/* Safe area insets for notched devices */
-@supports (padding: max(0px)) {
+/* Mobile styles */
+@media (max-width: 480px) {
   .main {
-    padding-left: max(var(--tg-safe-area-left), 16px);
-    padding-right: max(var(--tg-safe-area-right), 16px);
-    padding-bottom: max(var(--tg-safe-area-bottom), 16px);
+    padding: var(--spacing-sm);
+    padding-top: calc(var(--app-bar-height) + var(--tg-safe-area-top));
+    padding-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom));
+    padding-left: max(var(--spacing-sm), var(--tg-safe-area-left));
+    padding-right: max(var(--spacing-sm), var(--tg-safe-area-right));
   }
 }

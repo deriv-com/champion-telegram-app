@@ -1,11 +1,10 @@
 .appBar {
-  height: calc(56px + var(--tg-safe-area-top));
+  height: var(--app-bar-height);
   background: var(--tg-theme-bg-color, #ffffff);
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  padding: 0 var(--tg-safe-area-right, 16px) 8px var(--tg-safe-area-left, 16px);
-  padding-top: var(--tg-safe-area-top);
+  align-items: center;
+  padding: 0;
   border-bottom: 1px solid var(--tg-theme-secondary-bg-color, #f4f4f5);
   position: fixed;
   top: 0;
@@ -18,12 +17,38 @@
   -webkit-backdrop-filter: blur(10px);
 }
 
+/* Safe area extension */
+.appBar::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--tg-safe-area-top);
+  background: inherit;
+  z-index: -1;
+}
+
+/* Container for content */
+.appBar::before {
+  content: '';
+  position: absolute;
+  top: var(--tg-safe-area-top);
+  left: var(--tg-safe-area-left);
+  right: var(--tg-safe-area-right);
+  bottom: 0;
+  background: inherit;
+  z-index: 0;
+}
+
 .leading {
   display: flex;
   align-items: center;
   height: 100%;
-  padding: 12px 0;
-  margin-left: 8px;
+  padding: 12px;
+  margin-left: max(8px, var(--tg-safe-area-left));
+  position: relative;
+  z-index: 2;
 }
 
 .logo {
@@ -38,7 +63,9 @@
   height: 100%;
   display: flex;
   align-items: center;
-  margin-right: 8px;
+  margin-right: max(8px, var(--tg-safe-area-right));
+  position: relative;
+  z-index: 2;
 }
 
 .accountInfo {
@@ -124,8 +151,8 @@
 
 .dropdown {
   position: fixed;
-  top: calc(56px + var(--tg-safe-area-top, 0px));
-  right: 16px;
+  top: calc(56px + var(--tg-safe-area-top));
+  right: max(16px, var(--tg-safe-area-right));
   background: var(--tg-theme-bg-color, #ffffff);
   border: 1px solid var(--tg-theme-secondary-bg-color, #f4f4f5);
   border-radius: 14px;
@@ -266,18 +293,17 @@
 
 @media (max-width: 480px) {
   .appBar {
-    height: calc(56px + var(--tg-safe-area-top, 0px));
+    height: 56px;
     --app-bar-height: 56px;
   }
 
   .leading {
     margin-left: 8px;
-    padding: calc(12px + var(--tg-safe-area-top, 0px)) 0 12px;
+    padding: 12px 0;
   }
 
   .trailing {
     margin-right: 8px;
-    padding-top: var(--tg-safe-area-top, 0px);
   }
 
   .logo {
