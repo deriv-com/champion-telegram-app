@@ -1,7 +1,7 @@
 .tabBar {
   display: flex;
-  background: var(--tg-theme-bg-color, #ffffff);
-  border-top: 1px solid var(--tg-theme-secondary-bg-color, rgba(244, 244, 245, 0.3));
+  background-color: var(--nav-background);
+  border-top: var(--border-width) solid var(--nav-border);
   position: fixed;
   bottom: 0;
   left: 0;
@@ -12,7 +12,6 @@
   margin: 0;
   z-index: 1000;
   box-sizing: border-box;
-  gap: 0;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -25,7 +24,7 @@
   left: 0;
   right: 0;
   height: var(--tg-safe-area-bottom);
-  background: inherit;
+  background-color: var(--nav-background);
   z-index: -1;
 }
 
@@ -37,7 +36,7 @@
   left: var(--tg-safe-area-left);
   right: var(--tg-safe-area-right);
   bottom: var(--tg-safe-area-bottom);
-  background: inherit;
+  background-color: var(--nav-background);
   z-index: 0;
 }
 
@@ -47,61 +46,98 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 6px;
+  padding: var(--spacing-xs);
   height: var(--tab-bar-height);
-  min-width: 64px;
+  min-width: var(--touch-target-size);
   margin: 0;
   position: relative;
   z-index: 2;
   border: none;
   background: none;
-  color: var(--tg-theme-hint-color, #999999);
-  font-size: var(--font-size-sm);
+  color: var(--nav-icon);
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
+  transition: color var(--animation-duration-normal) var(--animation-easing),
+              background-color var(--animation-duration-normal) var(--animation-easing),
+              transform var(--animation-duration-fast) var(--animation-easing);
   outline: none;
   border-radius: var(--border-radius);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .tabButton:hover:not(.active) {
-  color: var(--tg-theme-text-color, #000000);
-  background: var(--tg-theme-secondary-bg-color, #f4f4f5);
+  color: var(--app-text);
+  background-color: var(--app-hover-background);
 }
 
 .tabButton:focus-visible {
-  box-shadow: 0 0 0 2px var(--tg-theme-button-color, #2481cc);
-  background: var(--tg-theme-secondary-bg-color, #f4f4f5);
+  outline: 2px solid var(--app-focus-ring);
+  outline-offset: -2px;
 }
 
 .tabButton:active:not(.active) {
   transform: scale(0.95);
+  background-color: var(--app-active-background);
 }
 
 .tabButton.active {
-  color: var(--tg-theme-button-color, #2481cc);
-  font-weight: var(--font-weight-bold);
-  background: var(--tg-theme-secondary-bg-color, #f4f5f4);
+  color: var(--nav-icon-active);
+  font-weight: var(--font-weight-semibold);
+  background-color: var(--app-hover-background);
 }
 
 .tabButton img {
   width: 24px;
   height: 24px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: var(--spacing-xs);
+  transition: opacity var(--animation-duration-normal) var(--animation-easing),
+              filter var(--animation-duration-normal) var(--animation-easing);
   opacity: 0.7;
-  margin-bottom: 4px;
+  filter: brightness(0) saturate(100%);
 }
 
-.tabButton.active img {
+/* Light theme icon colors */
+:root[data-theme="light"] .tabButton img,
+:root[data-telegram-theme="light"] .tabButton img {
+  filter: brightness(0) saturate(100%) invert(35%) sepia(11%) saturate(934%) hue-rotate(175deg) brightness(94%) contrast(89%);
+}
+
+:root[data-theme="light"] .tabButton:hover:not(.active) img,
+:root[data-telegram-theme="light"] .tabButton:hover:not(.active) img {
+  opacity: 0.85;
+  filter: brightness(0) saturate(100%) invert(25%) sepia(11%) saturate(934%) hue-rotate(175deg) brightness(94%) contrast(89%);
+}
+
+:root[data-theme="light"] .tabButton.active img,
+:root[data-telegram-theme="light"] .tabButton.active img {
   opacity: 1;
-  filter: brightness(0) saturate(100%) invert(47%) sepia(98%) saturate(1783%) hue-rotate(167deg) brightness(99%) contrast(101%);
+  filter: brightness(0) saturate(100%) invert(58%) sepia(82%) saturate(2288%) hue-rotate(157deg) brightness(97%) contrast(101%);
+}
+
+/* Dark theme icon colors */
+:root[data-theme="dark"] .tabButton img,
+:root[data-telegram-theme="dark"] .tabButton img {
+  filter: brightness(0) saturate(100%) invert(80%) sepia(13%) saturate(188%) hue-rotate(175deg) brightness(87%) contrast(84%);
+}
+
+:root[data-theme="dark"] .tabButton:hover:not(.active) img,
+:root[data-telegram-theme="dark"] .tabButton:hover:not(.active) img {
+  opacity: 0.85;
+  filter: brightness(0) saturate(100%) invert(90%) sepia(13%) saturate(188%) hue-rotate(175deg) brightness(97%) contrast(94%);
+}
+
+:root[data-theme="dark"] .tabButton.active img,
+:root[data-telegram-theme="dark"] .tabButton.active img {
+  opacity: 1;
+  filter: brightness(0) saturate(100%) invert(72%) sepia(92%) saturate(4929%) hue-rotate(157deg) brightness(101%) contrast(98%);
 }
 
 .tabButton span {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   line-height: 1;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--animation-duration-normal) var(--animation-easing);
 }
 
 .tabButton.active span {

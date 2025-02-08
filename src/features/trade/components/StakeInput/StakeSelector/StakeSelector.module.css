@@ -1,0 +1,203 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background: var(--app-background);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-xs);
+  border: var(--border-width) solid var(--app-border);
+}
+
+.controlButton {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--border-radius);
+  background: var(--app-background);
+  color: var(--app-text);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: all var(--animation-duration-normal) var(--animation-easing);
+}
+
+.controlIcon {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+
+.controlButton:hover:not(:disabled) {
+  background: var(--app-hover-background);
+  color: var(--color-primary);
+}
+
+.controlButton:active:not(:disabled) {
+  transform: scale(0.95);
+  background: var(--app-active-background);
+}
+
+.controlButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  border: var(--border-width) solid var(--app-border);
+  border-radius: var(--border-radius);
+  background: var(--app-background);
+  padding: var(--spacing-sm);
+}
+
+.currencySymbol {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--app-text-secondary);
+  margin-right: var(--spacing-xs);
+}
+
+.input {
+  flex: 1;
+  border: none;
+  background: none;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--app-text);
+  text-align: right;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  outline: none;
+}
+
+.input.error {
+  color: var(--color-error);
+}
+
+.errorText {
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  margin-top: calc(-1 * var(--spacing-md));
+}
+
+.quickAmounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin: var(--spacing-sm) 0;
+}
+
+.quickAmount {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--app-border);
+  border-radius: 100px;
+  background: transparent;
+  color: var(--app-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--animation-duration-normal) var(--animation-easing);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.quickAmount:hover:not(.selected) {
+  background: var(--app-hover-background);
+  border-color: var(--color-primary-light);
+}
+
+.quickAmount:active:not(.selected) {
+  transform: scale(0.95);
+}
+
+.quickAmount.selected {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.balanceInfo,
+.payoutInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background-color: var(--app-background-secondary);
+  border-radius: var(--border-radius);
+}
+
+.balanceInfo {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.payoutRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.balanceLabel,
+.payoutLabel {
+  font-size: var(--font-size-sm);
+  color: var(--app-text-secondary);
+}
+
+.balanceValue,
+.payoutValue {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--app-text);
+}
+
+.submitButton {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: none;
+  border-radius: var(--border-radius);
+  background: var(--color-primary);
+  color: white;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: all var(--animation-duration-normal) var(--animation-easing);
+}
+
+.submitButton:hover:not(:disabled) {
+  background: var(--color-primary-light);
+}
+
+.submitButton:active:not(:disabled) {
+  transform: scale(0.98);
+  background: var(--color-primary-dark);
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Hide number input spinners */
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input[type=number] {
+  -moz-appearance: textfield;
+}

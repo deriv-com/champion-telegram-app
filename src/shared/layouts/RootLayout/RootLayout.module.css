@@ -2,7 +2,8 @@
   min-height: var(--tg-viewport-stable-height);
   height: var(--tg-viewport-stable-height);
   width: 100%;
-  background-color: var(--color-background);
+  background-color: var(--app-background);
+  color: var(--app-text);
   margin: 0;
   padding: 0;
   display: flex;
@@ -13,6 +14,8 @@
   left: 0;
   right: 0;
   bottom: 0;
+  transition: background-color var(--animation-duration-normal) var(--animation-easing),
+              color var(--animation-duration-normal) var(--animation-easing);
 }
 
 .main {
@@ -22,12 +25,12 @@
   flex: 1;
   margin: 0;
   padding: var(--spacing-md);
-  padding-top: calc(var(--app-bar-height) + var(--tg-safe-area-top));
+  padding-top: calc(var(--header-height) + var(--tg-safe-area-top));
   padding-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom));
   padding-left: max(var(--spacing-md), var(--tg-safe-area-left));
   padding-right: max(var(--spacing-md), var(--tg-safe-area-right));
   box-sizing: border-box;
-  background-color: var(--color-background);
+  background-color: var(--app-background);
   position: relative;
   z-index: 1;
   
@@ -40,13 +43,17 @@
   scroll-behavior: smooth;
   
   /* Hide scrollbar */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 /* Mobile styles */
 .mobile .main {
   padding: var(--spacing-sm);
+  padding-top: calc(var(--header-height) + var(--tg-safe-area-top));
+  padding-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom));
+  padding-left: max(var(--spacing-sm), var(--tg-safe-area-left));
+  padding-right: max(var(--spacing-sm), var(--tg-safe-area-right));
 }
 
 /* Hide scrollbar for WebKit browsers */
@@ -54,13 +61,11 @@
   display: none;
 }
 
-/* Mobile styles */
-@media (max-width: 480px) {
-  .main {
-    padding: var(--spacing-sm);
-    padding-top: calc(var(--app-bar-height) + var(--tg-safe-area-top));
-    padding-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom));
-    padding-left: max(var(--spacing-sm), var(--tg-safe-area-left));
-    padding-right: max(var(--spacing-sm), var(--tg-safe-area-right));
-  }
+/* Animation classes */
+.fadeIn {
+  animation: fadeIn var(--animation-duration-normal) var(--animation-easing);
+}
+
+.slideUp {
+  animation: slideUp var(--animation-duration-normal) var(--animation-easing);
 }

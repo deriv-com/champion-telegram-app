@@ -1,99 +1,140 @@
 .cashierView {
-  padding: 2rem;
+  padding: var(--spacing-xl);
   width: 100%;
   min-height: var(--tg-viewport-stable-height);
-  padding-bottom: calc(var(--tg-safe-area-bottom, 0px) + var(--tab-bar-height, 0px));
+  padding-bottom: calc(var(--tg-safe-area-bottom, 0px) + var(--tab-bar-height));
   max-width: 1000px;
   margin: 0 auto;
+  animation: fadeIn var(--animation-duration-normal) var(--animation-easing);
 }
 
 .optionsGrid {
   display: grid;
-  gap: 1.5rem;
+  gap: var(--spacing-xl);
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  margin-bottom: 3rem;
+  margin-bottom: var(--spacing-2xl);
 }
 
 .optionCard {
-  background: var(--color-white);
-  border-radius: var(--border-radius);
-  padding: 1.5rem 1.25rem;
+  background-color: var(--app-background);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl) var(--spacing-lg);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-lg);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--animation-duration-normal) var(--animation-easing);
   position: relative;
   overflow: hidden;
-  box-shadow: var(--box-shadow);
-  border: 2px solid var(--color-background);
+  box-shadow: var(--shadow);
+  border: var(--border-width) solid var(--app-border);
 }
 
 .optionCard:hover {
   transform: translateY(-2px);
-  box-shadow: var(--box-shadow-lg);
+  box-shadow: var(--shadow-lg);
   border-color: var(--color-primary);
+  background-color: var(--app-hover-background);
 }
 
 .optionCard:active {
-  transform: translateY(0);
-  box-shadow: var(--box-shadow);
+  transform: scale(0.98);
+  box-shadow: var(--shadow);
+  background-color: var(--app-active-background);
 }
 
 .optionIcon {
-  width: 2rem;
-  height: 2rem;
+  width: var(--touch-target-size);
+  height: var(--touch-target-size);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-primary);
-  transition: transform 0.3s ease;
-  padding: 0.25rem;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  transition: all var(--animation-duration-normal) var(--animation-easing);
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-full);
+  background-color: var(--app-background-secondary);
 }
 
 .optionCard:hover .optionIcon {
   transform: scale(1.1);
-  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  background-color: var(--app-hover-background);
 }
 
 .optionIcon img {
   width: 100%;
   height: 100%;
+  transition: transform var(--animation-duration-normal) var(--animation-easing),
+              filter var(--animation-duration-normal) var(--animation-easing);
+}
+
+/* Light theme icon colors - except P2P */
+:root[data-theme="light"] .optionIcon img:not([src*="p2p"]),
+:root[data-telegram-theme="light"] .optionIcon img:not([src*="p2p"]) {
+  filter: brightness(0) saturate(100%) invert(58%) sepia(82%) saturate(2288%) hue-rotate(157deg) brightness(97%) contrast(101%);
+}
+
+:root[data-theme="light"] .optionCard:hover .optionIcon img:not([src*="p2p"]),
+:root[data-telegram-theme="light"] .optionCard:hover .optionIcon img:not([src*="p2p"]) {
+  filter: brightness(0) saturate(100%) invert(58%) sepia(82%) saturate(2288%) hue-rotate(157deg) brightness(110%) contrast(101%);
+}
+
+/* Dark theme icon colors - except P2P */
+:root[data-theme="dark"] .optionIcon img:not([src*="p2p"]),
+:root[data-telegram-theme="dark"] .optionIcon img:not([src*="p2p"]) {
+  filter: brightness(0) saturate(100%) invert(72%) sepia(92%) saturate(4929%) hue-rotate(157deg) brightness(101%) contrast(98%);
+}
+
+:root[data-theme="dark"] .optionCard:hover .optionIcon img:not([src*="p2p"]),
+:root[data-telegram-theme="dark"] .optionCard:hover .optionIcon img:not([src*="p2p"]) {
+  filter: brightness(0) saturate(100%) invert(72%) sepia(92%) saturate(4929%) hue-rotate(157deg) brightness(110%) contrast(98%);
 }
 
 .optionLabel {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text);
+  color: var(--app-text);
   text-align: center;
-  transition: color 0.3s ease;
+  transition: color var(--animation-duration-normal) var(--animation-easing);
   letter-spacing: 0.3px;
 }
 
-
+/* Tablet and Desktop */
 @media (min-width: 768px) {
   .cashierView {
-    padding: 2.5rem;
+    padding: var(--spacing-2xl);
   }
   
   .optionsGrid {
     grid-template-columns: repeat(5, 1fr);
-    gap: 2rem;
+    gap: var(--spacing-2xl);
   }
   
   .optionCard {
-    padding: 2rem 1.5rem;
+    padding: var(--spacing-2xl) var(--spacing-xl);
   }
 
   .optionIcon {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: calc(var(--touch-target-size) * 1.25);
+    height: calc(var(--touch-target-size) * 1.25);
   }
 
   .optionLabel {
     font-size: var(--font-size-base);
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 480px) {
+  .cashierView {
+    padding: var(--spacing-lg);
+  }
+
+  .optionsGrid {
+    gap: var(--spacing-lg);
+  }
+
+  .optionCard {
+    padding: var(--spacing-lg) var(--spacing-md);
   }
 }

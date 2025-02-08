@@ -1,32 +1,35 @@
 .shimmerContainer {
   position: relative;
   overflow: hidden;
-  background: #f0f0f0; /* Light grey background */
-  min-width: 40px;
-  min-height: 14px;
+  background-color: var(--app-background-secondary);
+  min-width: var(--touch-target-size);
+  min-height: var(--font-size-base);
   border: none;
+  transition: background-color var(--animation-duration-normal) var(--animation-easing);
 }
 
 .shimmerComplexContainer {
   display: flex;
   flex-direction: column;
   width: 100%;
+  gap: var(--spacing-sm);
 }
 
 /* Shape variants */
 .rounded {
-  border-radius: 4px;
+  border-radius: var(--border-radius);
 }
 
 .circular {
-  border-radius: 50%;
+  border-radius: var(--border-radius-full);
 }
 
 .square {
   border-radius: 0;
 }
 
-.shimmer {
+/* Light theme shimmer */
+[data-theme="light"] .shimmer {
   position: absolute;
   top: 0;
   left: 0;
@@ -42,7 +45,28 @@
     rgba(255, 255, 255, 0.6) 90%,
     rgba(255, 255, 255, 0) 100%
   );
-  animation: shimmer 2s infinite ease-in-out;
+  animation: shimmer var(--animation-duration-slow) infinite var(--animation-easing);
+  will-change: transform;
+}
+
+/* Dark theme shimmer */
+[data-theme="dark"] .shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 20%,
+    rgba(255, 255, 255, 0.2) 40%,
+    rgba(255, 255, 255, 0.3) 60%,
+    rgba(255, 255, 255, 0.2) 80%,
+    rgba(255, 255, 255, 0.1) 90%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shimmer var(--animation-duration-slow) infinite var(--animation-easing);
   will-change: transform;
 }
 

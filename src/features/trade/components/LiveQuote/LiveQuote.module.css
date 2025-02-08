@@ -1,34 +1,37 @@
 .container {
-  background: var(--color-white);
-  border-radius: var(--border-radius);
-  padding: 1rem;
+  background-color: var(--app-background);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: var(--box-shadow-lg);
+  box-shadow: var(--shadow-lg);
   width: 100%;
-  margin-bottom: 1rem;
-  border: 2px solid var(--color-background);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: var(--spacing-lg);
+  border: var(--border-width) solid var(--app-border);
+  transition: all var(--animation-duration-normal) var(--animation-easing);
 }
 
 .container:hover {
   transform: translateY(-2px);
-  box-shadow: var(--box-shadow-xl);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary);
+  background-color: var(--app-hover-background);
 }
 
 .priceContainer {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 .label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text);
+  color: var(--app-text);
   letter-spacing: 0.5px;
   line-height: var(--line-height-normal);
+  transition: color var(--animation-duration-normal) var(--animation-easing);
 }
 
 .price {
@@ -37,41 +40,42 @@
   gap: 2px;
   font-family: monospace;
   font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-extrabold);
-  color: var(--color-text);
+  font-weight: var(--font-weight-black);
+  color: var(--app-text);
   letter-spacing: -0.5px;
+  transition: color var(--animation-duration-normal) var(--animation-easing);
 }
 
 .digit {
   display: inline-block;
   min-width: 0.6em;
   text-align: center;
-  transition: all 0.2s ease;
+  transition: all var(--animation-duration-normal) var(--animation-easing);
   position: relative;
 }
 
 .lastDigit {
   color: var(--color-primary);
-  animation: pulse 2s infinite;
+  animation: pulse var(--animation-duration-slow) infinite;
 }
 
 .chartContainer {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 0;
-  margin-left: 1.5rem;
+  padding: var(--spacing-sm) 0;
+  margin-left: var(--spacing-xl);
   overflow: hidden;
 }
 
 .chart {
   width: 200px;
   height: 100px;
-  animation: fadeIn 0.5s ease-out;
+  animation: fadeIn var(--animation-duration-normal) var(--animation-easing);
 }
 
 .ticker {
-  animation: tickerPulse 1s ease-in-out infinite;
+  animation: tickerPulse var(--animation-duration-normal) var(--animation-easing) infinite;
   transform-origin: center;
   transform-box: fill-box;
 }
@@ -108,21 +112,34 @@
   }
   50% {
     transform: scale(1.1);
-    text-shadow: 0 0 10px var(--color-primary);
+    text-shadow: 0 0 10px var(--shadow-primary);
   }
   100% {
     transform: scale(1);
   }
 }
 
+/* Tablet styles */
+@media (max-width: 768px) {
+  .chart {
+    width: 160px;
+    height: 80px;
+  }
+}
+
+/* Mobile styles */
 @media (max-width: 480px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+
   .price {
     font-size: var(--font-size-xl);
   }
   
   .chartContainer {
-    padding: 0.25rem 0;
-    margin-left: 1rem;
+    padding: var(--spacing-xs) 0;
+    margin-left: var(--spacing-lg);
   }
   
   .chart {

@@ -3,20 +3,32 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: var(--spacing-2xl);
   text-align: center;
   min-height: 50vh;
-  background-color: #f8f9fa;
+  background-color: var(--app-background);
+  color: var(--app-text);
+  transition: background-color var(--animation-duration-normal) var(--animation-easing),
+              color var(--animation-duration-normal) var(--animation-easing);
 }
 
 .title {
-  font-size: 1.5rem;
-  color: #dc3545;
-  margin-bottom: 1rem;
+  font-size: var(--font-size-xl);
+  color: var(--color-error);
+  margin-bottom: var(--spacing-lg);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
 }
 
 .message {
-  color: #6c757d;
-  margin-bottom: 2rem;
+  color: var(--app-text-secondary);
+  margin-bottom: var(--spacing-2xl);
   max-width: 500px;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+}
+
+/* Animation */
+.container {
+  animation: fadeIn var(--animation-duration-normal) var(--animation-easing);
 }

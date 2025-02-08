@@ -5,64 +5,62 @@
   width: auto;
   min-width: 200px;
   max-width: 400px;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-lg);
   z-index: 1000;
-  animation: slideIn 0.3s ease-out;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  animation: slideIn var(--animation-duration-normal) var(--animation-easing);
   transform: translateZ(0);
   will-change: transform, opacity;
-  font-size: 14px;
-  line-height: 1.4;
-  left: calc(var(--tg-safe-area-left, 0) + 8px);
-  right: calc(var(--tg-safe-area-right, 0) + 8px);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  left: calc(var(--tg-safe-area-left, 0) + var(--spacing-sm));
+  right: calc(var(--tg-safe-area-right, 0) + var(--spacing-sm));
   margin: 0 auto;
 }
 
 /* Positions */
 .top {
-  top: calc(var(--tg-safe-area-top, 0) + 4px);
+  top: calc(var(--tg-safe-area-top, 0) + var(--spacing-xs));
 }
 
 .bottom {
-  bottom: calc(var(--tg-safe-area-bottom, 0) + 4px);
+  bottom: calc(var(--tg-safe-area-bottom, 0) + var(--spacing-xs));
 }
 
 @media screen and (max-width: 320px) {
   .toast {
-    padding: 8px;
-    font-size: 13px;
+    padding: var(--spacing-xs);
+    font-size: var(--font-size-xs);
   }
 }
 
 /* Types */
 .info {
-  background-color: var(--tg-theme-button-color, rgba(36, 129, 204, 0.95));
-  color: var(--tg-theme-button-text-color, #ffffff);
+  background-color: var(--color-primary);
+  color: var(--color-white);
 }
 
 .success {
-  background-color: rgba(76, 175, 80, 0.95);
-  color: white;
+  background-color: var(--color-success);
+  color: var(--color-white);
 }
 
 .error {
-  background-color: rgba(244, 67, 54, 0.95);
-  color: white;
+  background-color: var(--color-error);
+  color: var(--color-white);
 }
 
 .warning {
-  background-color: rgba(255, 152, 0, 0.95);
-  color: white;
+  background-color: var(--color-warning);
+  color: var(--color-white);
 }
 
 /* Content Layout */
 .content {
   flex: 1;
-  margin: 0 6px;
-  min-width: 0; /* Enable text truncation */
+  margin: 0 var(--spacing-xs);
+  min-width: 0;
 }
 
 .message {
@@ -70,21 +68,21 @@
   overflow-wrap: break-word;
   word-wrap: break-word;
   hyphens: auto;
-  padding: 2px 0;
+  padding: var(--spacing-xs) 0;
 }
 
 .iconContainer {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: var(--font-size-lg);
+  height: var(--font-size-lg);
   flex-shrink: 0;
-  margin-top: 3px;
+  margin-top: var(--spacing-xs);
 }
 
 .icon {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
 }
 
 .closeButton {
@@ -92,61 +90,52 @@
   border: none;
   color: inherit;
   cursor: pointer;
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   opacity: 0.7;
-  padding: 4px;
-  transition: opacity 0.2s;
+  padding: var(--spacing-xs);
+  transition: opacity var(--animation-duration-normal) var(--animation-easing);
   flex-shrink: 0;
   margin: 0;
   line-height: 1;
+  border-radius: var(--border-radius-sm);
 }
 
 .closeButton:hover {
   opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.closeButton:active {
+  opacity: 0.8;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .actionButton {
   background: none;
-  border: 1px solid currentColor;
-  border-radius: 4px;
+  border: var(--border-width) solid currentColor;
+  border-radius: var(--border-radius-sm);
   color: inherit;
   cursor: pointer;
-  font-size: 12px;
-  margin-top: 4px;
-  padding: 3px 8px;
+  font-size: var(--font-size-xs);
+  margin-top: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
   opacity: 0.9;
-  transition: opacity 0.2s;
+  transition: all var(--animation-duration-normal) var(--animation-easing);
   display: inline-block;
-  line-height: 1.2;
+  line-height: var(--line-height-tight);
 }
 
 .actionButton:hover {
   opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Animations */
-@keyframes slideIn {
-  from {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+.actionButton:active {
+  opacity: 0.8;
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(0.98);
 }
 
 .exit {
-  animation: slideOut 0.3s ease-in forwards;
-}
-
-@keyframes slideOut {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
+  animation: slideOut var(--animation-duration-normal) var(--animation-easing) forwards;
 }

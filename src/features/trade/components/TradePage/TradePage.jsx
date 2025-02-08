@@ -3,7 +3,7 @@ import { ShimmerLoading } from '@/shared/components/Loading';
 import TradeButton from '../TradeButton';
 import MarketSelector from '../MarketSelector';
 import LiveQuote from '../LiveQuote';
-import DurationInput from '../DurationInput';
+import DurationField from '../DurationField';
 import StakeInput from '../StakeInput';
 import DigitPrediction from '../DigitPrediction';
 import { useTrade } from '../../hooks/useTrade';
@@ -67,7 +67,7 @@ const TradePage = () => {
       {!isLoading && (
         <div className={styles.inputRow}>
           <div className={styles.halfWidth}>
-            <DurationInput
+            <DurationField
               value={duration}
               onChange={setDuration}
             />
@@ -106,6 +106,7 @@ const TradePage = () => {
             info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Matches ${selectedDigit}\n📊 Market: ${marketName}`);
           }}
           disabled={selectedDigit === null || selectedDigit === undefined}
+          selectedDigit={selectedDigit}
         />
         <TradeButton
           variant="negative"
@@ -117,6 +118,7 @@ const TradePage = () => {
             info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Differs ${selectedDigit}\n📊 Market: ${marketName}`);
           }}
           disabled={selectedDigit === null || selectedDigit === undefined}
+          selectedDigit={selectedDigit}
         />
       </div>
     </div>

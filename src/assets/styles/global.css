@@ -1,4 +1,6 @@
-@import './theme.css';
+@import './design-tokens.css';
+@import './theme-variants.css';
+@import './telegram.css';
 
 /* Reset & Base Styles */
 *,
@@ -7,44 +9,51 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Root element styles */
 html {
+  height: 100%;
   height: -webkit-fill-available;
-  background-color: var(--color-background);
+  background-color: var(--app-background);
 }
 
 body {
   min-height: 100vh;
-  /* mobile viewport bug fix */
   min-height: -webkit-fill-available;
-  background-color: var(--color-background);
-  overflow-x: hidden;
-  /* Prevent bounce in modern mobile browsers */
-  overscroll-behavior-y: none;
+  background-color: var(--app-background);
+  color: var(--app-text);
   font-family: var(--font-family);
   line-height: var(--line-height-normal);
-  color: var(--color-text);
+  font-size: var(--font-size-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
-/* Container */
-.container,
-.tg-container {
+/* Main Container */
+.container {
   width: 100%;
+  height: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--spacing-md);
-  min-height: 100vh;
-  /* mobile viewport bug fix */
-  min-height: -webkit-fill-available;
-  background-color: var(--color-background);
+  padding: calc(var(--spacing-md) + var(--tg-safe-area-top, 0px))
+          calc(var(--spacing-md) + var(--tg-safe-area-right, 0px))
+          calc(var(--spacing-md) + var(--tg-safe-area-bottom, 0px))
+          calc(var(--spacing-md) + var(--tg-safe-area-left, 0px));
   display: flex;
   flex-direction: column;
-  /* Ensure proper padding for iOS devices */
-  padding-bottom: calc(var(--spacing-md) + var(--tg-safe-area-bottom, 0px));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: var(--app-background);
 }
 
 /* Button Base */
@@ -52,52 +61,43 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: var(--touch-target-size);
   padding: var(--spacing-sm) var(--spacing-lg);
   border-radius: var(--border-radius);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
   text-decoration: none;
   cursor: pointer;
-  transition: all var(--transition-speed) ease-in-out;
   border: none;
   user-select: none;
+  transition: transform var(--animation-duration-fast) var(--animation-easing),
+              opacity var(--animation-duration-fast) var(--animation-easing);
+}
+
+.btn:active {
+  transform: scale(0.98);
+  opacity: 0.9;
 }
 
 /* Button Variants */
 .btn-primary {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-}
-
-.btn-primary:hover {
-  background-color: var(--color-primary-hover);
+  background-color: var(--app-button, var(--color-primary));
+  color: var(--app-button-text, var(--color-white));
 }
 
 .btn-secondary {
-  background-color: var(--color-secondary);
-  color: var(--color-white);
-}
-
-.btn-secondary:hover {
-  background-color: var(--color-secondary-hover);
+  background-color: var(--app-background-secondary);
+  color: var(--app-text);
+  border: var(--border-width) solid var(--app-border);
 }
 
 /* Responsive Utilities */
 @media (max-width: 576px) {
-  .container,
-  .tg-container {
-    padding: 0 var(--spacing-sm);
-    padding-bottom: calc(var(--spacing-sm) + var(--tg-safe-area-bottom, 0px));
-  }
-}
-
-/* iOS-specific fixes */
-@supports (-webkit-touch-callout: none) {
-  .container,
-  .tg-container {
-    /* Prevent rubber-band scroll effect on iOS */
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+  .container {
+    padding: calc(var(--spacing-sm) + var(--tg-safe-area-top, 0px))
+            calc(var(--spacing-sm) + var(--tg-safe-area-right, 0px))
+            calc(var(--spacing-sm) + var(--tg-safe-area-bottom, 0px))
+            calc(var(--spacing-sm) + var(--tg-safe-area-left, 0px));
   }
 }
 
@@ -107,21 +107,20 @@ body {
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--spacing-sm);
   pointer-events: none;
-  padding-top: var(--tg-safe-area-top, 0px);
-  padding-bottom: var(--tg-safe-area-bottom, 0px);
-  padding-left: var(--tg-safe-area-left, 0px);
-  padding-right: var(--tg-safe-area-right, 0px);
+  padding: var(--tg-safe-area-top, 0px)
+           var(--tg-safe-area-right, 0px)
+           var(--tg-safe-area-bottom, 0px)
+           var(--tg-safe-area-left, 0px);
   width: 100%;
+  animation: fadeIn var(--animation-duration-normal) var(--animation-easing);
 }
 
-/* Enable pointer events for individual toasts while keeping container click-through */
 .toast-container > * {
   pointer-events: auto;
 }
 
-/* Toast positioning variants */
 .toast-container[data-position="top"] {
   top: 0;
   align-items: center;
@@ -130,4 +129,52 @@ body {
 .toast-container[data-position="bottom"] {
   bottom: 0;
   align-items: center;
+}
+
+/* Card View - A minimal card container for displaying information */
+.card-view {
+  border-radius: var(--border-radius-lg);
+  background-color: var(--app-background-tertiary);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-view-label {
+  color: var(--app-text);
+  opacity: 0.48;
+}
+
+.card-view-value {
+  color: var(--app-text);
+  opacity: 0.72;
+}
+
+/* Utility Classes */
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+.text-error {
+  color: var(--color-error);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.touch-target {
+  min-height: var(--touch-target-size);
+  min-width: var(--touch-target-size);
 }

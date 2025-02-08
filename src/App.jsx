@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes.config';
 import { RootLayout, ProtectedRoute, Loading } from '@/shared';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import { LandingPage, Dashboard } from '@/features/home';
 import LoginPage from '@/features/auth/components/LoginPage';
 import { TradePage } from '@/features/trade';
@@ -86,25 +87,21 @@ function App() {
     handleInitialization();
   }, [navigate, initialize]);
 
-  // Show loading state during initial load or WebApp initialization
-  if ((isLoading && !isAuthenticated) || !isWebAppInitialized) {
-    return (
-      <RootLayout>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          height: '100vh' 
-        }}>
-          <Loading size="lg" text="Initializing..." />
-        </div>
-      </RootLayout>
-    );
-  }
-
   return (
-    <RootLayout>
-      <Routes>
+    <ThemeProvider>
+      <RootLayout>
+        {/* Show loading state during initial load or WebApp initialization */}
+        {((isLoading && !isAuthenticated) || !isWebAppInitialized) ? (
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            height: '100vh' 
+          }}>
+            <Loading size="lg" text="Initializing..." />
+          </div>
+        ) : (
+          <Routes>
         <Route 
           path={ROUTES.HOME} 
           element={
@@ -125,8 +122,10 @@ function App() {
           }
         />
         <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
-      </Routes>
-    </RootLayout>
+          </Routes>
+        )}
+      </RootLayout>
+    </ThemeProvider>
   );
 }
 

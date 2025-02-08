@@ -1,41 +1,77 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import BottomSheet from '@/shared/components/BottomSheet';
+import { chevronDownIcon } from '@/assets/images';
+import StakeSelector from './StakeSelector/StakeSelector';
 import styles from './StakeInput.module.css';
 
 const StakeInput = ({ value, onChange, disabled, balance }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [tempValue, setTempValue] = useState(value === 0 ? '' : value);
   const isExceedingBalance = balance !== null && value > balance;
 
+  const handleSubmit = useCallback(() => {
+    onChange(tempValue);
+    setIsOpen(false);
+  }, [onChange, tempValue]);
+
+  const handleClose = useCallback(() => {
+    setTempValue(value === 0 ? '' : value);
+    setIsOpen(false);
+  }, [value]);
+
   return (
-    <div className={styles.container}>
-      <div className={styles.labelRow}>
-        <label className={styles.label}>Stake</label>
-        {balance !== null && (
+    <div className={styles.wrapper}>
+      <div 
+        className={`card-view ${styles.container}`}
+        onClick={() => !disabled && setIsOpen(true)}
+      >
+        <div className={styles.fieldContent}>
+          <div className={styles.textContent}>
+            <span className={`card-view-label ${styles.label}`}>Stake</span>
+            <span className={`card-view-value ${styles.value}`}>
+              ${typeof value === 'number' && value > 0 ? value.toFixed(2) : '0.00'}
+            </span>
+          </div>
+          <img src={chevronDownIcon} alt="select" className={styles.chevron} />
+        </div>
+      </div>
+      
+      {balance !== null && (
+        <div className={styles.balanceContainer}>
           <span className={styles.balance}>
             Balance: ${balance.toFixed(2)}
           </span>
-        )}
-      </div>
-      <div className={styles.inputWrapper}>
-        <input
-          type="number"
-          min="0"
-          step="0.01"
-          value={value}
-          onChange={(e) => {
-            const newValue = Math.max(parseFloat(e.target.value) || 0, 0);
-            onChange(newValue);
-          }}
-          className={`${styles.input} ${isExceedingBalance ? styles.error : ''}`}
-          disabled={disabled}
-        />
-        <span className={styles.unit}>$</span>
-      </div>
+        </div>
+      )}
+      
       {isExceedingBalance && (
         <span className={styles.errorText}>
           Stake exceeds available balance
         </span>
       )}
+
+      <BottomSheet
+        isOpen={isOpen}
+        onClose={handleClose}
+        title="Select Stake Amount"
+      >
+        <StakeSelector
+          value={tempValue}
+          onChange={setTempValue}
+          onSubmit={handleSubmit}
+          balance={balance}
+        />
+      </BottomSheet>
     </div>
   );
+};
+
+StakeInput.propTypes = {
+  value: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+  balance: PropTypes.number
 };
 
 export default StakeInput;

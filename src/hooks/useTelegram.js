@@ -54,8 +54,18 @@ export const initializeTelegramWebApp = () => {
     // Initial setup
     updateViewportMetrics();
     
-    // Set header color to match theme
+    // Set header color and theme parameters
     WebApp.setHeaderColor(WebApp.backgroundColor);
+    
+    // Set initial theme parameters
+    const root = document.documentElement;
+    const params = WebApp.themeParams;
+    Object.entries(params).forEach(([key, value]) => {
+      if (key.includes('color')) {
+        root.style.setProperty(`--tg-theme-${key}`, value);
+      }
+    });
+    root.setAttribute('data-telegram-theme', WebApp.colorScheme || 'light');
     
     // Update on viewport changes
     cleanup.viewportChanged = () => {
@@ -161,21 +171,30 @@ export const useTelegram = () => {
     return () => WebApp.offEvent('viewportChanged', updateViewportMetrics);
   }, []);
 
-  // Handle theme changes
+  // Handle theme setup and changes
   useEffect(() => {
-    const handleThemeChanged = () => {
+    const handleThemeParams = () => {
       const root = document.documentElement;
       const params = WebApp.themeParams;
       
+      // Set theme parameters
       Object.entries(params).forEach(([key, value]) => {
         if (key.includes('color')) {
           root.style.setProperty(`--tg-theme-${key}`, value);
         }
       });
+
+      // Set color scheme
+      const scheme = WebApp.colorScheme || 'light';
+      root.setAttribute('data-telegram-theme', scheme);
     };
 
-    WebApp.onEvent('themeChanged', handleThemeChanged);
-    return () => WebApp.offEvent('themeChanged', handleThemeChanged);
+    // Set initial theme parameters
+    handleThemeParams();
+
+    // Update on theme changes
+    WebApp.onEvent('themeChanged', handleThemeParams);
+    return () => WebApp.offEvent('themeChanged', handleThemeParams);
   }, []);
 
   // Handle closing confirmation

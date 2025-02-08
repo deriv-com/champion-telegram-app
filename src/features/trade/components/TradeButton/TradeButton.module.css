@@ -1,16 +1,23 @@
 .buttonPositive,
 .buttonNegative {
-  text-transform: none;
+  display: flex;
+  flex-direction: column;
   flex: 1;
-  padding: 0.5rem 0.75rem;
+  padding: calc(var(--spacing-sm)) var(--spacing-sm);
   border: none;
   border-radius: var(--border-radius);
-  color: var(--color-white);
+  color: var(--color-text-dark);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--animation-duration-normal) var(--animation-easing);
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(5px);
+  min-height: calc(var(--touch-target-size));
+  letter-spacing: normal;
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .buttonPositive::before,
@@ -27,14 +34,13 @@
     rgba(255, 255, 255, 0.1),
     transparent
   );
-  animation: shine 8s infinite;
+  animation: shine var(--animation-duration-slow) infinite;
 }
 
 .buttonContent {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 0.375rem;
+  gap: calc(var(--spacing-xs) * 0.5);
   width: 100%;
   position: relative;
   z-index: 1;
@@ -44,101 +50,119 @@
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
+  letter-spacing: 0.75px;
+  color: var(--color-text-dark);
+}
+
+.buttonPositive .buttonLabel {
   text-align: right;
+  align-self: flex-end;
+}
+
+.buttonNegative .buttonLabel {
+  text-align: left;
+  align-self: flex-start;
 }
 
 .payoutRow {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   width: 100%;
-  background: rgba(255, 255, 255, 0);
-  border-radius: 8px;
-  padding: 0.2rem 0.375rem;
+}
+
+.buttonPositive .payoutRow {
+  justify-content: space-between;
+}
+
+.buttonNegative .payoutRow {
+  justify-content: space-between;
+  flex-direction: row-reverse;
 }
 
 .payoutLabel {
-  font-size: 0.625rem;
+  font-size: calc(var(--font-size-xs));
   font-weight: var(--font-weight-normal);
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-text-dark);
   letter-spacing: 0.3px;
-  line-height: 1;
-  margin-right: auto;
+  line-height: var(--line-height-tight);
 }
 
 .payoutAmount {
-  font-size: 0.625rem;
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-normal);
-  line-height: 1;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  margin-left: auto;
+  line-height: var(--line-height-tight);
+  text-shadow: var(--shadow-sm);
+  color: var(--color-text-dark);
 }
 
 .buttonPositive {
-  background: linear-gradient(135deg, var(--color-trade-button-positive) 0%, var(--color-trade-button-positive) 100%);
-  box-shadow: 0 4px 12px rgba(3, 195, 144, 0.2),
-              0 2px 4px rgba(3, 195, 144, 0.1),
-              inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, var(--color-trade-button-positive) 0%, var(--color-trade-button-positive-disabled) 100%);
+  box-shadow: var(--shadow-trade-button);
 }
 
 .buttonPositive:not(:disabled):hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(3, 195, 144, 0.25),
-              0 4px 8px rgba(3, 195, 144, 0.15),
-              inset 0 1px 1px rgba(255, 255, 255, 0.15);
-  /* background: linear-gradient(135deg, #04d49d 0%, #00b98c 100%); */
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-trade-button-hover);
+  background: linear-gradient(135deg, var(--color-trade-button-positive-hover) 0%, var(--color-trade-button-positive) 100%);
 }
 
 .buttonPositive:not(:disabled):active {
-  transform: translateY(1px);
-  box-shadow: 0 4px 12px rgba(3, 195, 144, 0.2),
-              0 2px 4px rgba(3, 195, 144, 0.1),
-              inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  transform: translateY(0);
+  box-shadow: var(--shadow-trade-button);
 }
 
 .buttonNegative {
-  background: linear-gradient(135deg, var(--color-trade-button-negative) 0%, var(--color-trade-button-negative) 100%);
-  box-shadow: 0 4px 12px rgba(223, 0, 64, 0.2),
-              0 2px 4px rgba(223, 0, 64, 0.1),
-              inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, var(--color-trade-button-negative) 0%, var(--color-trade-button-negative-disabled) 100%);
+  box-shadow: var(--shadow-trade-button);
 }
 
 .buttonNegative:not(:disabled):hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(223, 0, 64, 0.25),
-              0 4px 8px rgba(223, 0, 64, 0.15),
-              inset 0 1px 1px rgba(255, 255, 255, 0.15);
-  background: linear-gradient(135deg, #f00046 0%, #db0040 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-trade-button-hover);
+  background: linear-gradient(135deg, var(--color-trade-button-negative-hover) 0%, var(--color-trade-button-negative) 100%);
 }
 
 .buttonNegative:not(:disabled):active {
-  transform: translateY(1px);
-  box-shadow: 0 4px 12px rgba(223, 0, 64, 0.2),
-              0 2px 4px rgba(223, 0, 64, 0.1),
-              inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  transform: translateY(0);
+  box-shadow: var(--shadow-trade-button);
 }
 
 .buttonPositive:disabled {
-  background: linear-gradient(135deg, var(--color-trade-button-positive-disabled) 0%, var(--color-trade-button-positive-disabled) 100%);
+  background: var(--color-trade-button-positive-disabled);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
-  color: rgba(255, 255, 255, 0.8);
 }
 
 .buttonNegative:disabled {
-  background: linear-gradient(135deg, var(--color-trade-button-negative-disabled) 0%, var(--color-trade-button-negative-disabled) 100%);
+  background: var(--color-trade-button-negative-disabled);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
-  color: rgba(255, 255, 255, 0.8);
 }
 
+/* Disabled text colors */
+.buttonPositive:disabled .buttonLabel,
 .buttonPositive:disabled .payoutLabel,
+.buttonPositive:disabled .payoutAmount {
+  color: var(--color-text-dark);
+  opacity: 0.6;
+}
+
+.buttonNegative:disabled .buttonLabel,
 .buttonNegative:disabled .payoutLabel,
-.buttonPositive:disabled .payoutAmount,
 .buttonNegative:disabled .payoutAmount {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-text-dark);
+  opacity: 0.6;
+}
+
+.buttonPositive:disabled .payoutRow,
+.buttonNegative:disabled .payoutRow {
+  background: var(--color-trade-button-positive-disabled);
+}
+
+.buttonNegative:disabled .payoutRow {
+  background: var(--color-trade-button-negative-disabled);
 }
 
 @keyframes shine {
@@ -150,5 +174,17 @@
   }
   100% {
     left: 100%;
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 480px) {
+  .buttonLabel {
+    font-size: var(--font-size-sm);
+  }
+
+  .payoutLabel,
+  .payoutAmount {
+    font-size: calc(var(--font-size-xs) * 0.75);
   }
 }

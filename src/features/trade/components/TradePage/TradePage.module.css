@@ -1,5 +1,5 @@
 .container {
-  padding: 0.5rem;
+  padding: var(--spacing-xs);
   width: 100%;
   min-height: var(--tg-viewport-stable-height);
   padding-bottom: 10rem;
@@ -9,158 +9,48 @@
 
 .marketSelectorWrapper {
   width: 100%;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-lg);
 }
 
 .tradeControls {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 1rem;
-  background-color: var(--background-paper);
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background-color: var(--app-background-secondary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
 }
 
 .inputRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 24px;
   align-items: flex-start;
   width: 100%;
-  margin-top: 0.5rem;
-}
-
-.inputRow>* {
-  flex: 1 1 auto;
-  min-width: min-content;
+  margin-top: var(--spacing-xs);
 }
 
 .halfWidth {
-  flex: 1 1 calc(50% - 0.5rem);
+  flex: 1;
   min-width: 150px;
+  max-width: 100%;
 }
 
 .digitPredictionWrapper {
-  margin-top: 1.5rem;
+  margin-top: var(--spacing-lg);
   width: 100%;
 }
 
 .tradeButtonsContainer {
   position: fixed;
   bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, 0px));
-  left: 0rem;
-  right: 0rem;
+  left: 0;
+  right: 0;
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-md);
   z-index: 100;
-  background-color: rgba(247, 250, 252, 0.2);
-  padding: 1rem 1rem;
-  
-  /* Ensure buttons are above Telegram's WebApp elements */
+  background-color: var(--app-background);
+  padding: var(--spacing-md);
   transform: translateZ(0);
-}
-
-.tradeButton {
-  flex: 1;
-  padding: 0.875rem 1.25rem;
-  border: none;
-  border-radius: var(--border-radius);
-  color: var(--color-white);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--box-shadow-lg);
-  position: relative;
-  overflow: hidden;
-}
-
-.buttonContent {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.5rem;
-  width: 100%;
-  position: relative;
-}
-
-.buttonLabel {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: 0.5px;
-}
-
-.payoutRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px !important;
-  padding: 0.2rem 0.75rem;
-}
-
-.payoutLabel {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-normal);
-  color: var(--color-white);
-  opacity: 0.9;
-  line-height: var(--line-height-normal);
-}
-
-.payoutAmount {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-normal);
-  color: var(--color-white);
-  line-height: var(--line-height-normal);
-}
-
-.tradeButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.positiveButton {
-  background: #03c390;
-  animation: buttonPulse 2s infinite;
-}
-
-.positiveButton:not(:disabled):hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(3, 195, 144, 0.3);
-}
-
-.positiveButton:not(:disabled):active {
-  transform: translateY(0);
-  box-shadow: 0 8px 16px rgba(3, 195, 144, 0.2);
-}
-
-.negativeButton {
-  background: #df0040;
-  animation: buttonPulse 2s infinite;
-  animation-delay: 0.5s;
-}
-
-.negativeButton:not(:disabled):hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(223, 0, 64, 0.3);
-}
-
-.negativeButton:not(:disabled):active {
-  transform: translateY(0);
-  box-shadow: 0 8px 16px rgba(223, 0, 64, 0.2);
-}
-
-@keyframes buttonPulse {
-  0% {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-
-  50% {
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-  }
-
-  100% {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
 }
