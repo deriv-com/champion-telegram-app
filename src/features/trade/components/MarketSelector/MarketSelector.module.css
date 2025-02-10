@@ -1,15 +1,6 @@
 .container {
-  background-color: var(--app-background);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-  box-shadow: var(--shadow-lg);
   width: 100%;
-  position: relative;
-  border: var(--border-width) solid var(--app-border);
-  transition: all var(--animation-duration-normal) var(--animation-easing);
+  padding: var(--spacing-xs) var(--spacing-md);
 }
 
 .container.disabled {
@@ -18,75 +9,47 @@
   pointer-events: none;
 }
 
+.fieldContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.textContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xs);
+}
+
 .label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  color: var(--app-text);
-  letter-spacing: 0.5px;
   line-height: var(--line-height-normal);
-  transition: color var(--animation-duration-normal) var(--animation-easing);
 }
 
-.trigger {
-  width: 100%;
-  min-height: var(--touch-target-size);
-  padding: var(--spacing-lg) var(--spacing-xl);
-  border: var(--border-width) solid var(--app-border);
-  border-radius: var(--border-radius);
-  background-color: var(--app-background);
-  color: var(--app-text);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  cursor: pointer;
-  outline: none;
-  transition: all var(--animation-duration-normal) var(--animation-easing);
-  -webkit-tap-highlight-color: transparent;
-  box-shadow: var(--shadow);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.trigger:hover:not(:disabled) {
-  background-color: var(--app-hover-background);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--color-primary);
-}
-
-.trigger:active:not(:disabled) {
-  transform: scale(0.98);
-  box-shadow: var(--shadow);
-  background-color: var(--app-active-background);
-}
-
-.trigger.active {
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-primary);
-}
-
-.trigger:disabled {
-  background-color: var(--app-background-tertiary);
-  color: var(--app-text-secondary);
-  cursor: not-allowed;
-  box-shadow: none;
-  border-color: var(--app-border);
-}
-
-.selectedText {
-  flex: 1;
-  text-align: left;
-  margin-right: var(--spacing-lg);
+.value {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
 }
 
 .chevron {
-  color: var(--color-primary);
-  transition: transform var(--animation-duration-normal) var(--animation-easing);
+  width: var(--spacing-lg);
+  height: var(--spacing-lg);
+  margin-left: var(--spacing-sm);
 }
 
-.chevron.open {
-  transform: rotate(180deg);
+/* Light theme icon colors */
+:root[data-theme="light"] .chevron,
+:root[data-telegram-theme="light"] .chevron {
+  filter: brightness(0) saturate(100%) invert(35%) sepia(11%) saturate(934%) hue-rotate(175deg) brightness(94%) contrast(89%);
+}
+
+/* Dark theme icon colors */
+:root[data-theme="dark"] .chevron,
+:root[data-telegram-theme="dark"] .chevron {
+  filter: brightness(0) saturate(100%) invert(80%) sepia(13%) saturate(188%) hue-rotate(175deg) brightness(87%) contrast(84%);
 }
 
 /* Modal specific styles */

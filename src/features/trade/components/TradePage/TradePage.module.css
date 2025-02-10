@@ -1,45 +1,39 @@
 .container {
-  padding: var(--spacing-xs);
+  padding: var(--spacing-sm);
   width: 100%;
   min-height: var(--tg-viewport-stable-height);
-  padding-bottom: 10rem;
-  margin-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, 0px) + 120px);
+  padding-bottom: var(--spacing-xl);
+  margin-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, 0px) + var(--spacing-xl));
   position: relative;
 }
 
 .marketSelectorWrapper {
   width: 100%;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
 }
 
-.tradeControls {
+.tradeParameters {
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md);
-  background-color: var(--app-background-secondary);
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
-}
-
-.inputRow {
-  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
   flex-wrap: wrap;
-  gap: 24px;
-  align-items: flex-start;
-  width: 100%;
-  margin-top: var(--spacing-xs);
+  justify-content: space-between;
 }
 
-.halfWidth {
-  flex: 1;
-  min-width: 150px;
-  max-width: 100%;
+.tradeParameters > * {
+  min-width: 120px;
+  width: calc(50% - var(--spacing-md) / 2);
+}
+
+
+.tradeConfigWrapper {
+  width: 100%;
+  margin-bottom: var(--spacing-sm);
 }
 
 .digitPredictionWrapper {
-  margin-top: var(--spacing-lg);
   width: 100%;
+  margin-bottom: var(--spacing-md);
 }
 
 .tradeButtonsContainer {

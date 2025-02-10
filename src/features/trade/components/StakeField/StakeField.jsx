@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import BottomSheet from '@/shared/components/BottomSheet';
 import { chevronDownIcon } from '@/assets/images';
 import StakeSelector from './StakeSelector/StakeSelector';
-import styles from './StakeInput.module.css';
+import styles from './StakeField.module.css';
 
-const StakeInput = ({ value, onChange, disabled, balance }) => {
+const StakeField = ({ value, onChange, disabled, balance }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [tempValue, setTempValue] = useState(value === 0 ? '' : value);
   const isExceedingBalance = balance !== null && value > balance;
@@ -67,11 +67,11 @@ const StakeInput = ({ value, onChange, disabled, balance }) => {
   );
 };
 
-StakeInput.propTypes = {
+StakeField.propTypes = {
   value: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
   balance: PropTypes.number
 };
 
-export default StakeInput;
+export default StakeField;

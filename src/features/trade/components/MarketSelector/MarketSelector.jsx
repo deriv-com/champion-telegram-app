@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './MarketSelector.module.css';
 import Modal from '@/shared/components/Modal';
+import { chevronDownIcon } from '@/assets/images';
 
 const MarketSelector = ({ activeSymbols, onMarketChange, defaultMarket, disabled = false }) => {
   const [selectedMarket, setSelectedMarket] = useState(() => {
@@ -38,32 +39,21 @@ const MarketSelector = ({ activeSymbols, onMarketChange, defaultMarket, disabled
   }
 
   return (
-    <div className={`${styles.container} ${disabled ? styles.disabled : ''}`}>
-      <label className={styles.label}>
-        Select Market
-      </label>
-      <button
-        className={`${styles.trigger} ${showModal ? styles.active : ''}`}
+    <div className={`card-view ${styles.container} ${disabled ? styles.disabled : ''}`}>
+      <div 
+        className={styles.fieldContent}
         onClick={() => !disabled && setShowModal(true)}
-        disabled={disabled}
-        aria-haspopup="dialog"
-        aria-expanded={showModal}
       >
-        <span className={styles.selectedText}>{selectedMarketName}</span>
-        <svg 
-          className={`${styles.chevron} ${showModal ? styles.open : ''}`} 
-          width="20" 
-          height="20" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2.5" 
-          strokeLinecap="round" 
-          strokeLinejoin="round"
-        >
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </button>
+        <div className={styles.textContent}>
+          <span className={`card-view-label ${styles.label}`}>Select Market</span>
+          <span className={`card-view-value ${styles.value}`}>{selectedMarketName}</span>
+        </div>
+        <img 
+          src={chevronDownIcon} 
+          alt="select" 
+          className={styles.chevron} 
+        />
+      </div>
       <Modal
         isOpen={showModal}
         onClose={() => {

@@ -1,5 +1,4 @@
 .container {
-  width: 175px;
   padding: var(--spacing-xs) var(--spacing-md);
 }
 

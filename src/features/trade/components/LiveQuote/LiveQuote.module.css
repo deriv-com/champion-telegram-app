@@ -1,28 +1,19 @@
 .container {
-  background-color: var(--app-background);
+  background-color: var(--app-background-tertiary);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: var(--shadow-lg);
   width: 100%;
   margin-bottom: var(--spacing-lg);
-  border: var(--border-width) solid var(--app-border);
   transition: all var(--animation-duration-normal) var(--animation-easing);
-}
-
-.container:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--color-primary);
-  background-color: var(--app-hover-background);
 }
 
 .priceContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
 }
 
 .label {
@@ -31,19 +22,19 @@
   color: var(--app-text);
   letter-spacing: 0.5px;
   line-height: var(--line-height-normal);
-  transition: color var(--animation-duration-normal) var(--animation-easing);
+  opacity: 0.48;
 }
 
 .price {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: var(--spacing-2xs);
   font-family: monospace;
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-black);
   color: var(--app-text);
   letter-spacing: -0.5px;
-  transition: color var(--animation-duration-normal) var(--animation-easing);
+  opacity: 0.9;
 }
 
 .digit {
@@ -63,19 +54,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-sm) 0;
-  margin-left: var(--spacing-xl);
+  padding: var(--spacing-xs) 0;
+  margin-left: var(--spacing-lg);
   overflow: hidden;
 }
 
 .chart {
   width: 200px;
   height: 100px;
-  animation: fadeIn var(--animation-duration-normal) var(--animation-easing);
+  animation: fadeIn 0.5s ease-out;
 }
 
 .ticker {
-  animation: tickerPulse var(--animation-duration-normal) var(--animation-easing) infinite;
+  animation: tickerPulse 1s ease-in-out infinite;
   transform-origin: center;
   transform-box: fill-box;
 }
@@ -119,14 +110,6 @@
   }
 }
 
-/* Tablet styles */
-@media (max-width: 768px) {
-  .chart {
-    width: 160px;
-    height: 80px;
-  }
-}
-
 /* Mobile styles */
 @media (max-width: 480px) {
   .container {
@@ -138,8 +121,8 @@
   }
   
   .chartContainer {
-    padding: var(--spacing-xs) 0;
-    margin-left: var(--spacing-lg);
+    padding: var(--spacing-2xs) 0;
+    margin-left: var(--spacing-md);
   }
   
   .chart {

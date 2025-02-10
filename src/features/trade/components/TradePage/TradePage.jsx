@@ -4,7 +4,7 @@ import TradeButton from '../TradeButton';
 import MarketSelector from '../MarketSelector';
 import LiveQuote from '../LiveQuote';
 import DurationField from '../DurationField';
-import StakeInput from '../StakeInput';
+import StakeField from '../StakeField';
 import DigitPrediction from '../DigitPrediction';
 import { useTrade } from '../../hooks/useTrade';
 import { useNotification } from '@/hooks/useNotification';
@@ -13,7 +13,7 @@ import styles from './TradePage.module.css';
 
 const TradePage = () => {
   const { activeSymbols, isLoading } = useTrade();
-  const [currentDigit, setCurrentDigit] = useState();
+  const [currentDigit, setCurrentDigit] = useState(3);
   const { info } = useNotification();
   const { haptic } = useTelegram();
   const [duration, setDuration] = useState(1);
@@ -42,17 +42,6 @@ const TradePage = () => {
           </>
         ) : (
           <>
-            <LiveQuote 
-              isDigitsTradeType={true}
-              price="1.23456"
-              movement="up"
-              onLastDigitChange={(digit) => {
-                const numDigit = parseInt(digit);
-                if (!isNaN(numDigit)) {
-                  setCurrentDigit(numDigit);
-                }
-              }}
-            />
             <MarketSelector
               activeSymbols={activeSymbols}
               onMarketChange={(symbol) => {
@@ -65,21 +54,32 @@ const TradePage = () => {
         )}
       </div>
       {!isLoading && (
-        <div className={styles.inputRow}>
-          <div className={styles.halfWidth}>
-            <DurationField
-              value={duration}
-              onChange={setDuration}
-            />
-          </div>
-          <div className={styles.halfWidth}>
-            <StakeInput
-              value={stake}
-              onChange={setStake}
-              disabled={false}
-              balance={null}
-            />
-          </div>
+        <div className={styles.tradeParameters}>
+          <DurationField
+            value={duration}
+            onChange={setDuration}
+          />
+          <StakeField
+            value={stake}
+            onChange={setStake}
+            disabled={false}
+            balance={null}
+          />
+        </div>
+      )}
+      {!isLoading && (
+        <div className={styles.tradeConfigWrapper}>
+          <LiveQuote 
+            isDigitsTradeType={true}
+            price="1.23456"
+            movement="up"
+            onLastDigitChange={(digit) => {
+              const numDigit = parseInt(digit);
+              if (!isNaN(numDigit)) {
+                setCurrentDigit(numDigit);
+              }
+            }}
+          />
         </div>
       )}
       {!isLoading && (

@@ -1,30 +1,25 @@
 .container {
-  background-color: var(--app-background);
+  background-color: var(--app-background-tertiary);
   border-radius: var(--border-radius-lg);
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xl);
-  box-shadow: var(--shadow-lg);
-  border: var(--border-width) solid var(--app-border);
-  transition: background-color var(--animation-duration-normal) var(--animation-easing),
-              border-color var(--animation-duration-normal) var(--animation-easing);
+  gap: var(--spacing-md);
+  transition: all var(--animation-duration-normal) var(--animation-easing);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 var(--spacing-sm);
+  padding-bottom: var(--spacing-sm);
   border-bottom: var(--border-width) solid var(--app-border);
-  padding-bottom: var(--spacing-lg);
 }
 
 .title {
   font-weight: var(--font-weight-bold);
   color: var(--app-text);
   font-size: var(--font-size-lg);
-  letter-spacing: 0.5px;
 }
 
 .infoText {
@@ -54,14 +49,17 @@
 .digitGrid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: var(--spacing-lg);
-  padding: var(--spacing-sm);
+  gap: 8px;
+  padding: var(--spacing-xs);
+  margin: 0 auto;
+  width: 100%;
+  max-width: 375px;
 }
 
 .digitButton {
   aspect-ratio: 1;
   border: var(--border-width) solid transparent;
-  background-color: var(--app-background-secondary);
+  background-color: var(--app-background);
   color: var(--app-text);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-medium);
@@ -72,8 +70,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-md);
   min-height: var(--touch-target-size);
+  width: 100%;
 }
 
 .digitButton:hover:not(.disabled) {
@@ -90,7 +89,7 @@
 
 .digitButton.selected {
   background-color: var(--color-primary) !important;
-  color: var(--color-white);
+  color: var(--color-text-dark);
   box-shadow: var(--shadow-primary);
   transform: translateY(-2px) !important;
   transition: none !important;
@@ -126,11 +125,11 @@
 .tickCounter {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
   padding: var(--spacing-md);
   background-color: var(--app-background-secondary);
   border-radius: var(--border-radius);
-  margin-top: var(--spacing-sm);
+  margin-top: var(--spacing-xs);
   transition: background-color var(--animation-duration-normal) var(--animation-easing);
 }
 
@@ -156,19 +155,26 @@
   font-weight: var(--font-weight-medium);
 }
 
-/* Mobile styles */
-@media (max-width: 480px) {
-  .container {
-    padding: var(--spacing-lg);
-    gap: var(--spacing-lg);
-  }
-
+@media (max-width: 374px) {
   .digitGrid {
-    gap: var(--spacing-md);
-    padding: var(--spacing-xs);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
   }
 
   .digitButton {
     font-size: var(--font-size-base);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+}
+
+@media (max-width: 320px) {
+  .digitGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
   }
 }
