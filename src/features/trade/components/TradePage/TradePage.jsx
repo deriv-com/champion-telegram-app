@@ -13,7 +13,7 @@ import styles from './TradePage.module.css';
 
 const TradePage = () => {
   const { activeSymbols, isLoading } = useTrade();
-  const [currentDigit, setCurrentDigit] = useState(3);
+  const [currentDigit, setCurrentDigit] = useState();
   const { info } = useNotification();
   const { haptic } = useTelegram();
   const [duration, setDuration] = useState(1);
