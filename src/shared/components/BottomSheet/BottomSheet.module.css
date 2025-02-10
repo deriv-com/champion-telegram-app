@@ -62,7 +62,7 @@
 
 .content {
   padding: var(--spacing-md);
-  max-height: 60vh;
+  max-height: 70vh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
