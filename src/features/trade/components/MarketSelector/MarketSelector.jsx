@@ -70,6 +70,12 @@ const MarketSelector = ({ activeSymbols, onMarketChange, defaultMarket, disabled
               placeholder="Search markets..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  e.target.blur();
+                }
+              }}
             />
             {searchQuery && (
               <button

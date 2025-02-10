@@ -60,6 +60,12 @@ const DurationSelector = ({ value, onSubmit }) => {
           max={maxTicks}
           value={inputValue}
           onChange={handleInputChange}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleSubmit();
+            }
+          }}
           className={`${styles.input} ${error ? styles.error : ''}`}
           autoFocus={false}
         />

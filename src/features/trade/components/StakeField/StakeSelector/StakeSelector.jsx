@@ -68,13 +68,19 @@ const StakeSelector = ({ value, onChange, onSubmit, balance }) => {
         >
           −
         </button>
-        <div className={styles.inputWrapper}>
+        <div className={styles.inputContainer}>
           <span className={styles.currencySymbol}>$</span>
           <input
             type="text"
             inputMode="decimal"
             value={inputValue}
             onChange={handleInputChange}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }}
             className={`${styles.input} ${error ? styles.error : ''}`}
             placeholder="0.00"
           />
