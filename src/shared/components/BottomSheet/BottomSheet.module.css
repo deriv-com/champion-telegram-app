@@ -1,6 +1,6 @@
 .overlay {
   position: fixed;
-  top: calc(var(--header-height) + var(--tg-safe-area-top, 0px));
+  top: calc(var(--app-bar-height) + var(--tg-safe-area-top, 0px));
   left: 0;
   right: 0;
   bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, 0px));

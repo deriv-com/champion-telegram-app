@@ -14,10 +14,10 @@ const updateViewportMetrics = () => {
     root.style.setProperty('--tg-viewport-stable-height', `${WebApp.viewportStableHeight}px`);
     
     // Set safe areas using Telegram WebApp's built-in values
-    root.style.setProperty('--tg-safe-area-top', `${WebApp.safeArea?.top || 0}px`);
-    root.style.setProperty('--tg-safe-area-right', `${WebApp.safeArea?.right || 0}px`);
-    root.style.setProperty('--tg-safe-area-bottom', `${WebApp.safeArea?.bottom || 0}px`);
-    root.style.setProperty('--tg-safe-area-left', `${WebApp.safeArea?.left || 0}px`);
+    root.style.setProperty('--tg-safe-area-top', `${WebApp.safeAreaInset?.top || 0}px`);
+    root.style.setProperty('--tg-safe-area-right', `${WebApp.safeAreaInset?.right || 0}px`);
+    root.style.setProperty('--tg-safe-area-bottom', `${WebApp.safeAreaInset?.bottom || 0}px`);
+    root.style.setProperty('--tg-safe-area-left', `${WebApp.safeAreaInset?.left || 0}px`);
 
     // Set background color to match theme
     document.body.style.backgroundColor = WebApp.backgroundColor;

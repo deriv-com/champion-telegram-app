@@ -30,7 +30,7 @@ const StakeField = ({ value, onChange, disabled, balance }) => {
           <div className={styles.textContent}>
             <span className={`card-view-label ${styles.label}`}>Stake</span>
             <span className={`card-view-value ${styles.value}`}>
-              ${typeof value === 'number' && value > 0 ? value.toFixed(2) : '0.00'}
+              USD {typeof value === 'number' && value > 0 ? value.toFixed(2) : '0.00'}
             </span>
           </div>
           <img src={chevronDownIcon} alt="select" className={styles.chevron} />
@@ -40,7 +40,7 @@ const StakeField = ({ value, onChange, disabled, balance }) => {
       {balance !== null && (
         <div className={styles.balanceContainer}>
           <span className={styles.balance}>
-            Balance: ${balance.toFixed(2)}
+            Balance: USD {balance.toFixed(2)}
           </span>
         </div>
       )}

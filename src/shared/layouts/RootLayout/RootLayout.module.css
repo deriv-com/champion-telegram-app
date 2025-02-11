@@ -1,6 +1,17 @@
+/* Z-index variables */
+:root {
+  --z-index-root: 0;
+  --z-index-main: 1;
+  /* Fallbacks for Telegram safe areas */
+  --tg-safe-area-top: env(safe-area-inset-top, 0px);
+  --tg-safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --tg-safe-area-left: env(safe-area-inset-left, 0px);
+  --tg-safe-area-right: env(safe-area-inset-right, 0px);
+}
+
 .root {
-  min-height: var(--tg-viewport-stable-height);
-  height: var(--tg-viewport-stable-height);
+  min-height: var(--tg-viewport-stable-height, 100vh);
+  height: var(--tg-viewport-stable-height, 100vh);
   width: 100%;
   background-color: var(--app-background);
   color: var(--app-text);
@@ -10,12 +21,10 @@
   flex-direction: column;
   overflow: hidden;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
+  z-index: var(--z-index-root);
   transition: background-color var(--animation-duration-normal) var(--animation-easing),
-              color var(--animation-duration-normal) var(--animation-easing);
+    color var(--animation-duration-normal) var(--animation-easing);
 }
 
 .main {
@@ -24,16 +33,17 @@
   width: 100%;
   flex: 1;
   margin: 0;
-  padding: var(--spacing-md);
-  padding-top: calc(var(--header-height) + var(--tg-safe-area-top));
-  padding-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom));
-  padding-left: max(var(--spacing-md), var(--tg-safe-area-left));
-  padding-right: max(var(--spacing-md), var(--tg-safe-area-right));
   box-sizing: border-box;
   background-color: var(--app-background);
   position: relative;
-  z-index: 1;
-  
+  z-index: var(--z-index-main);
+  /* Base padding with safe area considerations */
+  padding: var(--spacing-md);
+  padding-top: var(--tg-safe-area-top, 0px);
+  padding-bottom: var(--tg-safe-area-bottom, 0px);
+  padding-left: var(--tg-safe-area-left, 0px);
+  padding-right: var(--tg-safe-area-right, 0px);
+
   /* Scrolling behavior */
   overflow-y: auto;
   overflow-x: hidden;
@@ -41,19 +51,51 @@
   overscroll-behavior-y: none;
   touch-action: pan-x pan-y;
   scroll-behavior: smooth;
-  
+
   /* Hide scrollbar */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
 /* Mobile styles */
-.mobile .main {
-  padding: var(--spacing-sm);
-  padding-top: calc(var(--header-height) + var(--tg-safe-area-top));
-  padding-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom));
-  padding-left: max(var(--spacing-sm), var(--tg-safe-area-left));
-  padding-right: max(var(--spacing-sm), var(--tg-safe-area-right));
+@media (max-width: 480px) {
+  .main {
+    /* Smaller padding for mobile but maintain safe areas */
+    padding: var(--spacing-sm);
+    padding-top: var(--tg-safe-area-top, 0px);
+    padding-bottom: var(--tg-safe-area-bottom, 0px);
+    padding-left: var(--tg-safe-area-left, 0px);
+    padding-right: var(--tg-safe-area-right, 0px);
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 481px) and (max-width: 768px) {
+  .main {
+    /* Medium padding for tablets with safe areas */
+    padding: var(--spacing-md);
+    padding-top: var(--tg-safe-area-top, 0px);
+    padding-bottom: var(--tg-safe-area-bottom, 0px);
+    padding-left: var(--tg-safe-area-left, 0px);
+    padding-right: var(--tg-safe-area-right, 0px);
+  }
+}
+
+/* Landscape orientation */
+@media (orientation: landscape) {
+  .root {
+    min-height: 100vh;
+    height: 100vh;
+  }
+
+  .main {
+    /* Maintain medium padding in landscape for better spacing */
+    padding: var(--spacing-md);
+    padding-top: var(--tg-safe-area-top, 0px);
+    padding-bottom: var(--tg-safe-area-bottom, 0px);
+    padding-left: var(--tg-safe-area-left, 0px);
+    padding-right: var(--tg-safe-area-right, 0px);
+  }
 }
 
 /* Hide scrollbar for WebKit browsers */
@@ -68,4 +110,27 @@
 
 .slideUp {
   animation: slideUp var(--animation-duration-normal) var(--animation-easing);
+}
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

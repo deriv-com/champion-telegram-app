@@ -1,10 +1,7 @@
 .container {
-  padding: var(--spacing-sm);
   width: 100%;
-  min-height: var(--tg-viewport-stable-height);
-  padding-bottom: var(--spacing-xl);
-  margin-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, 0px) + var(--spacing-xl));
   position: relative;
+  padding-bottom: calc(var(--tab-bar-height) + var(--touch-target-size) + var(--spacing-xl) + env(safe-area-inset-bottom, 0px));
 }
 
 .marketSelectorWrapper {
@@ -20,11 +17,10 @@
   justify-content: space-between;
 }
 
-.tradeParameters > * {
+.tradeParameters>* {
   min-width: 120px;
   width: calc(50% - var(--spacing-md) / 2);
 }
-
 
 .tradeConfigWrapper {
   width: 100%;
@@ -38,13 +34,16 @@
 
 .tradeButtonsContainer {
   position: fixed;
-  bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, 0px));
+  bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, env(safe-area-inset-bottom, 0px)));
   left: 0;
   right: 0;
   display: flex;
   gap: var(--spacing-md);
-  z-index: 100;
+  z-index: 2;
   background-color: var(--app-background);
   padding: var(--spacing-md);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   transform: translateZ(0);
+  margin-bottom: env(safe-area-inset-bottom, 0px);
 }

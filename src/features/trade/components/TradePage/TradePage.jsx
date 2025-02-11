@@ -69,7 +69,7 @@ const TradePage = () => {
       )}
       {!isLoading && (
         <div className={styles.tradeConfigWrapper}>
-          <LiveQuote 
+          <LiveQuote
             isDigitsTradeType={true}
             price="1.23456"
             movement="up"

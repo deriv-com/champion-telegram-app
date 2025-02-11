@@ -1,48 +1,32 @@
 .dashboard {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: relative;
   display: flex;
   flex-direction: column;
   background-color: var(--app-background);
-  z-index: 1;
-  transition: background-color var(--animation-duration-normal) var(--animation-easing);
+  width: 100%;
+  flex: 1;
+  padding-top: calc(var(--app-bar-height) + var(--tg-safe-area-top, env(safe-area-inset-top, 0px)));
+  padding-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, env(safe-area-inset-bottom, 0px)));
   animation: fadeIn var(--animation-duration-normal) var(--animation-easing);
+  z-index: 1;
 }
 
 .content {
+  position: relative;
   flex: 1;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
+  background-color: var(--app-background);
+  transition: background-color var(--animation-duration-normal) var(--animation-easing);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
-  display: flex;
-  flex-direction: column;
   padding: var(--spacing-md);
-  /* Account for fixed bars and safe areas */
-  margin-top: calc(var(--header-height) + var(--tg-safe-area-top, 0px));
-  margin-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, 0px));
-  background-color: var(--app-background);
-  position: relative;
-  transition: background-color var(--animation-duration-normal) var(--animation-easing);
 }
 
-/* Hide scrollbar */
+/* Hide scrollbar for WebKit browsers */
 .content::-webkit-scrollbar {
   display: none;
-}
-
-.content {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-/* Mobile styles */
-@media (max-width: 480px) {
-  .content {
-    padding: var(--spacing-sm);
-  }
 }

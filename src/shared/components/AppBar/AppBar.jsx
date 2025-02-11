@@ -263,23 +263,6 @@ const AppBar = () => {
           </div>
         ) : null}
         <div 
-          className={`${styles.dropdownItem} ${styles.themeToggle}`}
-          onClick={() => {
-            setTheme(theme === 'light' ? 'dark' : 'light');
-            // Close dropdown after theme change with a small delay for smooth animation
-            setTimeout(() => setIsDropdownOpen(false), 150);
-          }}
-          data-testid="theme-toggle"
-        >
-          <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-          <div className={styles.toggleSwitch}>
-            <div className={styles.toggleTrack} />
-            <div className={styles.toggleThumb}>
-              <ThemeIcon theme={theme} />
-            </div>
-          </div>
-        </div>
-        <div 
           className={`${styles.dropdownItem} ${styles.logout}`}
           onClick={handleLogout}
           data-testid="logout-button"

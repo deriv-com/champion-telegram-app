@@ -11,8 +11,15 @@
 .optionsGrid {
   display: grid;
   gap: var(--spacing-xl);
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: 1fr;
   margin-bottom: var(--spacing-2xl);
+}
+
+/* Small screens (≥ 375px) */
+@media (min-width: 375px) {
+  .optionsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .optionCard {
@@ -88,6 +95,21 @@
 :root[data-theme="dark"] .optionCard:hover .optionIcon img:not([src*="p2p"]),
 :root[data-telegram-theme="dark"] .optionCard:hover .optionIcon img:not([src*="p2p"]) {
   filter: brightness(0) saturate(100%) invert(72%) sepia(92%) saturate(4929%) hue-rotate(157deg) brightness(110%) contrast(98%);
+}
+
+/* Preserve P2P icon original color */
+:root[data-theme="light"] .optionIcon img[src*="p2p"],
+:root[data-telegram-theme="light"] .optionIcon img[src*="p2p"],
+:root[data-theme="dark"] .optionIcon img[src*="p2p"],
+:root[data-telegram-theme="dark"] .optionIcon img[src*="p2p"] {
+  filter: none !important;
+}
+
+:root[data-theme="light"] .optionCard:hover .optionIcon img[src*="p2p"],
+:root[data-telegram-theme="light"] .optionCard:hover .optionIcon img[src*="p2p"],
+:root[data-theme="dark"] .optionCard:hover .optionIcon img[src*="p2p"],
+:root[data-telegram-theme="dark"] .optionCard:hover .optionIcon img[src*="p2p"] {
+  filter: none !important;
 }
 
 .optionLabel {

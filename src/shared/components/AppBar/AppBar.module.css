@@ -1,46 +1,19 @@
 .appBar {
-  height: var(--header-height);
+  height: calc(var(--app-bar-height) + var(--tg-safe-area-top, env(safe-area-inset-top, 0px)));
   background-color: var(--nav-background-solid);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0;
   border-bottom: var(--border-width) solid var(--nav-border);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 3;
   box-sizing: border-box;
   transition: background-color var(--animation-duration-normal) var(--animation-easing),
               border-color var(--animation-duration-normal) var(--animation-easing);
-}
-
-/* Safe area extension */
-.appBar::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: var(--tg-safe-area-top);
-  background-color: var(--nav-background-solid);
-  z-index: -1;
-  transition: background-color var(--animation-duration-normal) var(--animation-easing);
-}
-
-/* Container for content */
-.appBar::before {
-  content: '';
-  position: absolute;
-  top: var(--tg-safe-area-top);
-  left: var(--tg-safe-area-left);
-  right: var(--tg-safe-area-right);
-  bottom: 0;
-  background-color: var(--nav-background-solid);
-  z-index: 0;
-  transition: background-color var(--animation-duration-normal) var(--animation-easing);
 }
 
 .leading {
@@ -48,7 +21,6 @@
   align-items: center;
   height: 100%;
   padding: var(--spacing-sm);
-  margin-left: max(var(--spacing-sm), var(--tg-safe-area-left));
   position: relative;
   z-index: 2;
 }
@@ -63,7 +35,7 @@
   height: 100%;
   display: flex;
   align-items: center;
-  margin-right: max(var(--spacing-sm), var(--tg-safe-area-right));
+  padding: var(--spacing-sm);
   position: relative;
   z-index: 2;
 }
@@ -171,7 +143,7 @@
 
 .dropdown {
   position: fixed;
-  top: calc(var(--header-height) + var(--tg-safe-area-top));
+  top: calc(var(--app-bar-height) + var(--tg-safe-area-top));
   right: max(var(--spacing-lg), var(--tg-safe-area-right));
   background-color: var(--app-background-secondary);
   border: var(--border-width) solid var(--app-border);
@@ -190,7 +162,7 @@
   visibility: hidden;
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - var(--header-height) - var(--tg-safe-area-top) - var(--spacing-lg));
+  max-height: calc(100vh - var(--app-bar-height) - var(--tg-safe-area-top) - var(--spacing-lg));
 }
 
 .show {
@@ -457,12 +429,12 @@
 
   .dropdown {
     position: fixed;
-    top: calc(var(--header-height) + var(--tg-safe-area-top));
+    top: calc(var(--app-bar-height) + var(--tg-safe-area-top));
     right: 0;
     left: 0;
     width: 100%;
     height: auto;
-    max-height: calc(100vh - var(--header-height) - var(--tg-safe-area-top));
+    max-height: calc(100vh - var(--app-bar-height) - var(--tg-safe-area-top));
     border-radius: 0;
     border-left: none;
     border-right: none;

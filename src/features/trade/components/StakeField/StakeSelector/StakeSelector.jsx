@@ -69,7 +69,7 @@ const StakeSelector = ({ value, onChange, onSubmit, balance }) => {
           −
         </button>
         <div className={styles.inputContainer}>
-          <span className={styles.currencySymbol}>$</span>
+          <span className={styles.currencySymbol}>USD</span>
           <input
             type="text"
             inputMode="decimal"
@@ -112,7 +112,7 @@ const StakeSelector = ({ value, onChange, onSubmit, balance }) => {
             }}
             type="button"
           >
-            ${amount}
+            USD {amount}
           </button>
         ))}
       </div>
@@ -120,22 +120,22 @@ const StakeSelector = ({ value, onChange, onSubmit, balance }) => {
       {balance !== null && (
         <div className={styles.balanceInfo}>
           <span className={styles.balanceLabel}>Balance:</span>
-          <span className={styles.balanceValue}>${balance.toFixed(2)}</span>
+          <span className={styles.balanceValue}>USD {balance.toFixed(2)}</span>
         </div>
       )}
 
       <div className={styles.payoutInfo}>
         <div className={styles.payoutRow}>
           <span className={styles.payoutLabel}>Max Payout:</span>
-          <span className={styles.payoutValue}>${payouts.maxPayout}</span>
+          <span className={styles.payoutValue}>USD {payouts.maxPayout}</span>
         </div>
         <div className={styles.payoutRow}>
           <span className={styles.payoutLabel}>Payout (Matches):</span>
-          <span className={styles.payoutValue}>${payouts.matchPayout}</span>
+          <span className={styles.payoutValue}>USD {payouts.matchPayout}</span>
         </div>
         <div className={styles.payoutRow}>
           <span className={styles.payoutLabel}>Payout (Differs):</span>
-          <span className={styles.payoutValue}>${payouts.differPayout}</span>
+          <span className={styles.payoutValue}>USD {payouts.differPayout}</span>
         </div>
       </div>
 

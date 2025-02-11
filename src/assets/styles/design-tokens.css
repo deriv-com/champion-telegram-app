@@ -88,7 +88,7 @@
   --spacing-2xl: 3.5rem;
 
   /* Layout */
-  --header-height: 56px;
+  --app-bar-height: 56px;
   --tab-bar-height: 56px;
   --touch-target-size: 44px;
   --touch-target-spacing: 8px;

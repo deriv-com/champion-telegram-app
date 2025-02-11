@@ -1,45 +1,80 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useDurationConfig } from '../../../hooks/useDurationConfig';
 import styles from './DurationSelector.module.css';
 
 const DurationSelector = ({ value, onSubmit }) => {
-  const { minTicks, maxTicks, suggestedTicks, validateDuration } = useDurationConfig();
+  const min = 1;
+  const max = 10;
   const [inputValue, setInputValue] = useState(value.toString());
   const [error, setError] = useState('');
 
-  const handleInputChange = useCallback((e) => {
+  const validate = (val) => {
+    const numVal = parseInt(val);
+    
+    if (isNaN(numVal)) {
+      return 'Please enter a valid number';
+    }
+    if (numVal < min) {
+      return `Minimum duration is ${min} tick`;
+    }
+    if (numVal > max) {
+      return `Maximum duration is ${max} ticks`;
+    }
+    return '';
+  };
+
+  const handleInputChange = (e) => {
     const val = e.target.value;
     setInputValue(val);
-    setError(validateDuration(val));
-  }, [validateDuration]);
+    setError(validate(val));
+  };
 
-  const handleIncrement = useCallback(() => {
+  const handleIncrement = () => {
     const currentVal = parseInt(inputValue);
-    const newValue = isNaN(currentVal) || currentVal >= maxTicks ? minTicks : currentVal + 1;
+    let newValue;
+    
+    if (isNaN(currentVal) || currentVal >= max) {
+      newValue = min;
+    } else {
+      newValue = currentVal + 1;
+    }
+    
     setInputValue(newValue.toString());
     setError('');
-  }, [inputValue, maxTicks, minTicks]);
+  };
 
-  const handleDecrement = useCallback(() => {
+  const handleDecrement = () => {
     const currentVal = parseInt(inputValue);
-    const newValue = isNaN(currentVal) || currentVal <= minTicks ? maxTicks : currentVal - 1;
+    let newValue;
+    
+    if (isNaN(currentVal) || currentVal <= min) {
+      newValue = max;
+    } else {
+      newValue = currentVal - 1;
+    }
+    
     setInputValue(newValue.toString());
     setError('');
-  }, [inputValue, maxTicks, minTicks]);
+  };
 
-  const handleSubmit = useCallback(() => {
+  const handleSuggestionClick = (suggestion) => {
+    setInputValue(suggestion.toString());
+    setError('');
+  };
+
+  const handleSubmit = () => {
     const numVal = parseInt(inputValue);
     if (!error && numVal !== value) {
       onSubmit(numVal);
     }
-  }, [error, inputValue, onSubmit, value]);
+  };
 
   useEffect(() => {
     setInputValue(value.toString());
     setError('');
   }, [value]);
 
+  const suggestions = [1, 2, 3, 5, 7, 10];
   const numericValue = parseInt(inputValue);
   const isValid = !error && !isNaN(numericValue);
 
@@ -49,30 +84,24 @@ const DurationSelector = ({ value, onSubmit }) => {
         <button
           className={styles.controlButton}
           onClick={handleDecrement}
-          disabled={isValid && numericValue <= minTicks}
+          disabled={isValid && numericValue <= min}
           type="button"
         >
           -
         </button>
         <input
           type="number"
-          min={minTicks}
-          max={maxTicks}
+          min={min}
+          max={max}
           value={inputValue}
           onChange={handleInputChange}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              handleSubmit();
-            }
-          }}
           className={`${styles.input} ${error ? styles.error : ''}`}
           autoFocus={false}
         />
         <button
           className={styles.controlButton}
           onClick={handleIncrement}
-          disabled={isValid && numericValue >= maxTicks}
+          disabled={isValid && numericValue >= max}
           type="button"
         >
           +
@@ -82,14 +111,11 @@ const DurationSelector = ({ value, onSubmit }) => {
       {error && <div className={styles.errorText}>{error}</div>}
 
       <div className={styles.suggestions}>
-        {suggestedTicks.map((suggestion) => (
+        {suggestions.map((suggestion) => (
           <button
             key={suggestion}
             className={`${styles.suggestion} ${value === suggestion ? styles.selected : ''}`}
-            onClick={() => {
-              setInputValue(suggestion.toString());
-              setError('');
-            }}
+            onClick={() => handleSuggestionClick(suggestion)}
             type="button"
           >
             {suggestion} tick{suggestion !== 1 ? 's' : ''}
@@ -114,4 +140,4 @@ DurationSelector.propTypes = {
   onSubmit: PropTypes.func.isRequired
 };
 
-export default React.memo(DurationSelector);
+export default DurationSelector;
