@@ -34,7 +34,7 @@
 
 .tradeButtonsContainer {
   position: fixed;
-  bottom: calc(var(--tab-bar-height) + (var(--spacing-md)*2));
+  bottom: calc(var(--tab-bar-height));
   left: 0;
   right: 0;
   display: flex;
@@ -45,4 +45,5 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   transform: translateZ(0);
+  margin-bottom: var(--tg-safe-area-bottom, env(safe-area-inset-bottom, 0px));
 }
