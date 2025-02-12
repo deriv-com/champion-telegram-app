@@ -8,7 +8,9 @@
   border-radius: var(--border-radius);
   color: var(--color-text-dark);
   cursor: pointer;
-  transition: all var(--animation-duration-normal) var(--animation-easing);
+  transition: transform var(--animation-duration-normal) var(--animation-easing),
+              box-shadow var(--animation-duration-normal) var(--animation-easing),
+              background var(--animation-duration-normal) var(--animation-easing);
   position: relative;
   overflow: hidden;
   height: var(--touch-target-size);
@@ -144,25 +146,12 @@
 /* Disabled text colors */
 .buttonPositive:disabled .buttonLabel,
 .buttonPositive:disabled .payoutLabel,
-.buttonPositive:disabled .payoutAmount {
-  color: var(--color-text-dark);
-  opacity: 0.6;
-}
-
+.buttonPositive:disabled .payoutAmount,
 .buttonNegative:disabled .buttonLabel,
 .buttonNegative:disabled .payoutLabel,
 .buttonNegative:disabled .payoutAmount {
   color: var(--color-text-dark);
   opacity: 0.6;
-}
-
-.buttonPositive:disabled .payoutRow,
-.buttonNegative:disabled .payoutRow {
-  background: var(--color-trade-button-positive-disabled);
-}
-
-.buttonNegative:disabled .payoutRow {
-  background: var(--color-trade-button-negative-disabled);
 }
 
 @keyframes shine {
