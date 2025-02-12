@@ -1,40 +1,12 @@
 .container {
   width: 100%;
   position: relative;
-  padding-bottom: calc(var(--tab-bar-height) + var(--touch-target-size));
-}
-
-.marketSelectorWrapper {
-  width: 100%;
-  margin-bottom: var(--spacing-sm);
-}
-
-.tradeParameters {
-  display: flex;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-sm);
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.tradeParameters>* {
-  min-width: 120px;
-  width: calc(50% - var(--spacing-md) / 2);
-}
-
-.tradeConfigWrapper {
-  width: 100%;
-  margin-bottom: var(--spacing-sm);
-}
-
-.digitPredictionWrapper {
-  width: 100%;
-  margin-bottom: var(--spacing-md);
+  padding-bottom: calc(var(--tab-bar-height) + var(--touch-target-size) + var(--spacing-xl));
 }
 
 .tradeButtonsContainer {
   position: fixed;
-  bottom: var(--tab-bar-height);
+  bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, env(safe-area-inset-bottom, 0px)));
   left: 0;
   right: 0;
   display: flex;
@@ -45,4 +17,5 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   transform: translateZ(0);
+  margin-bottom: env(safe-area-inset-bottom, 0px);
 }
