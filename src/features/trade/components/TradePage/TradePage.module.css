@@ -1,7 +1,7 @@
 .container {
   width: 100%;
   position: relative;
-  padding-bottom: calc(var(--tab-bar-height) + var(--touch-target-size) + var(--spacing-xl));
+  padding-bottom: calc(var(--tab-bar-height) + var(--touch-target-size) + var(--spacing-md));
 }
 
 .tradeButtonsContainer {
