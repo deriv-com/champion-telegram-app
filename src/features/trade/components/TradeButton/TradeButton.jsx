@@ -10,6 +10,7 @@ const TradeButton = ({
   onClick,
   disabled,
   selectedDigit,
+  isTrading,
   ...props 
 }) => {
   const buttonClass = variant === 'positive' ? styles.buttonPositive : styles.buttonNegative;
@@ -18,7 +19,15 @@ const TradeButton = ({
     <Button
       className={buttonClass}
       onClick={onClick}
-      disabled={disabled || selectedDigit === undefined || selectedDigit === null}
+      disabled={
+        disabled || 
+        isTrading ||
+        selectedDigit === undefined || 
+        selectedDigit === null || 
+        Number.isNaN(selectedDigit) ||
+        selectedDigit < 0 || 
+        selectedDigit > 9
+      }
       {...props}
     >
       <div className={styles.buttonContent}>
@@ -38,7 +47,8 @@ TradeButton.propTypes = {
   payoutAmount: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
-  selectedDigit: PropTypes.number
+  selectedDigit: PropTypes.number,
+  isTrading: PropTypes.bool
 };
 
 export default TradeButton;

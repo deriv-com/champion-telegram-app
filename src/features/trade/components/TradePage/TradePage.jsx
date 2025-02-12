@@ -23,6 +23,7 @@ const TradePage = () => {
   };
   const [selectedDigit, setSelectedDigit] = useState(null);
   const [selectedMarket, setSelectedMarket] = useState(null);
+  const [isTrading, setIsTrading] = useState(false);
 
   return (
     <div className={styles.container}>
@@ -103,10 +104,14 @@ const TradePage = () => {
           onClick={() => {
             // Demo notification - actual trade implementation will come later
             const marketName = selectedMarket && typeof selectedMarket === 'object' ? selectedMarket.display_name : 'Unknown';
+            setIsTrading(true);
             info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Matches ${selectedDigit}\n📊 Market: ${marketName}`);
+            // Simulate trade completion after 5 seconds
+            setTimeout(() => setIsTrading(false), 5000);
           }}
           disabled={selectedDigit === null || selectedDigit === undefined}
           selectedDigit={selectedDigit}
+          isTrading={isTrading}
         />
         <TradeButton
           variant="negative"
@@ -115,10 +120,14 @@ const TradePage = () => {
           onClick={() => {
             // Demo notification - actual trade implementation will come later
             const marketName = selectedMarket && typeof selectedMarket === 'object' ? selectedMarket.display_name : 'Unknown';
+            setIsTrading(true);
             info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Differs ${selectedDigit}\n📊 Market: ${marketName}`);
+            // Simulate trade completion after 5 seconds
+            setTimeout(() => setIsTrading(false), 5000);
           }}
           disabled={selectedDigit === null || selectedDigit === undefined}
           selectedDigit={selectedDigit}
+          isTrading={isTrading}
         />
       </div>
     </div>

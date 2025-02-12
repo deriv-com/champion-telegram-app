@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { useTelegram } from '../hooks/useTelegram';
+import { createContext, useContext, useMemo } from 'react';
+import { useThemeDetection } from '../hooks/useThemeDetection';
 
 const ThemeContext = createContext({
   theme: 'light',
@@ -8,64 +8,13 @@ const ThemeContext = createContext({
 });
 
 export const ThemeProvider = ({ children }) => {
-  const { webApp } = useTelegram();
-  const [theme, setTheme] = useState('light');
-  const [telegramTheme, setTelegramTheme] = useState('light');
+  const { theme, telegramTheme, setTheme } = useThemeDetection();
 
-  useEffect(() => {
-    // Function to detect and set theme
-    const detectTheme = () => {
-      // Get Telegram theme
-      if (webApp?.colorScheme) {
-        setTelegramTheme(webApp.colorScheme);
-        // Set data attribute for Telegram theme
-        document.documentElement.setAttribute('data-telegram-theme', webApp.colorScheme);
-      }
-
-      // Set our app theme based on Telegram theme
-      const newTheme = webApp?.colorScheme || 
-        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      
-      setTheme(newTheme);
-      document.documentElement.setAttribute('data-theme', newTheme);
-    };
-
-    // Initial theme detection
-    detectTheme();
-
-    // Listen for Telegram theme changes
-    if (webApp) {
-      webApp.onEvent('themeChanged', detectTheme);
-    }
-
-    // Listen for system theme changes
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleThemeChange = (e) => {
-      if (!webApp?.colorScheme) {
-        const newTheme = e.matches ? 'dark' : 'light';
-        setTheme(newTheme);
-        document.documentElement.setAttribute('data-theme', newTheme);
-      }
-    };
-
-    mediaQuery.addListener(handleThemeChange);
-
-    return () => {
-      mediaQuery.removeListener(handleThemeChange);
-      if (webApp) {
-        webApp.offEvent('themeChanged', detectTheme);
-      }
-    };
-  }, [webApp]);
-
-  const value = {
+  const value = useMemo(() => ({
     theme,
     telegramTheme,
-    setTheme: (newTheme) => {
-      setTheme(newTheme);
-      document.documentElement.setAttribute('data-theme', newTheme);
-    },
-  };
+    setTheme,
+  }), [theme, telegramTheme, setTheme]);
 
   return (
     <ThemeContext.Provider value={value}>

@@ -1,10 +1,29 @@
 /* Theme Variants - Light and Dark theme implementations */
 @import './design-tokens.css';
 
-/* Light Theme */
-:root,
-[data-theme="light"],
+/* Light Theme - Telegram */
 [data-telegram-theme="light"] {
+  color-scheme: light;
+  
+  /* Background colors */
+  --app-background: var(--tg-theme-secondary-bg-color, var(--color-background-secondary-light));
+  --app-background-secondary: var(--tg-theme-secondary-bg-color, rgba(237, 242, 247, 0.8));
+  --app-background-tertiary: var(--color-background-tertiary-light);
+  
+  /* Text colors */
+  --app-text: var(--tg-theme-text-color, var(--color-text-light));
+  --app-text-secondary: var(--tg-theme-hint-color, var(--color-text-secondary-light));
+  --app-text-tertiary: var(--color-text-tertiary-light);
+  
+  /* Button colors */
+  --app-button: var(--tg-theme-button-color, var(--color-primary));
+  --app-button-text: var(--tg-theme-button-text-color, var(--color-white));
+  --app-link: var(--tg-theme-link-color, var(--color-primary));
+}
+
+/* Light Theme - App (takes precedence over Telegram theme) */
+:root,
+[data-theme="light"] {
   color-scheme: light;
   
   /* Background colors */
@@ -57,9 +76,28 @@
   --shadow-error-lg: 0 8px 16px rgba(223, 0, 64, 0.4);
 }
 
-/* Dark Theme */
-[data-theme="dark"],
+/* Dark Theme - Telegram */
 [data-telegram-theme="dark"] {
+  color-scheme: dark;
+  
+  /* Background colors */
+  --app-background: var(--tg-theme-secondary-bg-color, var(--color-background-secondary-dark));
+  --app-background-secondary: var(--tg-theme-secondary-bg-color, var(--color-background-secondary-dark));
+  --app-background-tertiary: var(--color-background-tertiary-dark);
+  
+  /* Text colors */
+  --app-text: var(--tg-theme-text-color, var(--color-text-dark));
+  --app-text-secondary: var(--tg-theme-hint-color, var(--color-text-secondary-dark));
+  --app-text-tertiary: var(--color-text-tertiary-dark);
+  
+  /* Button colors */
+  --app-button: var(--tg-theme-button-color, var(--color-primary-light));
+  --app-button-text: var(--tg-theme-button-text-color, var(--color-white));
+  --app-link: var(--tg-theme-link-color, var(--color-primary-light));
+}
+
+/* Dark Theme - App (takes precedence over Telegram theme) */
+[data-theme="dark"] {
   color-scheme: dark;
   
   /* Background colors */

@@ -18,15 +18,24 @@ function App() {
   const { isAuthenticated, isLoading, initialize } = useAuth();
   const [isWebAppInitialized, setIsWebAppInitialized] = useState(false);
 
-  // Initialize Telegram WebApp
+  /**
+   * Initialize Telegram WebApp and set up cleanup
+   * Handles initialization of Telegram-specific features and ensures proper cleanup
+   * of event listeners when component unmounts
+   */
   useEffect(() => {
+    let cleanupTelegram;
     try {
-      initializeTelegramWebApp();
+      cleanupTelegram = initializeTelegramWebApp();
       setIsWebAppInitialized(true);
     } catch (error) {
-      console.error('Failed to initialize Telegram WebApp:', error);
+      // Log specific error for debugging but continue app initialization
+      console.error('Failed to initialize Telegram WebApp:', error.message || error);
       setIsWebAppInitialized(true); // Continue anyway to allow app to work in browser
     }
+
+    // Cleanup function to remove event listeners on unmount
+    return () => cleanupTelegram?.();
   }, []);
 
   useEffect(() => {

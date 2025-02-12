@@ -10,11 +10,12 @@ const StakeSelector = ({ value, onChange, onSubmit, balance }) => {
 
   const handleInputChange = useCallback((e) => {
     const val = e.target.value;
+    const validationError = validateStake(val);
     setInputValue(val);
-    setError(validateStake(val));
+    setError(validationError);
     
     // Only update parent if value is valid
-    if (!validateStake(val)) {
+    if (!validationError) {
       onChange(parseFloat(val) || 0);
     }
   }, [onChange, validateStake]);
