@@ -1,7 +1,7 @@
 .container {
   width: 100%;
   position: relative;
-  padding-bottom: calc(var(--tab-bar-height) + var(--touch-target-size) + var(--spacing-lg));
+  padding-bottom: calc(var(--tab-bar-height) + var(--touch-target-size));
 }
 
 .marketSelectorWrapper {
@@ -34,7 +34,7 @@
 
 .tradeButtonsContainer {
   position: fixed;
-  bottom: var(--tab-bar-height);
+  bottom: calc(var(--tab-bar-height) + (var(--spacing-md)*2));
   left: 0;
   right: 0;
   display: flex;
