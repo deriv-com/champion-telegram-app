@@ -1,148 +1,180 @@
 .container {
-  background: var(--color-white);
-  border-radius: var(--border-radius);
-  padding: 1.5rem;
+  background-color: var(--app-background-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  box-shadow: var(--box-shadow-lg);
+  gap: var(--spacing-md);
+  transition: all var(--animation-duration-normal) var(--animation-easing);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 0.5rem;
-  border-bottom: 1px solid var(--color-background-dark);
-  padding-bottom: 1rem;
+  padding-bottom: var(--spacing-sm);
+  border-bottom: var(--border-width) solid var(--app-border);
 }
 
 .title {
   font-weight: var(--font-weight-bold);
-  color: var(--color-text);
+  color: var(--app-text);
   font-size: var(--font-size-lg);
-  letter-spacing: 0.5px;
 }
 
 .infoText {
   display: block;
-  font-size: 0.7rem;
-  color: var(--color-text-light);
-  opacity: 0.6;
+  font-size: var(--font-size-xs);
+  color: var(--app-text-secondary);
   font-weight: var(--font-weight-normal);
-  margin-top: 0.15rem;
+  margin-top: var(--spacing-xs);
 }
 
 .currentDigit {
-  color: var(--color-text-light);
+  color: var(--app-text-secondary);
   font-size: var(--font-size-sm);
-  background: var(--color-background);
-  padding: 0.5rem 0.75rem;
+  background-color: var(--app-background-secondary);
+  padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--border-radius);
+  transition: background-color var(--animation-duration-normal) var(--animation-easing);
 }
 
 .currentDigit strong {
   color: var(--color-primary);
   font-size: var(--font-size-base);
-  margin-left: 0.25rem;
+  margin-left: var(--spacing-xs);
+  font-weight: var(--font-weight-bold);
 }
 
 .digitGrid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 1rem;
-  padding: 0.5rem;
+  gap: 8px;
+  padding: var(--spacing-xs);
+  margin: 0 auto;
+  width: 100%;
+  max-width: 375px;
 }
 
 .digitButton {
   aspect-ratio: 1;
-  border: 2px solid transparent;
-  background: var(--color-background);
-  color: var(--color-text);
+  border: var(--border-width) solid transparent;
+  background-color: var(--app-background);
+  color: var(--app-text);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-medium);
   border-radius: var(--border-radius);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--animation-duration-normal) var(--animation-easing);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--box-shadow);
+  box-shadow: var(--shadow-md);
+  min-height: var(--touch-target-size);
+  width: 100%;
 }
 
 .digitButton:hover:not(.disabled) {
-  background: var(--color-background-dark);
+  background-color: var(--app-hover-background);
   transform: translateY(-2px);
-  box-shadow: var(--box-shadow-lg);
+  box-shadow: var(--shadow-lg);
 }
 
 .digitButton:active:not(.disabled) {
-  transform: translateY(0);
-  box-shadow: var(--box-shadow);
+  transform: scale(0.98);
+  box-shadow: var(--shadow);
+  background-color: var(--app-active-background);
 }
 
 .digitButton.selected {
-  background: var(--color-primary) !important;
-  color: var(--color-white);
-  box-shadow: var(--box-shadow-primary);
+  background-color: var(--color-primary) !important;
+  color: var(--color-text-dark);
+  box-shadow: var(--shadow-primary);
   transform: translateY(-2px) !important;
   transition: none !important;
   z-index: 1;
-  animation: pulse 1.5s infinite;
+  animation: pulse var(--animation-duration-slow) infinite;
 }
 
 .digitButton.highlight:not(.selected) {
   border-color: var(--highlight-color, var(--color-primary)) !important;
-  box-shadow: 0 0 10px var(--highlight-color, var(--color-primary));
+  box-shadow: var(--shadow-primary);
 }
 
 .digitButton.disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background: var(--color-background-dark);
+  background-color: var(--app-background-tertiary);
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0.4);
+    box-shadow: 0 0 0 0 var(--app-focus-ring);
   }
   70% {
-    box-shadow: 0 0 0 12px rgba(var(--color-primary-rgb), 0);
+    box-shadow: 0 0 0 12px transparent;
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0);
+    box-shadow: 0 0 0 0 transparent;
   }
 }
 
 .tickCounter {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  background: var(--color-background);
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background-color: var(--app-background-secondary);
   border-radius: var(--border-radius);
-  margin-top: 0.5rem;
+  margin-top: var(--spacing-xs);
+  transition: background-color var(--animation-duration-normal) var(--animation-easing);
 }
 
 .progressBar {
   width: 100%;
   height: 6px;
-  background: var(--color-background-dark);
-  border-radius: 3px;
+  background-color: var(--app-background-tertiary);
+  border-radius: var(--border-radius-sm);
   overflow: hidden;
 }
 
 .progress {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-hover));
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
   transition: width 1s linear;
-  box-shadow: var(--box-shadow-primary);
+  box-shadow: var(--shadow-primary);
 }
 
 .tickText {
   text-align: center;
-  color: var(--color-text-light);
+  color: var(--app-text-secondary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
+}
+
+@media (max-width: 374px) {
+  .digitGrid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .digitButton {
+    font-size: var(--font-size-base);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+}
+
+@media (max-width: 320px) {
+  .digitGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
 }

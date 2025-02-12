@@ -6,3 +6,4 @@ export { default as Modal } from './Modal';
 export { ProtectedRoute } from './ProtectedRoute';
 export { TabBar } from './TabBar';
 export { default as Toast } from './Toast';
+export { default as BottomSheet } from './BottomSheet';

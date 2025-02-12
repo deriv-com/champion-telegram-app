@@ -5,7 +5,6 @@ import App from './App';
 import { initializeTelegramWebApp } from '@/hooks/useTelegram';
 import '@/assets/styles/global.css';
 import '@/assets/styles/telegram.css';
-import '@/assets/styles/theme.css';
 
 // Initialize Telegram WebApp
 try {

@@ -1,19 +1,42 @@
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes.config';
 import { RootLayout, ProtectedRoute, Loading } from '@/shared';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import { LandingPage, Dashboard } from '@/features/home';
 import LoginPage from '@/features/auth/components/LoginPage';
 import { TradePage } from '@/features/trade';
 import { CashierPage } from '@/features/cashier';
 import { PositionsPage } from '@/features/positions';
 import { useAuth } from '@/hooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import websocketService from '@/services/websocket.service';
 import { authService } from '@/services/auth.service';
+import { initializeTelegramWebApp } from '@/hooks/useTelegram';
 
 function App() {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading, initialize } = useAuth();
+  const [isWebAppInitialized, setIsWebAppInitialized] = useState(false);
+
+  /**
+   * Initialize Telegram WebApp and set up cleanup
+   * Handles initialization of Telegram-specific features and ensures proper cleanup
+   * of event listeners when component unmounts
+   */
+  useEffect(() => {
+    let cleanupTelegram;
+    try {
+      cleanupTelegram = initializeTelegramWebApp();
+      setIsWebAppInitialized(true);
+    } catch (error) {
+      // Log specific error for debugging but continue app initialization
+      console.error('Failed to initialize Telegram WebApp:', error.message || error);
+      setIsWebAppInitialized(true); // Continue anyway to allow app to work in browser
+    }
+
+    // Cleanup function to remove event listeners on unmount
+    return () => cleanupTelegram?.();
+  }, []);
 
   useEffect(() => {
     const handleInitialization = async () => {
@@ -73,25 +96,21 @@ function App() {
     handleInitialization();
   }, [navigate, initialize]);
 
-  // Show loading state only during initial load
-  if (isLoading && !isAuthenticated) {
-    return (
-      <RootLayout>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          height: '100vh' 
-        }}>
-          <Loading size="lg" text="Initializing..." />
-        </div>
-      </RootLayout>
-    );
-  }
-
   return (
-    <RootLayout>
-      <Routes>
+    <ThemeProvider>
+      <RootLayout>
+        {/* Show loading state during initial load or WebApp initialization */}
+        {((isLoading && !isAuthenticated) || !isWebAppInitialized) ? (
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            height: '100vh' 
+          }}>
+            <Loading size="lg" text="Initializing..." />
+          </div>
+        ) : (
+          <Routes>
         <Route 
           path={ROUTES.HOME} 
           element={
@@ -112,8 +131,10 @@ function App() {
           }
         />
         <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
-      </Routes>
-    </RootLayout>
+          </Routes>
+        )}
+      </RootLayout>
+    </ThemeProvider>
   );
 }
 

@@ -1,66 +1,61 @@
 .container {
-  background: var(--color-white);
-  border-radius: var(--border-radius);
-  padding: 1rem;
+  background-color: var(--app-background-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: var(--box-shadow-lg);
   width: 100%;
-  margin-bottom: 1rem;
-  border: 2px solid var(--color-background);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.container:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--box-shadow-xl);
+  margin-bottom: var(--spacing-lg);
+  transition: all var(--animation-duration-normal) var(--animation-easing);
 }
 
 .priceContainer {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-xs);
 }
 
 .label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text);
+  color: var(--app-text);
   letter-spacing: 0.5px;
   line-height: var(--line-height-normal);
+  opacity: 0.48;
 }
 
 .price {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: var(--spacing-2xs);
   font-family: monospace;
   font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-extrabold);
-  color: var(--color-text);
+  font-weight: var(--font-weight-black);
+  color: var(--app-text);
   letter-spacing: -0.5px;
+  opacity: 0.9;
 }
 
 .digit {
   display: inline-block;
   min-width: 0.6em;
   text-align: center;
-  transition: all 0.2s ease;
+  transition: all var(--animation-duration-normal) var(--animation-easing);
   position: relative;
 }
 
 .lastDigit {
   color: var(--color-primary);
-  animation: pulse 2s infinite;
+  animation: pulse var(--animation-duration-slow) infinite;
 }
 
 .chartContainer {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 0;
-  margin-left: 1.5rem;
+  padding: var(--spacing-xs) 0;
+  margin-left: var(--spacing-lg);
   overflow: hidden;
 }
 
@@ -108,21 +103,26 @@
   }
   50% {
     transform: scale(1.1);
-    text-shadow: 0 0 10px var(--color-primary);
+    text-shadow: 0 0 10px var(--shadow-primary);
   }
   100% {
     transform: scale(1);
   }
 }
 
+/* Mobile styles */
 @media (max-width: 480px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+
   .price {
     font-size: var(--font-size-xl);
   }
   
   .chartContainer {
-    padding: 0.25rem 0;
-    margin-left: 1rem;
+    padding: var(--spacing-2xs) 0;
+    margin-left: var(--spacing-md);
   }
   
   .chart {

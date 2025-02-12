@@ -1,53 +1,91 @@
-.buttonPrimary {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  border: none;
-  padding: 16px 32px;
-  border-radius: 100px;
-  font-size: 18px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 200px;
-  text-transform: uppercase;
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch-target-size);
+  padding: var(--spacing-sm) var(--spacing-xl);
+  border-radius: var(--border-radius-full);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
   letter-spacing: 0.5px;
-  box-shadow: 0 1px 4px rgba(0, 199, 244, 0.15);
+  cursor: pointer;
+  user-select: none;
+  transition: transform var(--animation-duration-normal) var(--animation-easing),
+              box-shadow var(--animation-duration-normal) var(--animation-easing),
+              background-color var(--animation-duration-normal) var(--animation-easing),
+              color var(--animation-duration-normal) var(--animation-easing);
+  min-width: 200px;
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.buttonPrimary {
+  composes: button;
+  background-color: var(--app-button, var(--color-primary));
+  color: var(--app-button-text, var(--color-white));
+  border: none;
+  box-shadow: var(--shadow-sm);
 }
 
 .buttonPrimary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 2px 6px rgba(0, 199, 244, 0.2);
+  background-color: var(--color-primary-dark);
+  box-shadow: var(--shadow-md);
+}
+
+.buttonPrimary:active {
+  background-color: var(--color-primary-darker);
+  box-shadow: var(--shadow-sm);
 }
 
 .buttonSecondary {
-  background-color: transparent;
-  color: var(--color-text);
-  border: 2px solid var(--color-text);
-  padding: 16px 32px;
-  border-radius: 100px;
-  font-size: 18px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 200px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  composes: button;
+  background-color: var(--app-background-secondary);
+  color: var(--app-text);
+  border: var(--border-width-thick) solid var(--app-border);
 }
 
 .buttonSecondary:hover {
-  background-color: var(--color-primary-hover);
-  color: var(--color-white);
-  transform: translateY(-2px);
-  box-shadow: 0 3px 10px rgba(0, 199, 244, 0.25);
-  border-color: var(--color-primary-hover);
+  background-color: var(--app-hover-background);
+  border-color: var(--app-button);
+  color: var(--app-button);
 }
 
+.buttonSecondary:active {
+  background-color: var(--app-active-background);
+}
+
+/* Dark theme specific styles */
+[data-theme="dark"] .buttonSecondary,
+[data-telegram-theme="dark"] .buttonSecondary {
+  background-color: var(--app-background-tertiary);
+}
+
+[data-theme="dark"] .buttonPrimary:hover,
+[data-telegram-theme="dark"] .buttonPrimary:hover {
+  background-color: var(--color-primary-light);
+}
+
+[data-theme="dark"] .buttonPrimary:active,
+[data-telegram-theme="dark"] .buttonPrimary:active {
+  background-color: var(--color-primary);
+}
+
+/* Disabled state */
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Mobile styles */
 @media (max-width: 576px) {
-  .buttonPrimary,
-  .buttonSecondary {
+  .button {
     width: 100%;
-    padding: 14px 28px;
-    font-size: 16px;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: var(--font-size-sm);
     min-width: unset;
   }
 }

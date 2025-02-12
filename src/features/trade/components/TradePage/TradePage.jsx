@@ -3,8 +3,8 @@ import { ShimmerLoading } from '@/shared/components/Loading';
 import TradeButton from '../TradeButton';
 import MarketSelector from '../MarketSelector';
 import LiveQuote from '../LiveQuote';
-import DurationInput from '../DurationInput';
-import StakeInput from '../StakeInput';
+import DurationField from '../DurationField';
+import StakeField from '../StakeField';
 import DigitPrediction from '../DigitPrediction';
 import { useTrade } from '../../hooks/useTrade';
 import { useNotification } from '@/hooks/useNotification';
@@ -23,6 +23,7 @@ const TradePage = () => {
   };
   const [selectedDigit, setSelectedDigit] = useState(null);
   const [selectedMarket, setSelectedMarket] = useState(null);
+  const [isTrading, setIsTrading] = useState(false);
 
   return (
     <div className={styles.container}>
@@ -42,17 +43,6 @@ const TradePage = () => {
           </>
         ) : (
           <>
-            <LiveQuote 
-              isDigitsTradeType={true}
-              price="1.23456"
-              movement="up"
-              onLastDigitChange={(digit) => {
-                const numDigit = parseInt(digit);
-                if (!isNaN(numDigit)) {
-                  setCurrentDigit(numDigit);
-                }
-              }}
-            />
             <MarketSelector
               activeSymbols={activeSymbols}
               onMarketChange={(symbol) => {
@@ -65,21 +55,32 @@ const TradePage = () => {
         )}
       </div>
       {!isLoading && (
-        <div className={styles.inputRow}>
-          <div className={styles.halfWidth}>
-            <DurationInput
-              value={duration}
-              onChange={setDuration}
-            />
-          </div>
-          <div className={styles.halfWidth}>
-            <StakeInput
-              value={stake}
-              onChange={setStake}
-              disabled={false}
-              balance={null}
-            />
-          </div>
+        <div className={styles.tradeParameters}>
+          <DurationField
+            value={duration}
+            onChange={setDuration}
+          />
+          <StakeField
+            value={stake}
+            onChange={setStake}
+            disabled={false}
+            balance={null}
+          />
+        </div>
+      )}
+      {!isLoading && (
+        <div className={styles.tradeConfigWrapper}>
+          <LiveQuote
+            isDigitsTradeType={true}
+            price="1.23456"
+            movement="up"
+            onLastDigitChange={(digit) => {
+              const numDigit = parseInt(digit);
+              if (!isNaN(numDigit)) {
+                setCurrentDigit(numDigit);
+              }
+            }}
+          />
         </div>
       )}
       {!isLoading && (
@@ -103,9 +104,14 @@ const TradePage = () => {
           onClick={() => {
             // Demo notification - actual trade implementation will come later
             const marketName = selectedMarket && typeof selectedMarket === 'object' ? selectedMarket.display_name : 'Unknown';
+            setIsTrading(true);
             info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Matches ${selectedDigit}\n📊 Market: ${marketName}`);
+            // Simulate trade completion after 5 seconds
+            setTimeout(() => setIsTrading(false), 5000);
           }}
           disabled={selectedDigit === null || selectedDigit === undefined}
+          selectedDigit={selectedDigit}
+          isTrading={isTrading}
         />
         <TradeButton
           variant="negative"
@@ -114,9 +120,14 @@ const TradePage = () => {
           onClick={() => {
             // Demo notification - actual trade implementation will come later
             const marketName = selectedMarket && typeof selectedMarket === 'object' ? selectedMarket.display_name : 'Unknown';
+            setIsTrading(true);
             info(`🎯 Trade Placed Successfully!\n💰 Stake: $${stake}\n🎲 Trade: Differs ${selectedDigit}\n📊 Market: ${marketName}`);
+            // Simulate trade completion after 5 seconds
+            setTimeout(() => setIsTrading(false), 5000);
           }}
           disabled={selectedDigit === null || selectedDigit === undefined}
+          selectedDigit={selectedDigit}
+          isTrading={isTrading}
         />
       </div>
     </div>

@@ -1,0 +1,47 @@
+.container {
+  padding: var(--spacing-xs) var(--spacing-md);
+}
+
+.fieldContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.textContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+  margin-top: 1px;
+}
+
+.value {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+  margin-bottom: 1px;
+}
+
+.chevron {
+  width: 16px;
+  height: 16px;
+  margin-left: var(--spacing-sm);
+}
+
+/* Light theme icon colors */
+:root[data-theme="light"] .chevron,
+:root[data-telegram-theme="light"] .chevron {
+  filter: brightness(0) saturate(100%) invert(35%) sepia(11%) saturate(934%) hue-rotate(175deg) brightness(94%) contrast(89%);
+}
+
+/* Dark theme icon colors */
+:root[data-theme="dark"] .chevron,
+:root[data-telegram-theme="dark"] .chevron {
+  filter: brightness(0) saturate(100%) invert(80%) sepia(13%) saturate(188%) hue-rotate(175deg) brightness(87%) contrast(84%);
+}

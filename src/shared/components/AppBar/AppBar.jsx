@@ -7,21 +7,20 @@ import { authService } from '@/services/auth.service';
 import { logoutIcon } from '@/assets/images';
 import styles from './AppBar.module.css';
 
-// Move ChevronIcon outside component to prevent recreation
 const ChevronIcon = memo(({ className }) => (
-  <svg 
-    className={className} 
-    width="20" 
-    height="20" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
+  <svg
+    className={className}
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
     strokeLinejoin="round"
     data-testid="chevron-icon"
   >
-    <path d="M6 9l6 6 6-6"/>
+    <path d="M6 9l6 6 6-6" />
   </svg>
 ));
 
@@ -31,10 +30,10 @@ ChevronIcon.propTypes = {
 
 const AppBar = () => {
   const { showConfirm } = useTelegram();
-  const { 
-    logout, 
-    isLoading, 
-    isSwitchingAccount, 
+  const {
+    logout,
+    isLoading,
+    isSwitchingAccount,
     switchAccount,
     defaultAccount,
     accountId,
@@ -72,7 +71,7 @@ const AppBar = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        dropdownRef.current && 
+        dropdownRef.current &&
         !dropdownRef.current.contains(event.target) &&
         accountRef.current &&
         !accountRef.current.contains(event.target)
@@ -126,7 +125,7 @@ const AppBar = () => {
 
       // Perform logout and wait for it to complete
       const success = await logout();
-      
+
       // If logout failed, show error and re-enable button
       if (!success) {
         console.error('Logout failed');
@@ -150,16 +149,16 @@ const AppBar = () => {
     <>
       <div className={styles.appBar}>
         <div className={styles.leading}>
-          <img 
-            src="/champion-short-logo.svg" 
-            alt="Champion Logo" 
+          <img
+            src="/champion-short-logo.svg"
+            alt="Champion Logo"
             className={styles.logo}
           />
         </div>
         <div className={styles.trailing}>
-          <button 
+          <button
             ref={accountRef}
-            className={`${styles.accountInfo} ${isDropdownOpen ? styles.active : ''}`} 
+            className={`${styles.accountInfo} ${isDropdownOpen ? styles.active : ''}`}
             onClick={toggleDropdown}
             data-testid="account-info"
             type="button"
@@ -167,7 +166,7 @@ const AppBar = () => {
             <div className={styles.accountContent}>
               {isLoading || isSwitchingAccount ? (
                 <div className={styles.accountDetails}>
-                  <ShimmerLoading 
+                  <ShimmerLoading
                     lines={[
                       { width: '100px', height: '16px', style: { marginBottom: '2px' } },
                       { width: '140px', height: '16px' }
@@ -188,7 +187,7 @@ const AppBar = () => {
           </button>
         </div>
       </div>
-      <div 
+      <div
         ref={dropdownRef}
         className={`${styles.dropdown} ${isDropdownOpen ? styles.show : ''}`}
         data-testid="dropdown"
@@ -196,7 +195,7 @@ const AppBar = () => {
         {isLoadingAccounts ? (
           <div className={styles.accountsList}>
             <div className={styles.accountItem}>
-              <ShimmerLoading 
+              <ShimmerLoading
                 lines={[
                   { width: '80px', height: '16px', style: { marginBottom: '4px' } },
                   { width: '120px', height: '14px' }
@@ -224,7 +223,7 @@ const AppBar = () => {
             ))}
           </div>
         ) : null}
-        <div 
+        <div
           className={`${styles.dropdownItem} ${styles.logout}`}
           onClick={handleLogout}
           data-testid="logout-button"

@@ -5,8 +5,42 @@ import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes.config';
 
+// Update viewport metrics
+const updateViewportMetrics = () => {
+  const root = document.documentElement;
+  try {
+    // Set viewport heights
+    root.style.setProperty('--tg-viewport-height', `${WebApp.viewportHeight}px`);
+    root.style.setProperty('--tg-viewport-stable-height', `${WebApp.viewportStableHeight}px`);
+    
+    // Set safe areas using Telegram WebApp's built-in values
+    root.style.setProperty('--tg-safe-area-top', `${WebApp.safeAreaInset?.top || 0}px`);
+    root.style.setProperty('--tg-safe-area-right', `${WebApp.safeAreaInset?.right || 0}px`);
+    root.style.setProperty('--tg-safe-area-bottom', `${WebApp.safeAreaInset?.bottom || 0}px`);
+    root.style.setProperty('--tg-safe-area-left', `${WebApp.safeAreaInset?.left || 0}px`);
+
+    // Set background color to match theme
+    document.body.style.backgroundColor = WebApp.backgroundColor;
+  } catch (error) {
+    console.error('Failed to update viewport metrics:', error);
+    // Reset to safe defaults
+    root.style.setProperty('--tg-viewport-height', '100vh');
+    root.style.setProperty('--tg-viewport-stable-height', '100vh');
+    root.style.setProperty('--tg-safe-area-top', '0px');
+    root.style.setProperty('--tg-safe-area-right', '0px');
+    root.style.setProperty('--tg-safe-area-bottom', '0px');
+    root.style.setProperty('--tg-safe-area-left', '0px');
+  }
+};
+
 // Initialize Telegram WebApp
 export const initializeTelegramWebApp = () => {
+  const cleanup = {
+    viewportChanged: null,
+    themeChanged: null,
+    orientationChanged: null
+  };
+
   try {
     // Initialize WebApp
     WebApp.ready();
@@ -14,21 +48,62 @@ export const initializeTelegramWebApp = () => {
     // Lock orientation to portrait mode
     WebApp.lockOrientation();
     
-    // Set initial viewport height
-    const root = document.documentElement;
-    root.style.setProperty('--tg-viewport-height', `${WebApp.viewportHeight}px`);
-    root.style.setProperty('--tg-viewport-stable-height', `${WebApp.viewportStableHeight}px`);
-
-    // Request fullscreen mode
-    WebApp.requestFullscreen();
+    // Expand the WebApp to maximum available height
     WebApp.expand();
+
+    // Initial setup
+    updateViewportMetrics();
+    
+    // Set header color and theme parameters
+    WebApp.setHeaderColor(WebApp.backgroundColor);
+    
+    // Set initial theme parameters
+    const root = document.documentElement;
+    const params = WebApp.themeParams;
+    Object.entries(params).forEach(([key, value]) => {
+      if (key.includes('color')) {
+        root.style.setProperty(`--tg-theme-${key}`, value);
+      }
+    });
+    root.setAttribute('data-telegram-theme', WebApp.colorScheme || 'light');
+    
+    // Update on viewport changes
+    cleanup.viewportChanged = () => {
+      updateViewportMetrics();
+    };
+    WebApp.onEvent('viewportChanged', cleanup.viewportChanged);
+    
+    // Update on theme changes
+    cleanup.themeChanged = () => {
+      document.body.style.backgroundColor = WebApp.backgroundColor;
+      WebApp.setHeaderColor(WebApp.backgroundColor);
+      updateViewportMetrics();
+    };
+    WebApp.onEvent('themeChanged', cleanup.themeChanged);
+
+    // Handle orientation changes
+    cleanup.orientationChanged = () => {
+      updateViewportMetrics();
+    };
+    WebApp.onEvent('orientationChanged', cleanup.orientationChanged);
   } catch (error) {
-    console.warn('Telegram WebApp initialization failed:', error);
+    console.error('Telegram WebApp initialization failed:', error);
+    throw new Error('Failed to initialize Telegram WebApp');
   }
+
+  // Return cleanup function
+  return () => {
+    try {
+      if (cleanup.viewportChanged) WebApp.offEvent('viewportChanged', cleanup.viewportChanged);
+      if (cleanup.themeChanged) WebApp.offEvent('themeChanged', cleanup.themeChanged);
+      if (cleanup.orientationChanged) WebApp.offEvent('orientationChanged', cleanup.orientationChanged);
+    } catch (error) {
+      console.warn('Cleanup failed:', error);
+    }
+  };
 };
 
 export const useTelegram = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
   const [isBackButtonVisible, setIsBackButtonVisible] = useState(false);
   const [isMainButtonVisible, setIsMainButtonVisible] = useState(false);
   const [isClosingConfirmationEnabled, setIsClosingConfirmationEnabled] = useState(false);
@@ -88,43 +163,38 @@ export const useTelegram = () => {
 
   // Handle viewport changes
   useEffect(() => {
-    const updateViewportHeight = () => {
-      const root = document.documentElement;
-      // Set viewport heights from Telegram WebApp
-      const viewportHeight = WebApp.viewportHeight;
-      const viewportStableHeight = WebApp.viewportStableHeight;
-      
-      // Update CSS variables
-      root.style.setProperty('--tg-viewport-height', `${viewportHeight}px`);
-      root.style.setProperty('--tg-viewport-stable-height', `${viewportStableHeight}px`);
-      
-      // Update expanded state
-      setIsExpanded(WebApp.isExpanded);
-    };
-
     // Set initial viewport height
-    updateViewportHeight();
+    updateViewportMetrics();
 
     // Update on viewport changes
-    WebApp.onEvent('viewportChanged', updateViewportHeight);
-    return () => WebApp.offEvent('viewportChanged', updateViewportHeight);
+    WebApp.onEvent('viewportChanged', updateViewportMetrics);
+    return () => WebApp.offEvent('viewportChanged', updateViewportMetrics);
   }, []);
 
-  // Handle theme changes
+  // Handle theme setup and changes
   useEffect(() => {
-    const handleThemeChanged = () => {
+    const handleThemeParams = () => {
       const root = document.documentElement;
       const params = WebApp.themeParams;
       
+      // Set theme parameters
       Object.entries(params).forEach(([key, value]) => {
         if (key.includes('color')) {
           root.style.setProperty(`--tg-theme-${key}`, value);
         }
       });
+
+      // Set color scheme
+      const scheme = WebApp.colorScheme || 'light';
+      root.setAttribute('data-telegram-theme', scheme);
     };
 
-    WebApp.onEvent('themeChanged', handleThemeChanged);
-    return () => WebApp.offEvent('themeChanged', handleThemeChanged);
+    // Set initial theme parameters
+    handleThemeParams();
+
+    // Update on theme changes
+    WebApp.onEvent('themeChanged', handleThemeParams);
+    return () => WebApp.offEvent('themeChanged', handleThemeParams);
   }, []);
 
   // Handle closing confirmation
@@ -211,7 +281,7 @@ export const useTelegram = () => {
 
   return {
     // State
-    isExpanded,
+    isExpanded: WebApp.isExpanded,
     isBackButtonVisible,
     isMainButtonVisible,
     isClosingConfirmationEnabled,

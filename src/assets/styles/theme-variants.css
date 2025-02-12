@@ -1,0 +1,178 @@
+/* Theme Variants - Light and Dark theme implementations */
+@import './design-tokens.css';
+
+/* Light Theme - Telegram */
+[data-telegram-theme="light"] {
+  color-scheme: light;
+  
+  /* Background colors */
+  --app-background: var(--tg-theme-secondary-bg-color, var(--color-background-secondary-light));
+  --app-background-secondary: var(--tg-theme-secondary-bg-color, rgba(237, 242, 247, 0.8));
+  --app-background-tertiary: var(--color-background-tertiary-light);
+  
+  /* Text colors */
+  --app-text: var(--tg-theme-text-color, var(--color-text-light));
+  --app-text-secondary: var(--tg-theme-hint-color, var(--color-text-secondary-light));
+  --app-text-tertiary: var(--color-text-tertiary-light);
+  
+  /* Button colors */
+  --app-button: var(--tg-theme-button-color, var(--color-primary));
+  --app-button-text: var(--tg-theme-button-text-color, var(--color-white));
+  --app-link: var(--tg-theme-link-color, var(--color-primary));
+}
+
+/* Light Theme - App (takes precedence over Telegram theme) */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+  
+  /* Background colors */
+  --app-background: var(--tg-theme-secondary-bg-color, var(--color-background-secondary-light));
+  --app-background-secondary: var(--tg-theme-secondary-bg-color, rgba(237, 242, 247, 0.8));
+  --app-background-tertiary: var(--color-background-tertiary-light);
+  
+  /* Text colors */
+  --app-text: var(--tg-theme-text-color, var(--color-text-light));
+  --app-text-secondary: var(--tg-theme-hint-color, var(--color-text-secondary-light));
+  --app-text-tertiary: var(--color-text-tertiary-light);
+  
+  /* Border colors */
+  --app-border: var(--color-border-light);
+  --app-border-primary: rgba(0, 199, 244, 0.3);
+
+  /* Interactive states */
+  --app-hover-background: rgba(0, 199, 244, 0.1);
+  --app-active-background: rgba(0, 199, 244, 0.2);
+  --app-focus-ring: rgba(0, 199, 244, 0.4);
+  
+  /* Overlay colors */
+  --app-overlay: rgba(0, 0, 0, 0.5);
+  --app-overlay-light: rgba(0, 0, 0, 0.3);
+
+  /* Button colors */
+  --app-button: var(--tg-theme-button-color, var(--color-primary));
+  --app-button-text: var(--tg-theme-button-text-color, var(--color-white));
+  --app-link: var(--tg-theme-link-color, var(--color-primary));
+
+  /* Navigation colors */
+  --nav-background: var(--tg-theme-bg-color, var(--color-background-light));
+  --nav-background-solid: var(--color-background-light);
+  --nav-border: var(--color-border-light);
+  --nav-icon: var(--color-text-secondary-light);
+  --nav-icon-active: var(--color-primary);
+
+  /* Status colors */
+  --color-success: #03c390;
+  --color-success-light: #04eaab;
+  --color-success-dark: #02a87c;
+  --color-error: #df0040;
+  --color-error-light: #ff1a5c;
+  --color-error-dark: #b80035;
+
+  /* Status shadows */
+  --shadow-success: 0 4px 12px rgba(3, 195, 144, 0.3);
+  --shadow-success-lg: 0 8px 16px rgba(3, 195, 144, 0.4);
+  --shadow-error: 0 4px 12px rgba(223, 0, 64, 0.3);
+  --shadow-error-lg: 0 8px 16px rgba(223, 0, 64, 0.4);
+}
+
+/* Dark Theme - Telegram */
+[data-telegram-theme="dark"] {
+  color-scheme: dark;
+  
+  /* Background colors */
+  --app-background: var(--tg-theme-secondary-bg-color, var(--color-background-secondary-dark));
+  --app-background-secondary: var(--tg-theme-secondary-bg-color, var(--color-background-secondary-dark));
+  --app-background-tertiary: var(--color-background-tertiary-dark);
+  
+  /* Text colors */
+  --app-text: var(--tg-theme-text-color, var(--color-text-dark));
+  --app-text-secondary: var(--tg-theme-hint-color, var(--color-text-secondary-dark));
+  --app-text-tertiary: var(--color-text-tertiary-dark);
+  
+  /* Button colors */
+  --app-button: var(--tg-theme-button-color, var(--color-primary-light));
+  --app-button-text: var(--tg-theme-button-text-color, var(--color-white));
+  --app-link: var(--tg-theme-link-color, var(--color-primary-light));
+}
+
+/* Dark Theme - App (takes precedence over Telegram theme) */
+[data-theme="dark"] {
+  color-scheme: dark;
+  
+  /* Background colors */
+  --app-background: var(--tg-theme-secondary-bg-color, var(--color-background-secondary-dark));
+  --app-background-secondary: var(--tg-theme-secondary-bg-color, var(--color-background-secondary-dark));
+  --app-background-tertiary: var(--color-background-tertiary-dark);
+  
+  /* Text colors */
+  --app-text: var(--tg-theme-text-color, var(--color-text-dark));
+  --app-text-secondary: var(--tg-theme-hint-color, var(--color-text-secondary-dark));
+  --app-text-tertiary: var(--color-text-tertiary-dark);
+  
+  /* Border colors */
+  --app-border: var(--color-border-dark);
+  --app-border-primary: rgba(0, 199, 244, 0.5);
+
+  /* Interactive states */
+  --app-hover-background: rgba(0, 199, 244, 0.15);
+  --app-active-background: rgba(0, 199, 244, 0.25);
+  --app-focus-ring: rgba(0, 199, 244, 0.6);
+  
+  /* Overlay colors */
+  --app-overlay: rgba(0, 0, 0, 0.8);
+  --app-overlay-light: rgba(0, 0, 0, 0.6);
+
+  /* Button colors */
+  --app-button: var(--tg-theme-button-color, var(--color-primary-light));
+  --app-button-text: var(--tg-theme-button-text-color, var(--color-white));
+  --app-link: var(--tg-theme-link-color, var(--color-primary-light));
+
+  /* Navigation colors */
+  --nav-background: var(--tg-theme-bg-color, var(--color-background-dark));
+  --nav-background-solid: var(--color-background-dark);
+  --nav-border: var(--color-border-dark);
+  --nav-icon: var(--color-text-secondary-dark);
+  --nav-icon-active: var(--color-primary-light);
+
+  /* Status colors */
+  --color-success: #04eaab;
+  --color-success-light: #04fbb7;
+  --color-success-dark: #03c390;
+  --color-error: #ff1a5c;
+  --color-error-light: #ff3d75;
+  --color-error-dark: #df0040;
+
+  /* Status shadows */
+  --shadow-success: 0 4px 12px rgba(4, 234, 171, 0.4);
+  --shadow-success-lg: 0 8px 16px rgba(4, 234, 171, 0.5);
+  --shadow-error: 0 4px 12px rgba(255, 26, 92, 0.4);
+  --shadow-error-lg: 0 8px 16px rgba(255, 26, 92, 0.5);
+}
+
+/* Common Interactive Styles */
+.interactive {
+  transition: background-color var(--animation-duration-fast) var(--animation-easing),
+              transform var(--animation-duration-fast) var(--animation-easing),
+              opacity var(--animation-duration-fast) var(--animation-easing);
+}
+
+.interactive:hover {
+  background-color: var(--app-hover-background);
+}
+
+.interactive:active {
+  background-color: var(--app-active-background);
+  transform: scale(0.98);
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--app-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Disable focus outline for mouse users, maintain for keyboard */
+:focus:not(:focus-visible) {
+  outline: none;
+}

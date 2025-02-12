@@ -18,7 +18,7 @@ const DigitPrediction = ({
       <div className={styles.header}>
         <span className={styles.title}>
           Last Digit Prediction
-          {!selectedDigit && !isTrading && (
+          {!isTrading && (
             <small className={styles.infoText}>Select any digit to start trading</small>
           )}
         </span>

@@ -17,7 +17,7 @@ const RootLayout = ({ children }) => {
     return () => mediaQuery.removeEventListener('change', handleResize);
   }, []);
 
-  const rootClasses = `${styles.root} ${isMobile ? styles.mobile : ''}`.trim();
+  const rootClasses = `${styles.root} ${isMobile ? styles.mobile : ''} ${styles.fadeIn}`.trim();
 
   return (
     <ErrorBoundary>
