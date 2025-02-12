@@ -7,7 +7,7 @@
   left: 0;
   right: 0;
   width: 100%;
-  height: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, env(safe-area-inset-bottom, 0px)));
+  height: var(--tab-bar-height);
   z-index: 3;
   box-sizing: border-box;
   backdrop-filter: blur(10px);
