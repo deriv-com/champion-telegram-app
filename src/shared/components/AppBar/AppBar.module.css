@@ -1,5 +1,5 @@
 .appBar {
-  height: calc(var(--app-bar-height) + var(--tg-safe-area-top, env(safe-area-inset-top, 0px)));
+  height: var(--app-bar-height);
   background-color: var(--nav-background-solid);
   display: flex;
   justify-content: space-between;
@@ -13,7 +13,7 @@
   z-index: 3;
   box-sizing: border-box;
   transition: background-color var(--animation-duration-normal) var(--animation-easing),
-              border-color var(--animation-duration-normal) var(--animation-easing);
+    border-color var(--animation-duration-normal) var(--animation-easing);
 }
 
 .leading {
@@ -91,7 +91,7 @@
   width: 16px;
   height: 16px;
   transition: transform var(--animation-duration-normal) var(--animation-easing),
-              filter var(--animation-duration-normal) var(--animation-easing);
+    filter var(--animation-duration-normal) var(--animation-easing);
 }
 
 /* Light theme icon colors */
@@ -129,9 +129,11 @@
   0% {
     opacity: 0.4;
   }
+
   50% {
     opacity: 0.8;
   }
+
   100% {
     opacity: 0.4;
   }
@@ -156,8 +158,8 @@
   transform: translateY(-10px) scale(0.98);
   pointer-events: none;
   transition: transform var(--animation-duration-normal) var(--animation-easing),
-              opacity var(--animation-duration-normal) var(--animation-easing),
-              visibility 0s linear var(--animation-duration-normal);
+    opacity var(--animation-duration-normal) var(--animation-easing),
+    visibility 0s linear var(--animation-duration-normal);
   z-index: 3;
   visibility: hidden;
   display: flex;
@@ -171,8 +173,8 @@
   pointer-events: auto;
   visibility: visible;
   transition: transform var(--animation-duration-normal) var(--animation-easing),
-              opacity var(--animation-duration-normal) var(--animation-easing),
-              visibility 0s linear 0s;
+    opacity var(--animation-duration-normal) var(--animation-easing),
+    visibility 0s linear 0s;
 }
 
 .accountsList {
@@ -193,8 +195,8 @@
   border-radius: var(--border-radius);
   cursor: pointer;
   transition: background-color var(--animation-duration-normal) var(--animation-easing),
-              transform var(--animation-duration-normal) var(--animation-easing),
-              box-shadow var(--animation-duration-normal) var(--animation-easing);
+    transform var(--animation-duration-normal) var(--animation-easing),
+    box-shadow var(--animation-duration-normal) var(--animation-easing);
   background-color: var(--app-background);
   border: var(--border-width) solid var(--app-border);
   text-align: left;
@@ -281,8 +283,8 @@
   border-radius: var(--border-radius);
   padding: var(--spacing-lg);
   transition: background-color var(--animation-duration-normal) var(--animation-easing),
-              transform var(--animation-duration-normal) var(--animation-easing),
-              box-shadow var(--animation-duration-normal) var(--animation-easing);
+    transform var(--animation-duration-normal) var(--animation-easing),
+    box-shadow var(--animation-duration-normal) var(--animation-easing);
 }
 
 .logoutIcon {

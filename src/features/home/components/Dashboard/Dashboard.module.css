@@ -5,8 +5,8 @@
   background-color: var(--app-background);
   width: 100%;
   flex: 1;
-  padding-top: calc(var(--app-bar-height) + var(--tg-safe-area-top, env(safe-area-inset-top, 0px)));
-  padding-bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, env(safe-area-inset-bottom, 0px)));
+  padding-top: var(--app-bar-height);
+  padding-bottom: var(--tab-bar-height);
   animation: fadeIn var(--animation-duration-normal) var(--animation-easing);
   z-index: 1;
 }
