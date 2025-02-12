@@ -1,7 +1,7 @@
 .container {
   width: 100%;
   position: relative;
-  padding-bottom: calc(var(--tab-bar-height) + var(--touch-target-size) + var(--spacing-xl) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: var(--tab-bar-height);
 }
 
 .marketSelectorWrapper {
@@ -34,7 +34,7 @@
 
 .tradeButtonsContainer {
   position: fixed;
-  bottom: calc(var(--tab-bar-height) + var(--tg-safe-area-bottom, env(safe-area-inset-bottom, 0px)));
+  bottom: var(--tab-bar-height);
   left: 0;
   right: 0;
   display: flex;
@@ -45,5 +45,4 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   transform: translateZ(0);
-  margin-bottom: env(safe-area-inset-bottom, 0px);
 }
