@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes.config';
 import { useAuth } from '@/hooks';
-import { Loading } from '@/shared/components';
+import { SpinnerLoading } from '@/shared/components';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading, initialize } = useAuth();
@@ -35,7 +35,7 @@ const ProtectedRoute = ({ children }) => {
 
   // Show loading state until auth check is complete
   if (isLoading || !authChecked) {
-    return <Loading size="lg" text="Loading..." />;
+    return <SpinnerLoading size="lg" text="Loading..." />;
   }
 
   // Redirect to login if not authenticated

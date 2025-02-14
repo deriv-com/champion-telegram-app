@@ -1,0 +1,125 @@
+.hero {
+  min-height: 100vh; /* Fallback */
+  min-height: 100dvh; /* Modern viewport units */
+  height: var(--tg-viewport-stable-height);
+  width: 100vw;
+  overflow-x: hidden;
+  padding: var(--spacing-md) var(--spacing-sm);
+  background-color: var(--app-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background-color var(--animation-duration-normal) var(--animation-easing);
+  animation: fadeIn var(--animation-duration-normal) var(--animation-easing);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  gap: var(--spacing-md);
+  width: 100%;
+  max-width: 100%;
+  padding: var(--spacing-md) var(--spacing-xs);
+}
+
+.logo {
+  max-width: min(267px, 60vw);
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: var(--spacing-md);
+  object-fit: contain;
+  transition: all var(--animation-duration-normal) var(--animation-easing);
+  filter: drop-shadow(0 0 10px var(--shadow-primary));
+  z-index: 1;
+  position: relative;
+}
+
+.carousel {
+  width: 100%;
+  margin: var(--spacing-md) 0;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  width: 100%;
+  max-width: 280px;
+  margin: var(--spacing-md) auto 0;
+  align-items: center;
+}
+
+.buttons button {
+  width: 100%;
+  min-height: var(--touch-target-size);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* iPhone SE and similar small screens */
+@media (max-width: 375px) {
+  .hero {
+    padding: var(--spacing-sm) var(--spacing-xs);
+  }
+
+  .container {
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-xs);
+  }
+
+  .logo {
+    max-width: min(200px, 50vw);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .buttons {
+    max-width: 240px;
+    gap: var(--spacing-sm);
+  }
+}
+
+/* Tablet and up */
+@media (min-width: 576px) {
+  .hero {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  .container {
+    gap: var(--spacing-xl);
+    padding: var(--spacing-xl) var(--spacing-md);
+    max-width: 768px;
+  }
+
+  .logo {
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .buttons {
+    flex-direction: row;
+    max-width: 500px;
+    gap: var(--spacing-md);
+  }
+
+  .buttons button {
+    min-width: 180px;
+  }
+}
+
+/* Desktop and up */
+@media (min-width: 992px) {
+  .container {
+    max-width: 1200px;
+  }
+}

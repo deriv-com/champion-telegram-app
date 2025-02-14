@@ -1,0 +1,131 @@
+.carousel {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  outline: none;
+}
+
+.slides {
+  display: flex;
+  transition: transform var(--animation-duration-normal) var(--animation-easing);
+  width: 100%;
+}
+
+.slide {
+  min-width: 100%;
+  flex-shrink: 0;
+}
+
+.slideContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  width: 100%;
+  max-width: min(90vw, 358px);
+  margin: 0 auto;
+}
+
+.bannerWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 var(--spacing-xs);
+  max-height: 50vh;
+}
+
+.banner {
+  max-width: 95%;
+  width: auto;
+  height: auto;
+  max-height: 45vh;
+  animation: float 6s ease-in-out infinite;
+  object-fit: contain;
+}
+
+.title {
+  font-family: var(--font-family);
+  font-style: normal;
+  font-weight: var(--font-weight-bold);
+  font-size: clamp(var(--font-size-md), 4vw, var(--font-size-lg));
+  line-height: 1.4;
+  text-align: center;
+  color: var(--color-text-light);
+  width: 100%;
+  margin: 0;
+}
+
+.subtitle {
+  font-family: var(--font-family);
+  font-style: normal;
+  font-weight: var(--font-weight-normal);
+  font-size: clamp(var(--font-size-xs), 3vw, var(--font-size-sm));
+  line-height: 1.5;
+  text-align: center;
+  color: var(--color-text-secondary-light);
+  width: 100%;
+  margin: 0;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.indicators {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-xs) 0;
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background-color: var(--app-text);
+  opacity: 0.2;
+  cursor: pointer;
+  transition: opacity var(--animation-duration-fast) var(--animation-easing),
+              transform var(--animation-duration-fast) var(--animation-easing);
+}
+
+.indicator:hover {
+  opacity: 0.4;
+}
+
+.indicator.active {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* Accessibility */
+.carousel:focus {
+  outline: 2px solid var(--app-primary);
+  outline-offset: 2px;
+}
+
+.indicator:focus {
+  outline: 2px solid var(--app-primary);
+  outline-offset: 2px;
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .slides {
+    transition: none;
+  }
+  
+  .indicator {
+    transition: none;
+  }
+}

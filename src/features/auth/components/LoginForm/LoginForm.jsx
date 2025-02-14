@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes.config';
 import { useTelegram, useAuth } from '@/hooks';
-import { Loading } from '@/shared/components/Loading';
+import { SpinnerLoading } from '@/shared/components';
 import React from 'react';
 import styles from './LoginForm.module.css';
 
@@ -35,7 +35,7 @@ const LoginForm = () => {
     <div className={styles.loginForm}>
       <div className={styles.container}>
         {isLoading ? (
-          <Loading size="lg" text="Preparing your trading dashboard..." />
+          <SpinnerLoading size="lg" text="Preparing your trading dashboard..." />
         ) : (
           <>
             <h1 className={styles.title}>Welcome to Champion Trade</h1>
