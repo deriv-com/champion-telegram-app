@@ -3,7 +3,7 @@ import { ROUTES } from '@/config/routes.config';
 import { RootLayout, ProtectedRoute } from '@/shared';
 import { SpinnerLoading } from '@/shared/components';
 import { ThemeProvider } from '@/contexts/ThemeContext';
-import { LandingPage, Dashboard, LandingPageNew } from '@/features/home';
+import { LandingPage, Dashboard } from '@/features/home';
 import LoginPage from '@/features/auth/components/LoginPage';
 import { TradePage } from '@/features/trade';
 import { CashierPage } from '@/features/cashier';
@@ -118,7 +118,7 @@ function App() {
                 isAuthenticated ? (
                   <Navigate to={ROUTES.DASHBOARD} replace />
                 ) : (
-                  <LandingPageNew />
+                  <LandingPage />
                 )
               }
             />

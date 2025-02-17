@@ -7,7 +7,7 @@
 
 .slides {
   display: flex;
-  transition: transform var(--animation-duration-normal) var(--animation-easing);
+  transition: transform var(--animation-duration-slow) var(--animation-easing);
   width: 100%;
 }
 

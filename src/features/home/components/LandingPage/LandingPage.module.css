@@ -1,7 +1,11 @@
 .hero {
-  padding: var(--spacing-2xl) var(--spacing-md) var(--spacing-3xl);
+  min-height: 100vh; /* Fallback */
+  min-height: 100dvh; /* Modern viewport units */
+  height: var(--tg-viewport-stable-height);
+  width: 100vw;
+  overflow-x: hidden;
+  padding: var(--spacing-md) var(--spacing-sm);
   background-color: var(--app-background);
-  min-height: var(--tg-viewport-stable-height);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,115 +18,162 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
-  gap: var(--spacing-xl);
+  gap: var(--spacing-md);
   width: 100%;
-  max-width: 1200px;
-  padding: var(--spacing-xl) var(--spacing-md);
-  animation: slideUp var(--animation-duration-normal) var(--animation-easing);
+  max-width: 100%;
+  padding: var(--spacing-md) var(--spacing-xs);
 }
 
 .logo {
-  width: 280px;
+  max-width: min(267px, 60vw);
+  width: 100%;
   height: auto;
   display: block;
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
+  object-fit: contain;
   transition: all var(--animation-duration-normal) var(--animation-easing);
   filter: drop-shadow(0 0 10px var(--shadow-primary));
+  z-index: 1;
+  position: relative;
 }
 
-.logo:hover {
-  transform: scale(1.05);
-  filter: drop-shadow(0 0 15px var(--shadow-primary));
-}
-
-.content {
-  max-width: 800px;
-  margin: 0 auto;
-  margin-bottom: var(--spacing-xl);
-}
-
-.title {
-  font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-black);
-  margin-bottom: var(--spacing-lg);
-  color: var(--app-text);
-  line-height: var(--line-height-tight);
-  letter-spacing: -0.04em;
-  transition: color var(--animation-duration-normal) var(--animation-easing);
-}
-
-.subtitle {
-  font-size: var(--font-size-xl);
-  color: var(--app-text-secondary);
-  line-height: var(--line-height-relaxed);
-  font-weight: var(--font-weight-medium);
-  max-width: 600px;
-  margin: 0 auto;
-  transition: color var(--animation-duration-normal) var(--animation-easing);
-}
-
-.buttons {
-  display: flex;
-  gap: var(--spacing-md);
+.carousel {
   width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
+  margin: var(--spacing-md) 0;
+}
+
+.buttonContainer {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  font-size: 16px;
+  color: #000;
+  text-align: center;
+  line-height: 1;
   justify-content: center;
+  padding: 16px 0;
 }
 
-.buttons button {
-  min-width: 200px;
-  min-height: var(--touch-target-size);
+.buttonIcon {
+  width: 16px;
+  height: 16px;
+  display: block;
 }
 
-/* Tablet styles */
-@media (max-width: 768px) {
+.accountSection {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  padding: 16px 0;
+}
+
+.accountText {
+  color: var(--color-text-light);
+  font: 400 12px/2 Inter, sans-serif;
+}
+
+[data-theme="dark"] .accountText {
+  color: var(--color-text-dark);
+}
+
+.accountLink {
+  display: flex;
+  margin-top: 8px;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: var(--color-primary-dark);
+  justify-content: start;
+  text-decoration: none;
+  transition: color var(--animation-duration-normal) var(--animation-easing);
+}
+
+[data-theme="dark"] .accountLink {
+  color: var(--color-primary-light);
+}
+
+.accountLink:hover {
+  color: var(--color-primary);
+}
+
+.linkLabel {
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+  line-height: 1;
+  align-self: stretch;
+  margin: auto 0;
+}
+
+.linkIcon {
+  width: 15px;
+  height: 24px;
+  margin: auto 0;
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* iPhone SE and similar small screens */
+@media (max-width: 375px) {
   .hero {
-    padding: var(--spacing-xl) var(--spacing-md) var(--spacing-2xl);
-  }
-
-  .title {
-    font-size: var(--font-size-3xl);
-  }
-
-  .subtitle {
-    font-size: var(--font-size-lg);
-  }
-
-  .logo {
-    width: 220px;
-  }
-}
-
-/* Mobile styles */
-@media (max-width: 576px) {
-  .hero {
-    padding: var(--spacing-lg) var(--spacing-md) var(--spacing-xl);
-  }
-
-  .buttons {
-    flex-direction: column;
-    gap: var(--spacing-lg);
-    align-items: center;
-  }
-
-  .buttons button {
-    width: 100%;
-    max-width: 300px;
-  }
-
-  .title {
-    font-size: var(--font-size-2xl);
-  }
-
-  .subtitle {
-    font-size: var(--font-size-base);
-    line-height: var(--line-height-relaxed);
+    padding: var(--spacing-sm) var(--spacing-xs);
   }
 
   .container {
-    padding: var(--spacing-lg) var(--spacing-sm);
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-xs);
+  }
+
+  .logo {
+    max-width: min(200px, 50vw);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .buttonContainer {
+    padding: 12px 0;
+  }
+
+  .accountSection {
+    padding: 12px 0;
+  }
+}
+
+/* Tablet and up */
+@media (min-width: 576px) {
+  .hero {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  .container {
+    gap: var(--spacing-xl);
+    padding: var(--spacing-xl) var(--spacing-md);
+    max-width: 768px;
+  }
+
+  .logo {
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .buttonContainer {
+    max-width: 500px;
+  }
+}
+
+/* Desktop and up */
+@media (min-width: 992px) {
+  .container {
+    max-width: 1200px;
   }
 }
