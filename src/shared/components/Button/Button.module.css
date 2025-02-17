@@ -3,18 +3,20 @@
   align-items: center;
   justify-content: center;
   min-height: var(--touch-target-size);
-  padding: var(--spacing-sm) var(--spacing-xl);
-  border-radius: var(--border-radius-full);
+  padding: 12px 20px;
+  border-radius: 96px;
   font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
+  font-family: Inter, sans-serif;
+  font-weight: 800;
   letter-spacing: 0.5px;
   cursor: pointer;
   user-select: none;
+  gap: 8px;
   transition: transform var(--animation-duration-normal) var(--animation-easing),
               box-shadow var(--animation-duration-normal) var(--animation-easing),
               background-color var(--animation-duration-normal) var(--animation-easing),
               color var(--animation-duration-normal) var(--animation-easing);
-  min-width: 200px;
+  width: auto;
 }
 
 .button:active {
@@ -23,20 +25,17 @@
 
 .buttonPrimary {
   composes: button;
-  background-color: var(--app-button, var(--color-primary));
-  color: var(--app-button-text, var(--color-white));
+  background-color: #00d0ff;
+  color: var(--color-white);
   border: none;
-  box-shadow: var(--shadow-sm);
 }
 
 .buttonPrimary:hover {
-  background-color: var(--color-primary-dark);
-  box-shadow: var(--shadow-md);
+  background-color: #00bfe8;
 }
 
 .buttonPrimary:active {
-  background-color: var(--color-primary-darker);
-  box-shadow: var(--shadow-sm);
+  background-color: #00aed4;
 }
 
 .buttonSecondary {
@@ -80,12 +79,14 @@
   box-shadow: none;
 }
 
+.fullWidth {
+  width: 100%;
+}
+
 /* Mobile styles */
 @media (max-width: 576px) {
   .button {
-    width: 100%;
-    padding: var(--spacing-sm) var(--spacing-lg);
+    padding: 10px 16px;
     font-size: var(--font-size-sm);
-    min-width: unset;
   }
 }

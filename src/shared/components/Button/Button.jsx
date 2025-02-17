@@ -7,6 +7,9 @@ const Button = ({
   children, 
   className,
   loading,
+  width,
+  height,
+  fullWidth = false,
   ...props
 }) => {
   const { haptic } = useTelegram();
@@ -18,13 +21,21 @@ const Button = ({
 
   const variantClass = variant === 'primary' ? styles.buttonPrimary : styles.buttonSecondary;
   const loadingClass = loading ? styles.loading : '';
-  const combinedClasses = [variantClass, loadingClass, className].filter(Boolean).join(' ');
+  const fullWidthClass = fullWidth ? styles.fullWidth : '';
+  const combinedClasses = [variantClass, loadingClass, fullWidthClass, className].filter(Boolean).join(' ');
+
+  const style = {
+    ...(width && { width }),
+    ...(height && { height }),
+    ...props.style
+  };
 
   return (
     <button 
       className={combinedClasses}
       disabled={loading || props.disabled}
       {...props}
+      style={style}
       onClick={handleClick}
     >
       {children}
@@ -37,7 +48,11 @@ Button.propTypes = {
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
   loading: PropTypes.bool,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  width: PropTypes.string,
+  height: PropTypes.string,
+  fullWidth: PropTypes.bool,
+  style: PropTypes.object
 };
 
 export default Button;

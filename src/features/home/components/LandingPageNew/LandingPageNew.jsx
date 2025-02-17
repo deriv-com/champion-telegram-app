@@ -1,7 +1,8 @@
 import React from 'react';
-import { championTradeLogo, tradingChartIllustration } from '@/assets/images';
-import { Button, Carousel } from '@/shared';
+import { championTradeLogo, tradingChartIllustration, telegramIcon, chevronRight } from '@/assets/images';
+import { Carousel, Button } from '@/shared';
 import { useNavigate } from 'react-router-dom';
+import { useTelegram } from '@/hooks/useTelegram';
 import { ROUTES } from '@/config/routes.config';
 import styles from './LandingPageNew.module.css';
 
@@ -12,19 +13,20 @@ const slides = [
     banner: tradingChartIllustration
   },
   {
-    title: 'Placeholder Title 2',
-    subtitle: 'Placeholder subtitle for the second slide with similar length for consistency',
+    title: 'Trade Smarter with Champion Trade',
+    subtitle: 'Experience the future of trading with our advanced platform powerful tools and expert insights',
     banner: tradingChartIllustration
   },
   {
-    title: 'Placeholder Title 3',
-    subtitle: 'Placeholder subtitle for the third slide maintaining the visual balance',
+    title: 'Trade Smarter with Champion Trade',
+    subtitle: 'Experience the future of trading with our advanced platform powerful tools and expert insights',
     banner: tradingChartIllustration
   }
 ];
 
 const LandingPageNew = () => {
   const navigate = useNavigate();
+  const { handleTelegramLogin } = useTelegram();
 
   return (
     <section className={styles.hero} role="banner">
@@ -46,14 +48,31 @@ const LandingPageNew = () => {
           margin="var(--spacing-md) 0"
         />
 
-        <div className={styles.buttons}>
+        <div className={styles.buttonContainer}>
           <Button
-            variant="secondary"
-            aria-label="Get started with Champion Trade"
-            onClick={() => navigate(ROUTES.LOGIN)}
+            onClick={handleTelegramLogin}
+            aria-label="Quick login with Telegram"
+            disabled={false}
+            fullWidth={false}
           >
-            Get Started
+            <img src={telegramIcon} alt="" className={styles.buttonIcon} />
+            <span>Quick login with Telegram</span>
           </Button>
+        </div>
+
+        <div className={styles.accountSection}>
+          <p className={styles.accountText}>Already have an account?</p>
+          <a
+            href="#"
+            className={styles.accountLink}
+            onClick={(e) => {
+              e.preventDefault();
+              navigate(ROUTES.LOGIN);
+            }}
+          >
+            <span className={styles.linkLabel}>Login with existing account</span>
+            <img src={chevronRight} alt="" className={styles.linkIcon} />
+          </a>
         </div>
       </div>
     </section>

@@ -7,3 +7,4 @@ export { default as logoutIcon } from './logout-icon.svg';
 export { default as positionsIcon } from './positions-icon.svg';
 export { default as tradeIcon } from './trade-icon.svg';
 export { default as tradingChartIllustration } from './trading-chart-illustration.svg';
+export { default as telegramIcon } from './telegram-icon.svg';
