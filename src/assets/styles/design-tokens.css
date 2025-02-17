@@ -8,6 +8,19 @@
   --color-primary-dark: #00A3CC;
   --color-primary-darker: #007A99;
 
+  /* Button Colors */
+  --color-button-primary: var(--color-primary);
+  --color-button-primary-hover: var(--color-primary-light);
+  --color-button-primary-active: var(--color-primary-dark);
+  --color-button-primary-text: #00375C;
+
+  --color-button-secondary-bg: var(--color-background-light);
+  --color-button-secondary-text: var(--color-primary);
+  --color-button-secondary-border: var(--color-primary);
+  --color-button-secondary-hover-bg: var(--color-background-tertiary-light);
+  --color-button-secondary-hover-text: var(--color-primary-dark);
+  --color-button-secondary-hover-border: var(--color-primary-dark);
+
   /* Colors - Light Theme */
   --color-background-light: #FFFFFF;
   --color-background-secondary-light: #FFFFFF;
@@ -25,6 +38,19 @@
   --color-text-secondary-dark: #CBD5E1;
   --color-text-tertiary-dark: #94A3B8;
   --color-border-dark: #334155;
+
+  /* Dark Theme Button Colors */
+  --color-button-primary-dark: var(--color-primary-dark);
+  --color-button-primary-hover-dark: var(--color-primary);
+  --color-button-primary-active-dark: var(--color-primary-darker);
+  --color-button-primary-text-dark: var(--color-text-dark);
+
+  --color-button-secondary-bg-dark: var(--color-background-dark);
+  --color-button-secondary-text-dark: var(--color-primary-light);
+  --color-button-secondary-border-dark: var(--color-primary-light);
+  --color-button-secondary-hover-bg-dark: var(--color-background-tertiary-dark);
+  --color-button-secondary-hover-text-dark: var(--color-primary);
+  --color-button-secondary-hover-border-dark: var(--color-primary);
 
   /* Status Colors */
   --color-success: #03c390;

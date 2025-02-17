@@ -1,6 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Carousel.module.css';
+
+const SWIPE_THRESHOLD = 50;
+
+const validateBannerOrTitle = (props, propName, componentName) => {
+  if (!props.banner && !props.title) {
+    return new Error(`Either 'banner' or 'title' is required in ${componentName}`);
+  }
+};
 
 const renderDefaultSlide = (slide, { bannerWidth = '390px', bannerHeight = 'auto' }) => (
   <div className={styles.slideContent}>
@@ -28,6 +36,7 @@ const Carousel = ({
   className = '',
   indicators = true,
   swipeEnabled = true,
+  swipeThreshold = SWIPE_THRESHOLD,
   height,
   width,
   margin,
@@ -47,8 +56,7 @@ const Carousel = ({
     carouselStyle[key] === undefined && delete carouselStyle[key]
   );
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
+  const [touch, setTouch] = useState({ start: 0, end: 0 });
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
@@ -67,20 +75,20 @@ const Carousel = ({
 
   const handleTouchStart = (e) => {
     if (!swipeEnabled) return;
-    setTouchStart(e.touches[0].clientX);
+    setTouch(prev => ({ ...prev, start: e.touches[0].clientX }));
   };
 
   const handleTouchMove = (e) => {
     if (!swipeEnabled) return;
-    setTouchEnd(e.touches[0].clientX);
+    setTouch(prev => ({ ...prev, end: e.touches[0].clientX }));
   };
 
   const handleTouchEnd = () => {
-    if (!swipeEnabled || !touchStart || !touchEnd) return;
+    if (!swipeEnabled || !touch.start || !touch.end) return;
     
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
+    const distance = touch.start - touch.end;
+    const isLeftSwipe = distance > swipeThreshold;
+    const isRightSwipe = distance < -swipeThreshold;
 
     if (isLeftSwipe) {
       nextSlide();
@@ -88,8 +96,7 @@ const Carousel = ({
       prevSlide();
     }
 
-    setTouchStart(0);
-    setTouchEnd(0);
+    setTouch({ start: 0, end: 0 });
   };
 
   const handleKeyDown = (e) => {
@@ -150,20 +157,8 @@ const Carousel = ({
 Carousel.propTypes = {
   slides: PropTypes.arrayOf(
     PropTypes.shape({
-      banner: function(props, propName, componentName) {
-        if (!props.banner && !props.title) {
-          return new Error(
-            `Either 'banner' or 'title' is required in ${componentName}`
-          );
-        }
-      },
-      title: function(props, propName, componentName) {
-        if (!props.banner && !props.title) {
-          return new Error(
-            `Either 'banner' or 'title' is required in ${componentName}`
-          );
-        }
-      },
+      banner: validateBannerOrTitle,
+      title: validateBannerOrTitle,
       subtitle: PropTypes.string
     })
   ).isRequired,
@@ -179,6 +174,7 @@ Carousel.propTypes = {
   padding: PropTypes.string,
   bannerWidth: PropTypes.string,
   bannerHeight: PropTypes.string,
+  swipeThreshold: PropTypes.number,
 };
 
-export default Carousel;
+export default memo(Carousel);

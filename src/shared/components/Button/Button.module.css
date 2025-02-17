@@ -1,91 +1,119 @@
-.button {
+/* Base button styles */
+.buttonBase {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: var(--touch-target-size);
   padding: 12px 20px;
-  border-radius: 96px;
+  border-radius: var(--border-radius-full);
   font-size: var(--font-size-base);
-  font-family: Inter, sans-serif;
-  font-weight: 800;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-bold);
   letter-spacing: 0.5px;
   cursor: pointer;
   user-select: none;
   gap: 8px;
-  transition: transform var(--animation-duration-normal) var(--animation-easing),
-              box-shadow var(--animation-duration-normal) var(--animation-easing),
-              background-color var(--animation-duration-normal) var(--animation-easing),
-              color var(--animation-duration-normal) var(--animation-easing);
   width: auto;
+  transition: all var(--animation-duration-normal) var(--animation-easing);
 }
 
-.button:active {
+/* Interactive states for base button */
+.buttonBase:active {
   transform: scale(0.98);
 }
 
-.buttonPrimary {
-  composes: button;
-  background-color: #00d0ff;
-  color: var(--color-white);
-  border: none;
-}
-
-.buttonPrimary:hover {
-  background-color: #00bfe8;
-}
-
-.buttonPrimary:active {
-  background-color: #00aed4;
-}
-
-.buttonSecondary {
-  composes: button;
-  background-color: var(--app-background-secondary);
-  color: var(--app-text);
-  border: var(--border-width-thick) solid var(--app-border);
-}
-
-.buttonSecondary:hover {
-  background-color: var(--app-hover-background);
-  border-color: var(--app-button);
-  color: var(--app-button);
-}
-
-.buttonSecondary:active {
-  background-color: var(--app-active-background);
-}
-
-/* Dark theme specific styles */
-[data-theme="dark"] .buttonSecondary,
-[data-telegram-theme="dark"] .buttonSecondary {
-  background-color: var(--app-background-tertiary);
-}
-
-[data-theme="dark"] .buttonPrimary:hover,
-[data-telegram-theme="dark"] .buttonPrimary:hover {
-  background-color: var(--color-primary-light);
-}
-
-[data-theme="dark"] .buttonPrimary:active,
-[data-telegram-theme="dark"] .buttonPrimary:active {
-  background-color: var(--color-primary);
-}
-
-/* Disabled state */
-.button:disabled {
+.buttonBase:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
+/* Primary variant */
+.buttonPrimary {
+  composes: buttonBase;
+  background-color: var(--color-button-primary);
+  color: var(--color-button-primary-text);
+  border: none;
+}
+
+/* Primary hover/active states */
+.buttonPrimary:hover {
+  background-color: var(--color-button-primary-hover);
+}
+
+.buttonPrimary:active {
+  background-color: var(--color-button-primary-active);
+}
+
+/* Primary dark theme */
+[data-theme="dark"] .buttonPrimary,
+[data-telegram-theme="dark"] .buttonPrimary {
+  background-color: var(--color-button-primary-dark);
+  color: var(--color-button-primary-text-dark);
+}
+
+[data-theme="dark"] .buttonPrimary:hover,
+[data-telegram-theme="dark"] .buttonPrimary:hover {
+  background-color: var(--color-button-primary-hover-dark);
+}
+
+[data-theme="dark"] .buttonPrimary:active,
+[data-telegram-theme="dark"] .buttonPrimary:active {
+  background-color: var(--color-button-primary-active-dark);
+}
+
+/* Secondary variant */
+.buttonSecondary {
+  composes: buttonBase;
+  background-color: var(--color-button-secondary-bg);
+  color: var(--color-button-secondary-text);
+  border: var(--border-width-thick) solid var(--color-button-secondary-border);
+}
+
+/* Secondary hover/active states */
+.buttonSecondary:hover {
+  background-color: var(--color-button-secondary-hover-bg);
+  border-color: var(--color-button-secondary-hover-border);
+  color: var(--color-button-secondary-hover-text);
+}
+
+.buttonSecondary:active {
+  background-color: var(--color-button-secondary-hover-bg);
+  border-color: var(--color-button-secondary-hover-border);
+  color: var(--color-button-secondary-hover-text);
+}
+
+/* Secondary dark theme */
+[data-theme="dark"] .buttonSecondary,
+[data-telegram-theme="dark"] .buttonSecondary {
+  background-color: var(--color-button-secondary-bg-dark);
+  color: var(--color-button-secondary-text-dark);
+  border-color: var(--color-button-secondary-border-dark);
+}
+
+[data-theme="dark"] .buttonSecondary:hover,
+[data-telegram-theme="dark"] .buttonSecondary:hover {
+  background-color: var(--color-button-secondary-hover-bg-dark);
+  border-color: var(--color-button-secondary-hover-border-dark);
+  color: var(--color-button-secondary-hover-text-dark);
+}
+
+[data-theme="dark"] .buttonSecondary:active,
+[data-telegram-theme="dark"] .buttonSecondary:active {
+  background-color: var(--color-button-secondary-hover-bg-dark);
+  border-color: var(--color-button-secondary-hover-border-dark);
+  color: var(--color-button-secondary-hover-text-dark);
+}
+
+/* Width modifier */
 .fullWidth {
   width: 100%;
 }
 
 /* Mobile styles */
 @media (max-width: 576px) {
-  .button {
+  .buttonBase {
     padding: 10px 16px;
     font-size: var(--font-size-sm);
   }

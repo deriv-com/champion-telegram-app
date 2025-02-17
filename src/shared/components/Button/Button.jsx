@@ -19,10 +19,12 @@ const Button = ({
     props.onClick?.(e);
   };
 
-  const variantClass = variant === 'primary' ? styles.buttonPrimary : styles.buttonSecondary;
-  const loadingClass = loading ? styles.loading : '';
-  const fullWidthClass = fullWidth ? styles.fullWidth : '';
-  const combinedClasses = [variantClass, loadingClass, fullWidthClass, className].filter(Boolean).join(' ');
+  const buttonClasses = [
+    variant === 'primary' ? styles.buttonPrimary : styles.buttonSecondary,
+    loading && styles.loading,
+    fullWidth && styles.fullWidth,
+    className
+  ].filter(Boolean).join(' ');
 
   const style = {
     ...(width && { width }),
@@ -32,7 +34,7 @@ const Button = ({
 
   return (
     <button 
-      className={combinedClasses}
+      className={buttonClasses}
       disabled={loading || props.disabled}
       {...props}
       style={style}
