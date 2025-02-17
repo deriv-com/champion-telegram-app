@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/config/routes.config';
-import { RootLayout, ProtectedRoute, Loading } from '@/shared';
+import { RootLayout, ProtectedRoute } from '@/shared';
+import { SpinnerLoading } from '@/shared/components';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { LandingPage, Dashboard } from '@/features/home';
 import LoginPage from '@/features/auth/components/LoginPage';
@@ -42,13 +43,13 @@ function App() {
     const handleInitialization = async () => {
       try {
         console.log('Starting app initialization...');
-        
+
         // Initialize auth state first
         const initResult = await initialize();
         console.log('Auth initialization result:', initResult);
 
         const ws = websocketService.instance;
-        
+
         // Only establish WebSocket connection if auth is successful and not already connected
         if (initResult && !ws.isConnected()) {
           try {
@@ -66,23 +67,23 @@ function App() {
             console.warn('Some features may be limited due to WebSocket connection failure');
           }
         }
-        
+
         // Handle navigation after successful initialization
         const currentPath = window.location.pathname;
         const hasSearchParams = window.location.search.length > 0;
-        
+
         // OAuth callback handling
         if (hasSearchParams && currentPath === '/') {
           console.log('Redirecting OAuth callback to login page...');
           navigate(ROUTES.LOGIN + window.location.search, { replace: true });
           return;
         }
-        
+
         // Skip navigation if on login page
         if (currentPath === ROUTES.LOGIN) {
           return;
         }
-        
+
         // Redirect authenticated users to dashboard if at root
         if (initResult && currentPath === '/') {
           console.log('Authenticated user at root, redirecting to dashboard...');
@@ -92,7 +93,7 @@ function App() {
         console.error('App initialization error:', error);
       }
     };
-    
+
     handleInitialization();
   }, [navigate, initialize]);
 
@@ -101,36 +102,36 @@ function App() {
       <RootLayout>
         {/* Show loading state during initial load or WebApp initialization */}
         {((isLoading && !isAuthenticated) || !isWebAppInitialized) ? (
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            height: '100vh' 
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh'
           }}>
-            <Loading size="lg" text="Initializing..." />
+            <SpinnerLoading size="lg" text="Initializing..." />
           </div>
         ) : (
           <Routes>
-        <Route 
-          path={ROUTES.HOME} 
-          element={
-            isAuthenticated ? (
-              <Navigate to={ROUTES.DASHBOARD} replace />
-            ) : (
-              <LandingPage />
-            )
-          } 
-        />
-        <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-        <Route 
-          path={ROUTES.DASHBOARD} 
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
+            <Route
+              path={ROUTES.HOME}
+              element={
+                isAuthenticated ? (
+                  <Navigate to={ROUTES.DASHBOARD} replace />
+                ) : (
+                  <LandingPage />
+                )
+              }
+            />
+            <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+            <Route
+              path={ROUTES.DASHBOARD}
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
           </Routes>
         )}
       </RootLayout>

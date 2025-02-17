@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="212" height="212" viewBox="0 0 212 212" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Base circles similar to trading chart illustration for consistency -->
+  <path d="M106.021 197.059c-10.808 0-21.292-2.117-31.162-6.291-9.534-4.033-18.095-9.805-25.448-17.158-7.352-7.352-13.125-15.914-17.157-25.447-4.175-9.87-6.291-20.355-6.291-31.163s2.116-21.292 6.291-31.162c4.032-9.533 9.805-18.095 17.157-25.447S65.325 47.266 74.86 43.233c9.87-4.174 20.354-6.291 31.162-6.291s21.292 2.117 31.163 6.291a79.8 79.8 0 0 1 25.447 17.158c7.353 7.352 13.125 15.914 17.157 25.447 4.175 9.87 6.292 20.355 6.292 31.162 0 10.808-2.117 21.293-6.292 31.163-4.032 9.533-9.804 18.095-17.157 25.447a79.8 79.8 0 0 1-25.447 17.158c-9.871 4.174-20.355 6.291-31.163 6.291" fill="#2ED7FE"/>
+  
+  <!-- Shield base with gradient -->
+  <path d="M106 40c-35 0-60 12-60 12s5 58 60 100c55-42 60-100 60-100s-25-12-60-12z" fill="url(#shield-gradient)"/>
+  
+  <!-- Binary code helix -->
+  <path d="M86 70c20 20 40 20 60 0M86 90c20 20 40 20 60 0M86 110c20 20 40 20 60 0" stroke="url(#helix-gradient)" stroke-width="2" stroke-dasharray="4 6"/>
+  
+  <!-- Floating padlocks -->
+  <g id="padlocks">
+    <path d="M96 100h20v15c0 5.523-4.477 10-10 10s-10-4.477-10-10v-15z" fill="url(#lock-gradient)"/>
+    <path d="M101 95v5h10v-5c0-2.761-2.239-5-5-5s-5 2.239-5 5z" fill="url(#lock-gradient)"/>
+    
+    <!-- Smaller decorative locks -->
+    <path d="M76 120h12v9c0 3.314-2.686 6-6 6s-6-2.686-6-6v-9z" fill="url(#lock-gradient-small)"/>
+    <path d="M79 117v3h6v-3c0-1.657-1.343-3-3-3s-3 1.343-3 3z" fill="url(#lock-gradient-small)"/>
+    
+    <path d="M124 120h12v9c0 3.314-2.686 6-6 6s-6-2.686-6-6v-9z" fill="url(#lock-gradient-small)"/>
+    <path d="M127 117v3h6v-3c0-1.657-1.343-3-3-3s-3 1.343-3 3z" fill="url(#lock-gradient-small)"/>
+  </g>
+
+  <!-- Pulse rings -->
+  <circle cx="106" cy="106" r="40" stroke="url(#pulse-gradient)" stroke-width="1" fill="none">
+    <animate attributeName="r" from="40" to="50" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" from="0.6" to="0" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Sacred geometry patterns -->
+  <path d="M106 76L81 116h50L106 76z" stroke="#2ED7FE" stroke-width="1" fill="none" opacity="0.3"/>
+  <circle cx="106" cy="106" r="30" stroke="#2ED7FE" stroke-width="1" fill="none" opacity="0.3"/>
+  
+  <!-- Decorative stars similar to trading chart illustration -->
+  <path d="m187.533 80.269 3.866 7.524 8.351 1.353-5.961 6.002 1.294 8.36-7.55-3.814-7.551 3.814 1.294-8.36-5.961-6.002 8.351-1.353z" fill="url(#star-gradient-1)"/>
+  <path d="m34.995 147.299 3.275 6.372 7.072 1.145-5.048 5.084 1.096 7.08-6.395-3.23-6.395 3.23 1.096-7.08-5.048-5.084 7.072-1.145z" fill="url(#star-gradient-2)"/>
+  <path d="m134.358 14.94 1.554 3.026 3.358.544-2.397 2.413.521 3.362-3.036-1.534-3.036 1.534.52-3.362-2.397-2.413 3.358-.544z" fill="url(#star-gradient-3)"/>
+  
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="shield-gradient" x1="106" y1="40" x2="106" y2="152" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="0.5" stop-color="#9BEBFE"/>
+      <stop offset="1" stop-color="#2ED7FE"/>
+    </linearGradient>
+    
+    <linearGradient id="helix-gradient" x1="86" y1="70" x2="146" y2="110" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#2ED7FE"/>
+    </linearGradient>
+    
+    <linearGradient id="lock-gradient" x1="96" y1="90" x2="116" y2="125" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#2ED7FE"/>
+    </linearGradient>
+    
+    <linearGradient id="lock-gradient-small" x1="76" y1="114" x2="88" y2="135" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#2ED7FE"/>
+    </linearGradient>
+    
+    <linearGradient id="pulse-gradient" x1="66" y1="66" x2="146" y2="146" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#2ED7FE"/>
+    </linearGradient>
+    
+    <linearGradient id="star-gradient-1" x1="190.45" y1="76.404" x2="183.912" y2="104.954" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff"/>
+      <stop offset="1" stop-color="#2ED7FE"/>
+    </linearGradient>
+    
+    <linearGradient id="star-gradient-2" x1="37.466" y1="144.026" x2="31.929" y2="168.204" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff"/>
+      <stop offset="1" stop-color="#2ED7FE"/>
+    </linearGradient>
+    
+    <linearGradient id="star-gradient-3" x1="135.531" y1="13.387" x2="132.902" y2="24.866" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff"/>
+      <stop offset="1" stop-color="#2ED7FE"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Loading } from '@/shared/components';
+import { SpinnerLoading } from '@/shared/components';
 import styles from './Dashboard.module.css';
 import { tradeIcon, cashierIcon, positionsIcon, accountIcon } from '@/assets/images';
 import { TabBar, AppBar } from '@/shared/components';
@@ -55,7 +55,7 @@ const Dashboard = () => {
   if (isLoading) {
     return (
       <div className={styles.dashboard}>
-        <Loading size="lg" text="Loading your account..." />
+        <SpinnerLoading size="lg" text="Loading your account..." />
       </div>
     );
   }

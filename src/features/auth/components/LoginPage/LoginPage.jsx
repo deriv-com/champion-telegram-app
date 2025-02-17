@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button, Loading } from '@/shared';
+import { Button, SpinnerLoading } from '@/shared/components';
 import { useNotification } from '@/hooks';
 import { ROUTES } from '@/config/routes.config';
 import { APP_CONFIG } from '@/config/app.config';
@@ -79,7 +79,7 @@ const LoginPage = () => {
     return (
       <div className={styles.loginPage}>
         <div className={styles.container}>
-          <Loading size="lg" text="Processing login..." />
+          <SpinnerLoading size="lg" text="Processing login..." />
         </div>
       </div>
     );
