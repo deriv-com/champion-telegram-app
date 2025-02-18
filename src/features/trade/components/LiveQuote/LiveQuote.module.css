@@ -7,7 +7,7 @@
   align-items: center;
   width: 100%;
   margin-bottom: var(--spacing-lg);
-  transition: all var(--animation-duration-normal) var(--animation-easing);
+  transition: background-color var(--animation-duration-normal) var(--animation-easing);
 }
 
 .priceContainer {
@@ -41,7 +41,9 @@
   display: inline-block;
   min-width: 0.6em;
   text-align: center;
-  transition: all var(--animation-duration-normal) var(--animation-easing);
+  transition: 
+    transform var(--animation-duration-normal) var(--animation-easing),
+    text-shadow var(--animation-duration-normal) var(--animation-easing);
   position: relative;
 }
 

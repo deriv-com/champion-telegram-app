@@ -4,12 +4,6 @@ import styles from './Carousel.module.css';
 
 const SWIPE_THRESHOLD = 50;
 
-const validateBannerOrTitle = (props, propName, componentName) => {
-  if (!props.banner && !props.title) {
-    return new Error(`Either 'banner' or 'title' is required in ${componentName}`);
-  }
-};
-
 const renderDefaultSlide = (slide, { bannerWidth = '390px', bannerHeight = 'auto' }) => (
   <div className={styles.slideContent}>
     {slide.banner && (
@@ -56,7 +50,8 @@ const Carousel = ({
     carouselStyle[key] === undefined && delete carouselStyle[key]
   );
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [touch, setTouch] = useState({ start: 0, end: 0 });
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
@@ -75,18 +70,18 @@ const Carousel = ({
 
   const handleTouchStart = (e) => {
     if (!swipeEnabled) return;
-    setTouch(prev => ({ ...prev, start: e.touches[0].clientX }));
+    setTouchStart(e.touches[0].clientX);
   };
 
   const handleTouchMove = (e) => {
     if (!swipeEnabled) return;
-    setTouch(prev => ({ ...prev, end: e.touches[0].clientX }));
+    setTouchEnd(e.touches[0].clientX);
   };
 
   const handleTouchEnd = () => {
-    if (!swipeEnabled || !touch.start || !touch.end) return;
+    if (!swipeEnabled || !touchStart || !touchEnd) return;
     
-    const distance = touch.start - touch.end;
+    const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > swipeThreshold;
     const isRightSwipe = distance < -swipeThreshold;
 
@@ -96,7 +91,8 @@ const Carousel = ({
       prevSlide();
     }
 
-    setTouch({ start: 0, end: 0 });
+    setTouchStart(0);
+    setTouchEnd(0);
   };
 
   const handleKeyDown = (e) => {
@@ -157,8 +153,16 @@ const Carousel = ({
 Carousel.propTypes = {
   slides: PropTypes.arrayOf(
     PropTypes.shape({
-      banner: validateBannerOrTitle,
-      title: validateBannerOrTitle,
+      banner: (props, propName, componentName) => {
+        if (!props.banner && !props.title) {
+          return new Error(`Either 'banner' or 'title' is required in ${componentName}`);
+        }
+      },
+      title: (props, propName, componentName) => {
+        if (!props.banner && !props.title) {
+          return new Error(`Either 'banner' or 'title' is required in ${componentName}`);
+        }
+      },
       subtitle: PropTypes.string
     })
   ).isRequired,

@@ -14,7 +14,12 @@
   user-select: none;
   gap: 8px;
   width: auto;
-  transition: all var(--animation-duration-normal) var(--animation-easing);
+  transition: 
+    background-color var(--animation-duration-normal) var(--animation-easing),
+    border-color var(--animation-duration-normal) var(--animation-easing),
+    color var(--animation-duration-normal) var(--animation-easing),
+    transform var(--animation-duration-normal) var(--animation-easing),
+    opacity var(--animation-duration-normal) var(--animation-easing);
 }
 
 /* Interactive states for base button */
