@@ -120,7 +120,10 @@
   margin-top: var(--spacing-xs);
   padding: var(--spacing-xs) var(--spacing-sm);
   opacity: 0.9;
-  transition: all var(--animation-duration-normal) var(--animation-easing);
+  transition: 
+    opacity var(--animation-duration-normal) var(--animation-easing),
+    background-color var(--animation-duration-normal) var(--animation-easing),
+    transform var(--animation-duration-normal) var(--animation-easing);
   display: inline-block;
   line-height: var(--line-height-tight);
 }

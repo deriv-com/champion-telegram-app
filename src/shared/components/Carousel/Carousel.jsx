@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Carousel.module.css';
+
+const SWIPE_THRESHOLD = 50;
 
 const renderDefaultSlide = (slide, { bannerWidth = '390px', bannerHeight = 'auto' }) => (
   <div className={styles.slideContent}>
@@ -28,6 +30,7 @@ const Carousel = ({
   className = '',
   indicators = true,
   swipeEnabled = true,
+  swipeThreshold = SWIPE_THRESHOLD,
   height,
   width,
   margin,
@@ -79,8 +82,8 @@ const Carousel = ({
     if (!swipeEnabled || !touchStart || !touchEnd) return;
     
     const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
+    const isLeftSwipe = distance > swipeThreshold;
+    const isRightSwipe = distance < -swipeThreshold;
 
     if (isLeftSwipe) {
       nextSlide();
@@ -150,18 +153,14 @@ const Carousel = ({
 Carousel.propTypes = {
   slides: PropTypes.arrayOf(
     PropTypes.shape({
-      banner: function(props, propName, componentName) {
+      banner: (props, propName, componentName) => {
         if (!props.banner && !props.title) {
-          return new Error(
-            `Either 'banner' or 'title' is required in ${componentName}`
-          );
+          return new Error(`Either 'banner' or 'title' is required in ${componentName}`);
         }
       },
-      title: function(props, propName, componentName) {
+      title: (props, propName, componentName) => {
         if (!props.banner && !props.title) {
-          return new Error(
-            `Either 'banner' or 'title' is required in ${componentName}`
-          );
+          return new Error(`Either 'banner' or 'title' is required in ${componentName}`);
         }
       },
       subtitle: PropTypes.string
@@ -179,6 +178,7 @@ Carousel.propTypes = {
   padding: PropTypes.string,
   bannerWidth: PropTypes.string,
   bannerHeight: PropTypes.string,
+  swipeThreshold: PropTypes.number,
 };
 
-export default Carousel;
+export default memo(Carousel);
